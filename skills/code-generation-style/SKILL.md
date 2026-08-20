@@ -8,6 +8,8 @@ user-invocable: true
 
 Generate and edit code that is clear by construction: simple structure, precise names, minimal abstractions, and comments only where they explain non-obvious intent.
 
+For the classic design-pattern catalog (Factory, Singleton, Strategy, Observer, Decorator, etc.) and when each one earns its place, use the `design-patterns` skill.
+
 ## Use This Skill For
 
 - Deciding whether generated code needs comments or documentation comments.

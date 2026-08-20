@@ -8,6 +8,8 @@ user-invocable: true
 
 Apply Clean Architecture with Hexagonal Ports & Adapters and DDD concepts pragmatically: protect domain rules, keep dependency direction inward, and wire concrete infrastructure only at the composition root.
 
+For general object-creation and behavioral patterns beyond this DDD-specific set (Strategy, Observer, Decorator, Builder, Adapter, etc.), use the `design-patterns` skill.
+
 ## Use This Skill For
 
 - Designing or reviewing layered application structure with `domain`, `application`, `infrastructure`, and `presentation` boundaries.

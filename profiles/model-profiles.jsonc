@@ -1,0 +1,47 @@
+{
+  "defaultProfile": "balanced",
+  "profiles": {
+    "deep": {
+      "purpose": "Architecture, hard debugging, critical reviews.",
+      "claude": {
+        "model": "opus",
+        "effort": "high"
+      },
+      "copilot": {
+        "model": "claude-opus-4.8",
+        "effort": "high"
+      },
+      "opencode": {
+        "model": "anthropic/claude-opus-4-8"
+      }
+    },
+    "balanced": {
+      "purpose": "Daily coding, review, and documentation work.",
+      "claude": {
+        "model": "sonnet",
+        "effort": "medium"
+      },
+      "copilot": {
+        "model": "gpt-5.5",
+        "effort": "medium"
+      },
+      "opencode": {
+        "model": "anthropic/claude-sonnet-4-6"
+      }
+    },
+    "fast": {
+      "purpose": "Small edits, quick docs, and low-risk checks.",
+      "claude": {
+        "model": "fable",
+        "effort": "low"
+      },
+      "copilot": {
+        "model": "gpt-5.4-mini",
+        "effort": "low"
+      },
+      "opencode": {
+        "model": "anthropic/claude-haiku-4-5"
+      }
+    }
+  }
+}

@@ -8,7 +8,7 @@ user-invocable: true
 
 Use this skill only when the repository actually uses React with TypeScript, Vite, and Ant Design (`antd`).
 
-For general SOLID/KISS/DRY/YAGNI tradeoffs, also apply the shared `programming-principles` skill. For test placement and coverage strategy, also apply `test-strategy`; use `tdd` when the user explicitly wants test-first development. For XSS, injection, and other client-side security concerns, also apply `secure-code-generation`.
+For general SOLID/KISS/DRY/YAGNI tradeoffs, also apply the shared `programming-principles` skill. For test placement and coverage strategy, also apply `test-strategy`; use `tdd` when the user explicitly wants test-first development. For XSS, injection, and other client-side security concerns, also apply `secure-code-generation`. For animation, motion, and responsive-layout guidance, also apply the `frontend-design` skill.
 
 Before editing, read the project files first and then apply the stack guide at `../../instructions/stacks/react-vite-antd.md` when it matches the repository. Do not impose that guide on Next.js, Vue, Svelte, plain JavaScript, other component libraries (MUI, Chakra), or legacy projects with established local conventions.
 

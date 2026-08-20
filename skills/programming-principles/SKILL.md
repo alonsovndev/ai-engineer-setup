@@ -8,6 +8,8 @@ user-invocable: true
 
 Apply SOLID, KISS, DRY, and YAGNI as tradeoff tools. Prefer the simplest design that solves the current problem, preserves behavior, and leaves clear seams for real change.
 
+For the classic creational/structural/behavioral pattern catalog (Factory, Singleton, Strategy, Observer, etc.) and when each one earns its place, use the `design-patterns` skill.
+
 ## Use This Skill For
 
 - Reviewing whether code is too complex, too coupled, too duplicated, or prematurely abstracted.

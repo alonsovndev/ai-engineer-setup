@@ -1,0 +1,18 @@
+{
+  // Template only. scripts/install.sh writes ~/.config/opencode/opencode.jsonc with a machine-local absolute instructions path.
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": ["REPO_ROOT/instructions/AGENTS.md"],
+  "skills": {
+    "paths": ["REPO_ROOT/skills"]
+  },
+  "permission": {
+    "edit": "ask",
+    "bash": {
+      "*": "ask",
+      "git push*": "deny",
+      "git reset --hard*": "deny",
+      "rm -rf*": "deny"
+    },
+    "webfetch": "ask"
+  }
+}

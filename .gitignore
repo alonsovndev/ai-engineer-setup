@@ -1,0 +1,29 @@
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# Secrets and auth
+*token*
+*secret*
+*credential*
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+
+# Local tool state
+node_modules/
+logs/
+cache/
+sessions/
+session-store.db*
+history.jsonl
+daemon.*
+*.lock
+*.log
+
+# Installer backups (scripts/install.sh)
+*.backup-*

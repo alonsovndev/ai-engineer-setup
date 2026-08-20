@@ -21,6 +21,7 @@ Do not symlink whole harness config roots because they contain local auth, sessi
 | Commit changes | `git-commit` | `/commit` | `/commit` | `Commit` |
 | Create PR | `create-pr`, `gh-prs` | `/create-pr` | `/create-pr` | `Create PR` |
 | Release readiness | `git-repo-flow`, `pr-review` | `/release-check` | `/release-check` | `Release Check` |
+| Frontend design review | `frontend-design` | `/design-review` | `/design-review` | `Design Review` |
 
 The `code-review` agent is available in all harnesses for local post-change review before completion.
 

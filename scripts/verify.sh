@@ -177,6 +177,58 @@ if [ "$check_copilot" -eq 1 ]; then
   check_link "$HOME/.copilot/.github/prompts" "$repo_root/commands/copilot-prompts"
 fi
 
+printf '\nChecking model profile consistency.\n'
+if command -v python3 >/dev/null 2>&1; then
+  python3 -c "
+import json, sys, re
+
+# Parse profiles JSON (strip comments)
+with open('$repo_root/profiles/model-profiles.jsonc') as f:
+    content = ''.join(l for l in f if not l.strip().startswith('//'))
+profiles = json.loads(content)
+
+# Parse run-agent.sh model mappings
+with open('$repo_root/scripts/run-agent.sh') as f:
+    script = f.read()
+
+script_models = {}
+for profile in ['deep', 'balanced', 'fast']:
+    block = re.search(rf'{profile}\)(.*?)\n\s*;;', script, re.DOTALL)
+    if block:
+        for harness_var, harness_key in [
+            ('claude_model', 'claude'),
+            ('copilot_model', 'copilot'),
+            ('opencode_model', 'opencode'),
+        ]:
+            m = re.search(rf'{harness_var}=\"([^\"]+)\"', block.group(1))
+            if m:
+                script_models[f'{profile}/{harness_key}'] = m.group(1)
+
+# Compare
+ok = True
+for pname, p in profiles.get('profiles', {}).items():
+    for h in ['claude', 'copilot', 'opencode']:
+        if h in p:
+            key = f'{pname}/{h}'
+            profile_model = p[h].get('model', '')
+            script_model = script_models.get(key, 'NOT_FOUND')
+            if profile_model == script_model:
+                print(f'ok: {key} = {profile_model}')
+            else:
+                print(f'mismatch: {key} profiles.jsonc={profile_model} run-agent.sh={script_model}')
+                ok = False
+
+if ok:
+    print('All model profiles match run-agent.sh mappings.')
+else:
+    print('WARN: Model profile drift detected. Update profiles/model-profiles.jsonc or scripts/run-agent.sh.')
+    sys.exit(1)
+" || warnings=1
+else
+  printf 'warn: python3 not available for model cross-check\n'
+  warnings=1
+fi
+
 printf '\nChecking git aliases.\n'
 for alias_name in sync resync feature; do
   if git config --global --get "alias.${alias_name}" >/dev/null 2>&1; then

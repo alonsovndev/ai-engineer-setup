@@ -34,6 +34,21 @@ Before editing, read the project files first and then apply the stack guide at `
 - Mock network calls with MSW.
 - Cover non-trivial custom hooks with `renderHook`.
 
+## Cross-Reference Skills
+
+When the task scope goes beyond stack integration, pull in the specialized skill that matches:
+
+| Task | Skill |
+|---|---|
+| Deep AntD component API, tokens, Pro/X, SSR, a11y, `@ant-design/cli` lookup | `ant-design` |
+| Vite config, plugins, build/SSR, environment API, Rolldown migration | `vite` |
+| React/Next.js performance: rendering, re-renders, async, bundle, server rules | `vercel-react-best-practices` |
+| Animation, motion, responsive layout, visual hierarchy | `frontend-design` |
+| State management selection, local vs server data patterns | `state-management` |
+| Redux Toolkit reducers, selectors, RTK Query | `redux-logic` |
+| Client-side security (XSS, injection, CSP) | `secure-code-generation` |
+| Test placement, fixtures, coverage strategy | `test-strategy` |
+
 ## Reference
 
 Canonical standards: `../../instructions/stacks/react-vite-antd.md`.

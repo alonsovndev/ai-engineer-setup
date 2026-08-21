@@ -153,6 +153,70 @@ write_opencode_config() {
   printf 'configured: %s\n' "$target_path"
 }
 
+merge_skills_from_agents() {
+  local agents_skills="$repo_root/.agents/skills"
+  local project_skills="$repo_root/skills"
+
+  if [ ! -d "$agents_skills" ]; then
+    return 0
+  fi
+
+  local merged=0
+  for skill_dir in "$agents_skills"/*/; do
+    [ -d "$skill_dir" ] || continue
+    local skill_name
+    skill_name="$(basename "$skill_dir")"
+
+    if [ -d "$project_skills/$skill_name" ]; then
+      if [ "$dry_run" -eq 1 ]; then
+        printf 'skill already exists in skills/: %s (skipping)\n' "$skill_name"
+      fi
+      continue
+    fi
+
+    if [ "$dry_run" -eq 1 ]; then
+      printf 'would merge: .agents/skills/%s -> skills/%s\n' "$skill_name" "$skill_name"
+      merged=$((merged + 1))
+      continue
+    fi
+
+    mv "$skill_dir" "$project_skills/$skill_name"
+    printf 'merged: .agents/skills/%s -> skills/%s\n' "$skill_name" "$skill_name"
+    merged=$((merged + 1))
+  done
+
+  if [ "$merged" -gt 0 ] && [ "$dry_run" -eq 0 ]; then
+    # Remove broken symlinks in .claude/skills/ that point into .agents/skills/
+    if [ -d "$repo_root/.claude/skills" ]; then
+      for link in "$repo_root/.claude/skills"/*; do
+        [ -L "$link" ] || continue
+        local link_target
+        link_target="$(readlink "$link" 2>/dev/null || true)"
+        case "$link_target" in
+          *../../.agents/skills/*)
+            unlink "$link"
+            printf 'removed broken symlink: .claude/skills/%s\n' "$(basename "$link")"
+            ;;
+        esac
+      done
+      # Remove .claude/skills/ if empty (the global symlink covers this)
+      if [ -z "$(ls -A "$repo_root/.claude/skills" 2>/dev/null)" ]; then
+        rmdir "$repo_root/.claude/skills"
+      fi
+    fi
+
+    # Clean up empty .agents/skills/ and .agents/
+    if [ -d "$agents_skills" ] && [ -z "$(ls -A "$agents_skills" 2>/dev/null)" ]; then
+      rmdir "$agents_skills"
+      if [ -d "$repo_root/.agents" ] && [ -z "$(ls -A "$repo_root/.agents" 2>/dev/null)" ]; then
+        rmdir "$repo_root/.agents"
+      fi
+    fi
+  fi
+}
+
+merge_skills_from_agents
+
 link_path "$repo_root/skills" "$HOME/.agents/skills"
 
 link_path "$repo_root/instructions/AGENTS.md" "$HOME/.claude/AGENTS.md"

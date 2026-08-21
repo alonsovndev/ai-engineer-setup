@@ -119,6 +119,7 @@ Do not impose framework-specific layout, testing, database, or Docker rules on u
 - For relational database design, ORM, SQLAlchemy, JPA/Hibernate, SQL review, table normalization, schema constraints, indexes, migrations, transactions, or repository persistence mapping, use the `relational-db-orm` skill.
 - For PostgreSQL-specific schema, SQL, migration, locking, grants, indexing, or ORM integration work, use the `postgresql` agent or skill when available.
 - For Terraform/OpenTofu infrastructure work, use the `terraform` skill and `terraform` agent when available.
+- For GitHub Actions workflow authoring or review (jobs, caching, secrets, matrix builds, reusable workflows, runner selection), use the `github-actions` skill.
 
 ## Quick Reference
 

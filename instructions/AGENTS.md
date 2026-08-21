@@ -110,6 +110,7 @@ Do not impose framework-specific layout, testing, database, or Docker rules on u
 - For SOLID, KISS, DRY, YAGNI, single responsibility, dependency inversion, interface segregation, abstraction tradeoffs, cohesion, coupling, or design-principle reviews, use the `programming-principles` skill.
 - For secure code generation, OWASP Top 10, OWASP API Security Top 10, authentication, authorization, input validation, output encoding, injection, XSS, CSRF, SSRF, secrets, cryptography, or security testing, use the `secure-code-generation` skill; for OWASP Agentic Security Initiative compliance on AI agent systems, use `agent-owasp-compliance` if installed.
 - For Clean Architecture, Hexagonal Ports & Adapters, DDD, Repository Pattern, Use Case Pattern, Dependency Injection, DTO/Mapper patterns, or Composition Root work, use the `clean-architecture-ddd` skill; for architecture-only reviews, use the `clean-architecture` agent when available.
+- For organizing work by vertical feature slices so frontend and backend changes stay cohesive and loosely coupled, use the `vertical-slicing` skill.
 - For testing strategy, test placement, coverage, fixtures, mocks, regression tests, characterization tests, or test suite cleanup, use the `test-strategy` skill; use `tdd` when the user explicitly wants test-first development.
 - For code-change verification, build/lint/type-check/test selection, coverage gates, static analysis, architecture guards, CI checks, hooks, or smoke tests, use the `quality-gates` skill.
 - For local post-change review before declaring work complete, use the `code-review` agent when available.
@@ -120,6 +121,17 @@ Do not impose framework-specific layout, testing, database, or Docker rules on u
 - For PostgreSQL-specific schema, SQL, migration, locking, grants, indexing, or ORM integration work, use the `postgresql` agent or skill when available.
 - For Terraform/OpenTofu infrastructure work, use the `terraform` skill and `terraform` agent when available.
 - For GitHub Actions workflow authoring or review (jobs, caching, secrets, matrix builds, reusable workflows, runner selection), use the `github-actions` skill.
+
+## Orchestration
+
+For multi-step feature work, consult the orchestration directory:
+
+- **Routing**: `orchestration/router.md` — which subagent for which domain
+- **Quality gates**: `orchestration/quality-gates.md` — required and conditional checks
+- **Handoff format**: `orchestration/handoff-contract.md` — how to delegate to subagents
+- **Task templates**: `orchestration/task-templates/` — feature, bugfix, and API change workflows
+
+When adding a full-stack feature, combine `vertical-slicing` with `clean-architecture-ddd`: implement one thin vertical slice at a time (presentation → application → domain → infrastructure → tests), enforcing layer boundaries within each slice.
 
 ## Quick Reference
 

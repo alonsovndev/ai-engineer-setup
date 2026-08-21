@@ -115,9 +115,11 @@ Do not impose framework-specific layout, testing, database, or Docker rules on u
 - For local post-change review before declaring work complete, use the `code-review` agent when available.
 - For Python FastAPI, DDD, SQLAlchemy, pytest, PostgreSQL, Docker, or batch/CronJob work, use the `python-fastapi-ddd` skill and `instructions/stacks/python-fastapi-ddd.md`.
 - For React, TypeScript, JavaScript, Vite, or Ant Design (`antd`) UI work, use the `react-vite-antd` skill and `instructions/stacks/react-vite-antd.md`; for architecture-only reviews, use the `react-ui` agent when available.
+- For Redux Toolkit state, reducers, selectors, RTK Query API slices, or store organization in existing Redux codebases, use the `redux-logic` skill.
 - For relational database design, ORM, SQLAlchemy, JPA/Hibernate, SQL review, table normalization, schema constraints, indexes, migrations, transactions, or repository persistence mapping, use the `relational-db-orm` skill.
 - For PostgreSQL-specific schema, SQL, migration, locking, grants, indexing, or ORM integration work, use the `postgresql` agent or skill when available.
-- For Terraform/OpenTofu infrastructure work, use the `terraform` agent or skill when available.
+- For Terraform/OpenTofu infrastructure work, use the `terraform` skill and `terraform` agent when available.
+- For GitHub Actions workflow authoring or review (jobs, caching, secrets, matrix builds, reusable workflows, runner selection), use the `github-actions` skill.
 
 ## Quick Reference
 

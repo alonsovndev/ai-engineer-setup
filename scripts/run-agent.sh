@@ -61,14 +61,14 @@ case "$profile" in
     claude_effort="high"
     copilot_model="claude-opus-4.8"
     copilot_effort="high"
-    opencode_model="anthropic/claude-opus-4-8"
+    opencode_model="anthropic/claude-opus-5"
     ;;
   balanced)
     claude_model="sonnet"
     claude_effort="medium"
     copilot_model="gpt-5.5"
     copilot_effort="medium"
-    opencode_model="anthropic/claude-sonnet-4-6"
+    opencode_model="anthropic/claude-sonnet-5"
     ;;
   fast)
     claude_model="fable"

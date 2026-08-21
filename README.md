@@ -22,7 +22,7 @@ This repository tracks only reusable instructions, skills, agents, commands, mod
 
 Core agents currently include `code-review`, `product-ba`, `tech-lead`, `python-api`, `react-ui`, `postgresql`, and `terraform`.
 
-Core development workflow skills include `git-repo-flow`, `git-commit`, `create-pr`, `gh-prs`, `pr-review`, `branch-protection`, `auto-delete-branches`, and `local-repo-setup`.
+Core development workflow skills include `git-repo-flow`, `git-commit`, `create-pr`, `gh-prs`, `pr-review`, `branch-protection`, `auto-delete-branches`, `local-repo-setup`, and `github-actions`.
 
 Stack-specific standards are not loaded as global defaults. Use `python-fastapi-ddd` for FastAPI/DDD work and `react-vite-antd` for React/TypeScript/Vite/Ant Design UI work.
 

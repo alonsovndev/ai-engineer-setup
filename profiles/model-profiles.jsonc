@@ -1,4 +1,8 @@
 {
+  // opencode model IDs are verified against `opencode models` output as of 2026-08-21.
+  // copilot model IDs are NOT independently verified here (no authenticated `copilot` session
+  // was available to query its model catalog) — recheck against `copilot --help` / `/model`
+  // periodically and update alongside scripts/run-agent.sh.
   "defaultProfile": "balanced",
   "profiles": {
     "deep": {
@@ -12,7 +16,7 @@
         "effort": "high"
       },
       "opencode": {
-        "model": "anthropic/claude-opus-4-8"
+        "model": "anthropic/claude-opus-5"
       }
     },
     "balanced": {
@@ -26,7 +30,7 @@
         "effort": "medium"
       },
       "opencode": {
-        "model": "anthropic/claude-sonnet-4-6"
+        "model": "anthropic/claude-sonnet-5"
       }
     },
     "fast": {

@@ -2,7 +2,7 @@
 name: terraform
 description: Terraform and OpenTofu infrastructure agent for module design, plan review, state safety, provider/backends, imports, moved blocks, IAM/security, and CI/CD workflow guidance.
 argument-hint: Provide Terraform files, module path, plan output if available, provider/cloud scope, and target environment if execution is requested.
-tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'todo']
+tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'todo', 'web']
 ---
 
 # Terraform Agent

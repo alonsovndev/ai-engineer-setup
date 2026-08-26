@@ -22,6 +22,8 @@ Do not symlink whole harness config roots because they contain local auth, sessi
 | Create PR | `create-pr`, `gh-prs` | `/create-pr` | `/create-pr` | `Create PR` |
 | Release readiness | `git-repo-flow`, `pr-review` | `/release-check` | `/release-check` | `Release Check` |
 | Frontend design review | `frontend-design` | `/design-review` | `/design-review` | `Design Review` |
+| Refine a raw idea into a requirement | `spec-planning` | `/spec-plan` | `/spec-plan` | `Spec Plan` |
+| Write a phased spec to `specs/` | `spec-planning` | `/spec-write-plan` | `/spec-write-plan` | `Spec Write Plan` |
 
 The `code-review` agent is available in all harnesses for local post-change review before completion.
 

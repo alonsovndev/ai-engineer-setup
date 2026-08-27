@@ -26,7 +26,7 @@ These baseline rules apply to every project. Do not apply stack-specific archite
 ## Git and Version Control
 
 - Do not commit changes unless the user explicitly asks for a commit.
-- Do not commit directly to `main` or `master`.
+- Do not commit directly to `main`, `master`, or `dev`.
 - Do not push or force-push unless the user explicitly asks.
 - Never force-push to protected branches such as `main` or `master`.
 - Do not use bypass flags such as `--no-verify` unless the user explicitly requests it.

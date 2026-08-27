@@ -53,6 +53,14 @@ BREAKING CHANGE: `extends` key behavior changed
 
 ## Workflow
 
+### 0. Check Current Branch
+
+```bash
+git branch --show-current
+```
+
+If the result is `main`, `master`, or `dev`, stop. Do not stage or commit anything. Tell the user to create or switch to a feature/hotfix branch first (see the `git-repo-flow` skill or `/git-start-feature`).
+
 ### 1. Analyze Diff
 
 ```bash
@@ -141,6 +149,7 @@ docs: add fork setup steps
 
 ## Git Safety Protocol
 
+- NEVER commit directly to `main`, `master`, or `dev`
 - NEVER update git config
 - NEVER run destructive commands (--force, hard reset) without explicit request
 - NEVER skip hooks (--no-verify) unless user asks

@@ -24,6 +24,8 @@ Do not symlink whole harness config roots because they contain local auth, sessi
 | Frontend design review | `frontend-design` | `/design-review` | `/design-review` | `Design Review` |
 | Refine a raw idea into a requirement | `spec-planning` | `/spec-plan` | `/spec-plan` | `Spec Plan` |
 | Write a phased spec to `specs/` | `spec-planning` | `/spec-write-plan` | `/spec-write-plan` | `Spec Write Plan` |
+| Wire AI tooling into a target repo | `ai-repo-setup` | `/ai-repo-setup` | `/ai-repo-setup` | `AI Repo Setup` |
+| Post-clone repo bootstrap (dev branch, hygiene files) | `git-repo-setup` | `/git-repo-setup` | `/git-repo-setup` | `Git Repo Setup` |
 
 The `code-review` agent is available in all harnesses for local post-change review before completion.
 

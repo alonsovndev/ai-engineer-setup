@@ -1,6 +1,6 @@
 ---
 description: "Create a conventional git commit from current changes"
-name: "Commit"
+name: "Git Commit Changes"
 argument-hint: "Optional type, scope, description, and files to include"
 agent: "agent"
 ---

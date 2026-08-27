@@ -1,6 +1,6 @@
 ---
 description: "Check readiness for dev to main release PRs and vX.Y.Z production tags"
-name: "Release Check"
+name: "Git Release Check"
 argument-hint: "Release version, target repo, and candidate branch details"
 agent: "tech-lead"
 ---

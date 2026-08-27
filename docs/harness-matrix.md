@@ -16,11 +16,11 @@ Do not symlink whole harness config roots because they contain local auth, sessi
 
 | Workflow | Skill | Claude command | opencode command | Copilot prompt |
 |---|---|---|---|---|
-| Start feature/hotfix | `git-repo-flow` | `/start-feature` | `/start-feature` | `Start Feature` |
-| Sync repo | `git-repo-flow` | `/sync-repo` | `/sync-repo` | `Sync Repo` |
-| Commit changes | `git-commit` | `/commit` | `/commit` | `Commit` |
-| Create PR | `create-pr`, `gh-prs` | `/create-pr` | `/create-pr` | `Create PR` |
-| Release readiness | `git-repo-flow`, `pr-review` | `/release-check` | `/release-check` | `Release Check` |
+| Start feature/hotfix | `git-repo-flow` | `/git-start-feature` | `/git-start-feature` | `Git Start Feature` |
+| Sync repo | `git-repo-flow` | `/git-sync-repo` | `/git-sync-repo` | `Git Sync Repo` |
+| Commit changes | `git-commit` | `/git-commit-changes` | `/git-commit-changes` | `Git Commit Changes` |
+| Create PR | `create-pr`, `gh-prs` | `/git-create-pr` | `/git-create-pr` | `Git Create PR` |
+| Release readiness | `git-repo-flow`, `pr-review` | `/git-release-check` | `/git-release-check` | `Git Release Check` |
 | Frontend design review | `frontend-design` | `/design-review` | `/design-review` | `Design Review` |
 | Refine a raw idea into a requirement | `spec-planning` | `/spec-plan` | `/spec-plan` | `Spec Plan` |
 | Write a phased spec to `specs/` | `spec-planning` | `/spec-write-plan` | `/spec-write-plan` | `Spec Write Plan` |

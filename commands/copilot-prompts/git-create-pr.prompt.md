@@ -1,6 +1,6 @@
 ---
 description: "Prepare or create a pull request using the GitHub Enterprise workflow"
-name: "Create PR"
+name: "Git Create PR"
 argument-hint: "Base branch, title, issue links, and whether push/create is approved"
 agent: "agent"
 ---

@@ -39,6 +39,7 @@ Scope note:
 ## Git and Version Control
 - Keep commits focused; use clear, descriptive messages.
 - Use feature branches; require tests and review before merging.
+- Never commit directly to `main`, `master`, or `dev` — always work on a `feature/*` or `hotfix/*` branch.
 - Use the `git-repo-flow`, `git-commit`, and `create-pr` skills for detailed workflow rules.
 
 ## Repository Conventions

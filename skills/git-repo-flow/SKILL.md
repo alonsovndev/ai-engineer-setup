@@ -34,6 +34,7 @@ Detection rules:
 
 ## Safety Rules
 
+- Never commit directly to `main`, `master`, or `dev` — create or switch to a `feature/*` or `hotfix/*` branch before making any commit.
 - Never run `git resync` without explicit approval. It performs `reset --hard` and `push --force-with-lease`.
 - Never run `git feature` unless topology is fork mode, worktree is clean, and branch name is confirmed.
 - In direct mode, do not use `git feature`; use the manual direct-mode feature workflow unless a direct-mode alias exists.

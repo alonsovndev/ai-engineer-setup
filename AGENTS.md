@@ -20,6 +20,7 @@ This repo stores portable AI-agent configuration, not application code.
 - Claude Code uses `agents/claude/`, `commands/claude/`, `skills/`, `instructions/AGENTS.md` at `~/.claude/AGENTS.md`, and `instructions/CLAUDE.md` at `~/.claude/CLAUDE.md`.
 - opencode uses generated config plus symlinks from `agents/opencode/` to `~/.config/opencode/agent` and `commands/opencode/` to `~/.config/opencode/command`.
 - Copilot CLI uses `agents/copilot/`, `commands/copilot-prompts/`, `skills/`, and `adapters/copilot/instructions/`.
+- Antigravity CLI uses `agents/antigravity/`, `skills/`, and `instructions/AGENTS.md` at `~/.gemini/config/agents`, `~/.gemini/config/skills`, and `~/.gemini/config/AGENTS.md`.
 
 ## Gotchas
 

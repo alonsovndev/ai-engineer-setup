@@ -25,6 +25,7 @@ Install only the harnesses you plan to use:
 | Claude Code | `claude` |
 | opencode | `opencode` |
 | GitHub Copilot CLI | `copilot` |
+| Antigravity CLI | `agy` |
 
 Git is required for normal repository workflows.
 
@@ -122,6 +123,7 @@ Missing selected harness commands are reported as issues. Install only the tools
 ./scripts/verify.sh --harness claude
 ./scripts/verify.sh --harness opencode
 ./scripts/verify.sh --harness copilot
+./scripts/verify.sh --harness antigravity
 ```
 
 ## Git aliases

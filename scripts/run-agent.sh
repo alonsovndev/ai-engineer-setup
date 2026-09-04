@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   cat <<'USAGE'
-Usage: run-agent.sh --harness claude|opencode|copilot [--profile deep|balanced|fast] [--mode work|plan|auto] [--agent name] [--] [prompt...]
+Usage: run-agent.sh --harness claude|opencode|copilot|antigravity [--profile deep|balanced|fast] [--mode work|plan|auto] [--agent name] [--] [prompt...]
 
 Starts the selected AI harness with a consistent profile vocabulary.
 This script does not bypass permissions by default.
@@ -62,6 +62,7 @@ case "$profile" in
     copilot_model="claude-opus-4.8"
     copilot_effort="high"
     opencode_model="anthropic/claude-opus-5"
+    antigravity_model="Gemini 3.5 Pro"
     ;;
   balanced)
     claude_model="sonnet"
@@ -69,6 +70,7 @@ case "$profile" in
     copilot_model="gpt-5.5"
     copilot_effort="medium"
     opencode_model="anthropic/claude-sonnet-5"
+    antigravity_model="Gemini 3.5 Flash"
     ;;
   fast)
     claude_model="fable"
@@ -76,6 +78,7 @@ case "$profile" in
     copilot_model="gpt-5.4-mini"
     copilot_effort="low"
     opencode_model="anthropic/claude-haiku-4-5"
+    antigravity_model="Gemini 3.5 Flash"
     ;;
   *)
     printf 'Unknown profile: %s\n' "$profile" >&2
@@ -93,7 +96,7 @@ case "$harness" in
       auto) command_args+=(--permission-mode auto) ;;
       *) printf 'Unknown mode: %s\n' "$mode" >&2; exit 2 ;;
     esac
-    exec claude "${command_args[@]}" "${arguments[@]}"
+    exec claude "${command_args[@]}" ${arguments[@]+"${arguments[@]}"}
     ;;
   opencode)
     command_args=(--model "$opencode_model")
@@ -104,7 +107,7 @@ case "$harness" in
       auto) command_args+=(--auto) ;;
       *) printf 'Unknown mode: %s\n' "$mode" >&2; exit 2 ;;
     esac
-    exec opencode "${command_args[@]}" "${arguments[@]}"
+    exec opencode "${command_args[@]}" ${arguments[@]+"${arguments[@]}"}
     ;;
   copilot)
     command_args=(--model "$copilot_model" --effort "$copilot_effort")
@@ -115,7 +118,18 @@ case "$harness" in
       auto) command_args+=(--mode autopilot) ;;
       *) printf 'Unknown mode: %s\n' "$mode" >&2; exit 2 ;;
     esac
-    exec copilot "${command_args[@]}" "${arguments[@]}"
+    exec copilot "${command_args[@]}" ${arguments[@]+"${arguments[@]}"}
+    ;;
+  antigravity)
+    command_args=(--model "$antigravity_model")
+    case "$mode" in
+      work) ;;
+      plan) command_args+=(--mode=plan) ;;
+      auto) command_args+=(--mode=accept-edits) ;;
+      *) printf 'Unknown mode: %s\n' "$mode" >&2; exit 2 ;;
+    esac
+    # Agent selection is interactive via /agents; there is no --agent CLI flag.
+    exec agy "${command_args[@]}" ${arguments[@]+"${arguments[@]}"}
     ;;
   *)
     printf 'Unknown harness: %s\n' "$harness" >&2

@@ -4,7 +4,7 @@ Use this guide when setup validation fails or a harness does not load the expect
 
 ## Verify reports missing commands
 
-`scripts/verify.sh` checks selected harness commands on `PATH`. With no options, it checks `claude`, `opencode`, and `copilot`.
+`scripts/verify.sh` checks selected harness commands on `PATH`. With no options, it checks `claude`, `opencode`, `copilot`, and `agy`.
 
 Install the missing harness or verify only the harnesses you use:
 
@@ -12,6 +12,7 @@ Install the missing harness or verify only the harnesses you use:
 ./scripts/verify.sh --harness claude
 ./scripts/verify.sh --harness opencode
 ./scripts/verify.sh --harness copilot
+./scripts/verify.sh --harness antigravity
 ```
 
 ## Verify reports a missing or wrong symlink
@@ -70,6 +71,17 @@ For direct-mode repositories, use the manual workflow in [Git repo flow](./git-r
 ## Copilot instruction links are project-specific
 
 The Copilot global instructions may reference project-level knowledge documents. If a target project does not have those files, treat the references as optional project context and rely on the global rules in this repository.
+
+## Antigravity does not load the shared skills or agents
+
+Antigravity chains global config from `~/.gemini/config/`. Confirm the symlinks are in place:
+
+```bash
+./scripts/install.sh
+./scripts/verify.sh --harness antigravity
+```
+
+Then run `agy` and check `/skills` (shared skills) and `/agents` (registered agents). If skills do not appear, your installed `agy` version may read the global skills path from `~/.gemini/antigravity-cli/skills/` instead of `~/.gemini/config/skills/` — some Antigravity docs reference both. Update `scripts/install.sh` and `scripts/uninstall.sh` to the path your version honors.
 
 ## Restore previous config
 

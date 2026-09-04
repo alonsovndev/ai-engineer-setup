@@ -39,6 +39,16 @@ The generated config also sets `skills.paths` to the current clone's absolute `s
 | `adapters/copilot/instructions/` | `~/.copilot/.github/instructions` | Symlink |
 | `commands/copilot-prompts/` | `~/.copilot/.github/prompts` | Symlink |
 
+## Antigravity CLI
+
+| Source | Target | Type |
+|---|---|---|
+| `instructions/AGENTS.md` | `~/.gemini/config/AGENTS.md` | Symlink |
+| `skills/` | `~/.gemini/config/skills` | Symlink |
+| `agents/antigravity/` | `~/.gemini/config/agents` | Symlink |
+
+The Antigravity global config root is `~/.gemini/config/`. Agent files live as `agents/antigravity/<name>/agent.md`, which map 1:1 to the `<name>/agent.md` layout Antigravity's agent scanner expects under `~/.gemini/config/agents/`.
+
 ## Backup behavior
 
 When a target already exists, `install.sh` moves it to a backup path before creating the managed path.

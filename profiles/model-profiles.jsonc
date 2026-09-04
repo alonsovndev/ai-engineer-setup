@@ -3,6 +3,8 @@
   // copilot model IDs are NOT independently verified here (no authenticated `copilot` session
   // was available to query its model catalog) — recheck against `copilot --help` / `/model`
   // periodically and update alongside scripts/run-agent.sh.
+  // antigravity model IDs are NOT verified (no authenticated `agy` session) — confirm against
+  // `agy --help` / the model catalog and update alongside scripts/run-agent.sh.
   "defaultProfile": "balanced",
   "profiles": {
     "deep": {
@@ -17,6 +19,9 @@
       },
       "opencode": {
         "model": "anthropic/claude-opus-5"
+      },
+      "antigravity": {
+        "model": "Gemini 3.5 Pro"
       }
     },
     "balanced": {
@@ -31,6 +36,9 @@
       },
       "opencode": {
         "model": "anthropic/claude-sonnet-5"
+      },
+      "antigravity": {
+        "model": "Gemini 3.5 Flash"
       }
     },
     "fast": {
@@ -45,6 +53,9 @@
       },
       "opencode": {
         "model": "anthropic/claude-haiku-4-5"
+      },
+      "antigravity": {
+        "model": "Gemini 3.5 Flash"
       }
     }
   }

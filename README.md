@@ -1,24 +1,25 @@
 # ai-agent-setup
 
-Portable AI coding-agent setup for Claude Code, opencode, and GitHub Copilot CLI.
+Portable AI coding-agent setup for Claude Code, opencode, GitHub Copilot CLI, and Antigravity CLI.
 
 This repository tracks only reusable instructions, skills, agents, commands, model profiles, and harness adapters. It intentionally excludes auth, sessions, telemetry, logs, caches, and machine-specific state.
 
 ## Layout
 
-| Path | Purpose |
-|---|---|
-| `instructions/` | Shared global working rules. `AGENTS.md` is canonical; `CLAUDE.md` is kept for Claude Code compatibility. Stack-specific guides live under `instructions/stacks/`. |
-| `skills/` | Shared `SKILL.md` packages loaded by supported harnesses. |
-| `agents/claude/` | Claude Code agent definitions. |
-| `agents/copilot/` | Copilot CLI agent definitions. |
-| `agents/opencode/` | opencode agent definitions. |
-| `commands/claude/` | Claude Code slash commands. |
-| `commands/opencode/` | opencode command wrappers. |
-| `commands/copilot-prompts/` | Copilot prompt files. |
-| `adapters/` | Harness-specific config files that are safe to version. |
-| `profiles/` | Model/profile mapping by harness. |
-| `scripts/` | Local install, uninstall, and validation scripts. |
+| Path                        | Purpose                                                                                                                                                            |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `instructions/`             | Shared global working rules. `AGENTS.md` is canonical; `CLAUDE.md` is kept for Claude Code compatibility. Stack-specific guides live under `instructions/stacks/`. |
+| `skills/`                   | Shared `SKILL.md` packages loaded by supported harnesses.                                                                                                          |
+| `agents/claude/`            | Claude Code agent definitions.                                                                                                                                     |
+| `agents/copilot/`           | Copilot CLI agent definitions.                                                                                                                                     |
+| `agents/opencode/`          | opencode agent definitions.                                                                                                                                         |
+| `agents/antigravity/`       | Antigravity CLI agent definitions.                                                                                                                                  |
+| `commands/claude/`          | Claude Code slash commands.                                                                                                                                        |
+| `commands/opencode/`        | opencode command wrappers.                                                                                                                                         |
+| `commands/copilot-prompts/` | Copilot prompt files.                                                                                                                                              |
+| `adapters/`                 | Harness-specific config files that are safe to version.                                                                                                            |
+| `profiles/`                 | Model/profile mapping by harness.                                                                                                                                  |
+| `scripts/`                  | Local install, uninstall, and validation scripts.                                                                                                                  |
 
 Core agents currently include `code-review`, `product-ba`, `tech-lead`, `python-api`, `react-ui`, `postgresql`, and `terraform`.
 
@@ -43,7 +44,6 @@ Preview changes before installing with:
 ./scripts/install.sh --dry-run
 ```
 
-
 Restart opencode after install or config changes because it loads config only at startup.
 
 ## Skills
@@ -59,7 +59,7 @@ git status
 ./scripts/verify.sh
 ```
 
-If the new skill appears as `skills/<skill-name>/SKILL.md`, it is portable and exposed through the managed symlinks for Claude Code, GitHub Copilot CLI, shared agent paths, and opencode's generated `skills.paths` config. Review the diff before committing community skills or skill updates.
+If the new skill appears as `skills/<skill-name>/SKILL.md`, it is portable and exposed through the managed symlinks for Claude Code, GitHub Copilot CLI, Antigravity CLI, shared agent paths, and opencode's generated `skills.paths` config. Review the diff before committing community skills or skill updates.
 
 ## Update Existing Install
 

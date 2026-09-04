@@ -7,10 +7,11 @@ warnings=0
 check_claude=0
 check_opencode=0
 check_copilot=0
+check_antigravity=0
 
 usage() {
   cat <<'USAGE'
-Usage: verify.sh [--harness claude|opencode|copilot]... [--all]
+Usage: verify.sh [--harness claude|opencode|copilot|antigravity]... [--all]
 
 Validates the portable AI-agent setup for this clone.
 When no harness is specified, all supported harnesses are checked.
@@ -21,6 +22,7 @@ select_all_harnesses() {
   check_claude=1
   check_opencode=1
   check_copilot=1
+  check_antigravity=1
 }
 
 if [ "$#" -eq 0 ]; then
@@ -34,6 +36,7 @@ while [ "$#" -gt 0 ]; do
         claude) check_claude=1 ;;
         opencode) check_opencode=1 ;;
         copilot) check_copilot=1 ;;
+        antigravity) check_antigravity=1 ;;
         *) printf 'Unknown harness: %s\n' "${2:-}" >&2; usage >&2; exit 2 ;;
       esac
       shift 2
@@ -118,6 +121,7 @@ printf 'Checking local commands only. No model/provider calls are made.\n\n'
 [ "$check_claude" -eq 1 ] && check_command claude
 [ "$check_opencode" -eq 1 ] && check_command opencode
 [ "$check_copilot" -eq 1 ] && check_command copilot
+[ "$check_antigravity" -eq 1 ] && check_command agy
 
 printf '\nChecking required repository paths.\n'
 check_required_path "$repo_root/instructions/AGENTS.md"
@@ -151,6 +155,13 @@ if [ "$check_copilot" -eq 1 ]; then
   check_required_path "$repo_root/agents/copilot/terraform.agent.md"
 fi
 
+if [ "$check_antigravity" -eq 1 ]; then
+  check_required_path "$repo_root/agents/antigravity/code-review/agent.md"
+  check_required_path "$repo_root/agents/antigravity/product-ba/agent.md"
+  check_required_path "$repo_root/agents/antigravity/postgresql/agent.md"
+  check_required_path "$repo_root/agents/antigravity/terraform/agent.md"
+fi
+
 printf '\nChecking symlinks.\n'
 check_link "$HOME/.agents/skills" "$repo_root/skills"
 
@@ -177,6 +188,12 @@ if [ "$check_copilot" -eq 1 ]; then
   check_link "$HOME/.copilot/.github/prompts" "$repo_root/commands/copilot-prompts"
 fi
 
+if [ "$check_antigravity" -eq 1 ]; then
+  check_link "$HOME/.gemini/config/AGENTS.md" "$repo_root/instructions/AGENTS.md"
+  check_link "$HOME/.gemini/config/skills" "$repo_root/skills"
+  check_link "$HOME/.gemini/config/agents" "$repo_root/agents/antigravity"
+fi
+
 printf '\nChecking model profile consistency.\n'
 if command -v python3 >/dev/null 2>&1; then
   python3 -c "
@@ -199,6 +216,7 @@ for profile in ['deep', 'balanced', 'fast']:
             ('claude_model', 'claude'),
             ('copilot_model', 'copilot'),
             ('opencode_model', 'opencode'),
+            ('antigravity_model', 'antigravity'),
         ]:
             m = re.search(rf'{harness_var}=\"([^\"]+)\"', block.group(1))
             if m:
@@ -207,7 +225,7 @@ for profile in ['deep', 'balanced', 'fast']:
 # Compare
 ok = True
 for pname, p in profiles.get('profiles', {}).items():
-    for h in ['claude', 'copilot', 'opencode']:
+    for h in ['claude', 'copilot', 'opencode', 'antigravity']:
         if h in p:
             key = f'{pname}/{h}'
             profile_model = p[h].get('model', '')

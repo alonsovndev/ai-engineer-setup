@@ -27,6 +27,7 @@ Run from this repository:
 ./scripts/run-agent.sh --harness claude --profile balanced --mode work
 ./scripts/run-agent.sh --harness opencode --profile fast --mode plan
 ./scripts/run-agent.sh --harness copilot --profile deep --mode auto
+./scripts/run-agent.sh --harness antigravity --profile balanced --mode plan
 ```
 
 Modes are harness-specific wrappers:
@@ -36,5 +37,7 @@ Modes are harness-specific wrappers:
 | `work` | Normal interactive work mode. |
 | `plan` | Planning or read-only mode where supported. |
 | `auto` | Higher-autonomy mode where supported. |
+
+For Antigravity CLI, `plan` maps to `--mode=plan` and `auto` maps to `--mode=accept-edits` (the CLI has no `auto` mode; `accept-edits` is the closest autonomy level). Antigravity custom agents are selected interactively via `/agents`, so `run-agent.sh --agent` is not supported for this harness.
 
 The launcher does not bypass permissions by default.

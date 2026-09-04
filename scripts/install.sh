@@ -236,4 +236,8 @@ link_path "$repo_root/agents/copilot" "$HOME/.copilot/agents"
 link_path "$repo_root/adapters/copilot/instructions" "$HOME/.copilot/.github/instructions"
 link_path "$repo_root/commands/copilot-prompts" "$HOME/.copilot/.github/prompts"
 
+link_path "$repo_root/instructions/AGENTS.md" "$HOME/.gemini/config/AGENTS.md"
+link_path "$repo_root/skills" "$HOME/.gemini/config/skills"
+link_path "$repo_root/agents/antigravity" "$HOME/.gemini/config/agents"
+
 printf '\nRestart opencode after config changes; it does not hot-reload config.\n'

@@ -62,4 +62,8 @@ unlink_if_repo_link "$HOME/.copilot/agents"
 unlink_if_repo_link "$HOME/.copilot/.github/instructions"
 unlink_if_repo_link "$HOME/.copilot/.github/prompts"
 
+unlink_if_repo_link "$HOME/.gemini/config/AGENTS.md"
+unlink_if_repo_link "$HOME/.gemini/config/skills"
+unlink_if_repo_link "$HOME/.gemini/config/agents"
+
 printf '\nBackups are not restored automatically. Restore the matching *.backup-* path manually if needed.\n'

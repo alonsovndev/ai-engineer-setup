@@ -20,6 +20,7 @@ Before editing, read the project files first and then apply the stack guide at `
 - Keep domain, application, infrastructure, and presentation dependencies pointing inward.
 - Keep FastAPI routes thin and wire concrete implementations at the composition root.
 - Run the repository's available Python checks before completion, such as tests, lint, type-check, or build commands.
+- Use the shared venv first (`source /Users/alonso/Documents/Workspace/pipenvdev/dev/bin/activate`, alias `pipactivate`), falling back to the project `.venv` when dependency versions conflict, and ask the user to create a project venv if neither works; see the venv policy in `../../instructions/AGENTS.md`. Never install into system Python.
 
 ## Reference
 

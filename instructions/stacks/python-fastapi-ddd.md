@@ -76,6 +76,15 @@ Inner layers never import outer layers. Infrastructure implements domain ports, 
 - Mark tests with `@pytest.mark.unit` or `@pytest.mark.integration` when the project uses marker-based CI filters.
 - Add `tests/architecture/test_architecture_rules.py` with AST-based import boundary enforcement when missing and appropriate for the project.
 
+## Local Python Environment (venv policy)
+
+Apply the shared-venv-first policy from `../AGENTS.md` for all Python work. Operational details for this stack:
+
+- Shared venv (preferred): `/Users/alonso/Documents/Workspace/pipenvdev/dev` — activate with `source /Users/alonso/Documents/Workspace/pipenvdev/dev/bin/activate` (alias `pipactivate`).
+- Missing package in the shared venv: `pip install <pkg>` without asking, unless it conflicts with an installed version.
+- Project venv fallback: use `.venv/bin/activate` (or `venv/bin/activate`) when the shared venv cannot satisfy the project's pinned dependencies.
+- If neither exists or works, ask the user to create a project venv for build and validation. Never install into system Python.
+
 ## PostgreSQL Conventions
 
 - Use SQLAlchemy 2.x.

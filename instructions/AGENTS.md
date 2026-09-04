@@ -101,6 +101,17 @@ These rules apply to all languages and projects unless the repository has strict
 - Use SOLID to reduce real coupling and improve testability, not to add ceremony.
 - When two approaches solve the same problem equally well, choose the simpler one.
 
+## Python Environment (Shared Venv Policy)
+
+Apply to all Python work, not only FastAPI projects. The goal is to avoid creating many per-project virtual environments.
+
+1. Prefer the shared venv for build, lint, type-check, test, and validation commands: activate with `source /Users/alonso/Documents/Workspace/pipenvdev/dev/bin/activate` (the `pipactivate` alias).
+2. If a package is missing from the shared venv, install it there with `pip install` without asking, unless it conflicts with an installed version.
+3. If the shared venv cannot cover the task (version conflict, incompatible pinned dependencies), use the project's own venv (`.venv/` or the declared venv path).
+4. If no usable venv exists, ask the user to create a project venv for build and validation before proceeding.
+
+Never install packages into system/global Python. Do not auto-create a new venv per project.
+
 ## Stack-Specific Standards
 
 Do not impose framework-specific layout, testing, database, or Docker rules on unrelated projects.

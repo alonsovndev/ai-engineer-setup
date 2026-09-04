@@ -101,7 +101,7 @@ print_opencode_config() {
   printf '%s\n' '  "permission": {'
   printf '%s\n' '    "edit": "ask",'
   printf '%s\n' '    "bash": {'
-  printf '%s\n' '      "*": "ask",'
+  printf '%s\n' '      "*": "allow",'
   printf '%s\n' '      "git push*": "deny",'
   printf '%s\n' '      "git reset --hard*": "deny",'
   printf '%s\n' '      "rm -rf*": "deny"'

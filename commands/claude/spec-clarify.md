@@ -1,3 +1,7 @@
+---
+description: "Capture a raw idea or requirement and refine it through a short round of clarifying questions."
+---
+
 Capture a raw idea or requirement and refine it through a short round of clarifying questions.
 
 Use the `spec-planning` skill.

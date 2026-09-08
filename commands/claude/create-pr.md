@@ -1,3 +1,7 @@
+---
+description: "Prepare or create a pull request from a feature branch into `dev` using the GitHub Enterprise workflow."
+---
+
 Prepare or create a pull request from a feature branch into `dev` using the GitHub Enterprise workflow.
 
 Use the `create-pr`, `gh-prs`, and `git-repo-flow` skills.

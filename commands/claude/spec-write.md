@@ -1,3 +1,7 @@
+---
+description: "Write the refined requirement from this conversation into a phased implementation plan under `specs/` in the current project's repo root."
+---
+
 Write the refined requirement from this conversation into a phased implementation plan under `specs/` in the current project's repo root.
 
 Use the `spec-planning` skill.

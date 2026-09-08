@@ -1,3 +1,7 @@
+---
+description: "Generate a clear, audience-tailored architecture explanation for the current project."
+---
+
 Generate a clear, audience-tailored architecture explanation for the current project.
 
 ## How to use this command

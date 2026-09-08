@@ -1,3 +1,7 @@
+---
+description: "Start a feature or hotfix branch using the standard GitHub workflow."
+---
+
 Start a feature or hotfix branch using the standard GitHub workflow.
 
 Use the `git-repo-flow` skill to prepare a new branch, and the `git-commit` skill for commits made on it.

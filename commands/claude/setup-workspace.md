@@ -1,3 +1,7 @@
+---
+description: "Scaffold a project workspace folder holding sibling BE/FE/docs repos."
+---
+
 Scaffold a project workspace folder holding sibling BE/FE/docs repos.
 
 Use the `workspace-setup` skill.

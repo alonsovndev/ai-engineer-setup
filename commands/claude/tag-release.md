@@ -1,3 +1,7 @@
+---
+description: "Check readiness and create the vX.Y.Z production tag from `main`."
+---
+
 Check readiness and create the vX.Y.Z production tag from `main`.
 
 Use the `git-repo-flow`, `gh-prs`, and `pr-review` skills.

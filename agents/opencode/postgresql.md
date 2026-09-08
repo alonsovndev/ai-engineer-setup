@@ -1,5 +1,4 @@
 ---
-name: postgresql
 description: PostgreSQL database agent for schema design, relational modeling, SQL review, query performance, indexing, Flyway migrations, locking, transaction safety, grants, normalization, and ORM integration.
 mode: subagent
 ---

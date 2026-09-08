@@ -1,5 +1,4 @@
 ---
-name: product-ba
 description: Product Owner and Business Analyst agent for requirements discovery, backlog definition, acceptance criteria, prioritization, and delivery-ready planning artifacts.
 mode: subagent
 ---

@@ -1,3 +1,8 @@
+---
+description: Scan, evaluate, and produce a prioritized enhancement plan for the current repository.
+agent: build
+---
+
 Scan, evaluate, and produce a prioritized enhancement plan for the current repository.
 
 ## How To Use This Command

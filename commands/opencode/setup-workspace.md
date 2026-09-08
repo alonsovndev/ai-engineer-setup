@@ -1,3 +1,8 @@
+---
+description: Scaffold a project workspace folder holding sibling BE/FE/docs repos.
+agent: build
+---
+
 Scaffold a project workspace folder holding sibling BE/FE/docs repos.
 
 Use the `workspace-setup` skill.

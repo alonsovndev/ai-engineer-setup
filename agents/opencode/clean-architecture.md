@@ -1,5 +1,4 @@
 ---
-name: clean-architecture
 description: Cross-stack Clean Architecture and DDD review agent for Hexagonal Ports & Adapters, dependency direction, layer placement, repository/use-case patterns, DTO/mappers, dependency injection, and composition root wiring.
 mode: subagent
 ---

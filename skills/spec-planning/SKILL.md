@@ -8,9 +8,9 @@ allowed-tools: Read, Write, Bash, Glob, Grep
 
 # Spec Planning Skill
 
-Two-step workflow for turning a raw idea into an execution-ready spec: refine, then write. Backs the `/spec-plan` and `/spec-write-plan` commands across Claude Code, opencode, and Copilot CLI.
+Two-step workflow for turning a raw idea into an execution-ready spec: refine, then write. Backs the `/spec-clarify` and `/spec-write` commands across Claude Code, opencode, and Copilot CLI.
 
-## Step 1: Refine (backs `/spec-plan`)
+## Step 1: Refine (backs `/spec-clarify`)
 
 1. Read the raw idea from the command arguments. If empty, ask the user for it.
 2. Optionally skim `README.md`, `AGENTS.md`, or `CLAUDE.md` at the project root for grounding context — only if it helps sharpen the questions.
@@ -29,9 +29,9 @@ Two-step workflow for turning a raw idea into an execution-ready spec: refine, t
    - Assumptions (mark unknowns `TBD` — never invent owners, dates, SLAs, or commitments)
    - Acceptance criteria
    - Open risks
-6. Do not write any files in this step. Tell the user to run `/spec-write-plan` next.
+6. Do not write any files in this step. Tell the user to run `/spec-write` next.
 
-## Step 2: Write Plan (backs `/spec-write-plan`)
+## Step 2: Write Plan (backs `/spec-write`)
 
 1. Use the Refined Requirement already produced in this conversation. If none exists yet and the command was given raw text directly, run Step 1 first using that text as the raw idea.
 2. Ensure the `specs/` folder convention exists at the current project's repo root:

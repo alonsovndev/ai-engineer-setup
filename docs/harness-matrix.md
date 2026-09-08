@@ -16,17 +16,18 @@ Do not symlink whole harness config roots because they contain local auth, sessi
 
 | Workflow | Skill | Claude command | opencode command | Copilot prompt | Antigravity skill `/`command |
 |---|---|---|---|---|---|
-| Start feature/hotfix | `git-repo-flow` | `/git-start-feature` | `/git-start-feature` | `Git Start Feature` | `git-repo-flow` |
-| Sync repo | `git-repo-flow` | `/git-sync-repo` | `/git-sync-repo` | `Git Sync Repo` | `git-repo-flow` |
-| Commit changes | `git-commit` | `/git-commit-changes` | `/git-commit-changes` | `Git Commit Changes` | `git-commit` |
-| Create PR | `create-pr`, `gh-prs` | `/git-create-pr` | `/git-create-pr` | `Git Create PR` | `gh-prs` |
-| Release readiness | `git-repo-flow`, `pr-review` | `/git-release-check` | `/git-release-check` | `Git Release Check` | `pr-review` |
-| Frontend design review | `frontend-design` | `/design-review` | `/design-review` | `Design Review` | `frontend-design` |
-| Refine a raw idea into a requirement | `spec-planning` | `/spec-plan` | `/spec-plan` | `Spec Plan` | `spec-planning` |
-| Write a phased spec to `specs/` | `spec-planning` | `/spec-write-plan` | `/spec-write-plan` | `Spec Write Plan` | `spec-planning` |
-| Wire AI tooling into a target repo | `ai-repo-setup` | `/ai-repo-setup` | `/ai-repo-setup` | `AI Repo Setup` | `ai-repo-setup` |
-| Scaffold a multi-repo project workspace | `workspace-setup` | `/workspace-setup` | `/workspace-setup` | `Workspace Setup` | `workspace-setup` |
-| Post-clone repo bootstrap (dev branch, hygiene files) | `git-repo-setup` | `/git-repo-setup` | `/git-repo-setup` | `Git Repo Setup` | `git-repo-setup` |
+| Start feature/hotfix | `git-repo-flow` | `/start-feature` | `/start-feature` | `Start Feature` | `git-repo-flow` |
+| Sync repo | `git-repo-flow` | `/sync-repo` | `/sync-repo` | `Sync Repo` | `git-repo-flow` |
+| Commit changes | `git-commit` | `/commit` | `/commit` | `Commit` | `git-commit` |
+| Create PR (feature → dev) | `create-pr`, `gh-prs` | `/create-pr` | `/create-pr` | `Create PR` | `gh-prs` |
+| Promote release (dev → main) | `create-pr`, `gh-prs`, `git-repo-flow` | `/promote-release` | `/promote-release` | `Promote Release` | `gh-prs` |
+| Tag release (create vX.Y.Z tag from main) | `git-repo-flow`, `pr-review` | `/tag-release` | `/tag-release` | `Tag Release` | `pr-review` |
+| Frontend design review | `frontend-design` | `/review-design` | `/review-design` | `Review Design` | `frontend-design` |
+| Refine a raw idea into a requirement | `spec-planning` | `/spec-clarify` | `/spec-clarify` | `Spec Clarify` | `spec-planning` |
+| Write a phased spec to `specs/` | `spec-planning` | `/spec-write` | `/spec-write` | `Spec Write` | `spec-planning` |
+| Wire AI tooling into a target repo | `ai-repo-setup` | `/setup-ai` | `/setup-ai` | `Setup AI` | `ai-repo-setup` |
+| Scaffold a multi-repo project workspace | `workspace-setup` | `/setup-workspace` | `/setup-workspace` | `Setup Workspace` | `workspace-setup` |
+| Post-clone repo bootstrap (dev branch, hygiene files) | `git-repo-setup` | `/setup-repo` | `/setup-repo` | `Setup Repo` | `git-repo-setup` |
 
 The `code-review` agent is available in all harnesses for local post-change review before completion.
 

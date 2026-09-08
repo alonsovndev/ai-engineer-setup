@@ -59,7 +59,7 @@ BREAKING CHANGE: `extends` key behavior changed
 git branch --show-current
 ```
 
-If the result is `main`, `master`, or `dev`, stop. Do not stage or commit anything. Tell the user to create or switch to a feature/hotfix branch first (see the `git-repo-flow` skill or `/git-start-feature`).
+If the result is `main`, `master`, or `dev`, stop. Do not stage or commit anything. Tell the user to create or switch to a feature/hotfix branch first (see the `git-repo-flow` skill or `/start-feature`).
 
 ### 1. Analyze Diff
 

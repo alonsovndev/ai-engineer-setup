@@ -77,10 +77,10 @@ Write these at the workspace root:
 - A list of detected sub-repos: folder name, role (FE/BE/Docs/Other/`TBD`), and the
   matched stack skill (or `TBD`).
 - A note that each sub-repo keeps its **own** `AGENTS.md`/`CLAUDE.md`, generated
-  separately by running `/ai-repo-setup` *inside* that sub-repo — this command does not
+  separately by running `/setup-ai` *inside* that sub-repo — this command does not
   do that automatically.
 - A pointer to `specs/` as the shared, cross-repo planning folder for plans spanning
-  multiple sub-repos, written via `/spec-plan` + `/spec-write-plan` run from the
+  multiple sub-repos, written via `/spec-clarify` + `/spec-write` run from the
   workspace root.
 - A pointer that global baseline rules load automatically from the machine's
   `ai-engineer-setup` install — this file adds only workspace-specific rules.
@@ -104,7 +104,7 @@ If `specs/` or `specs/.gitignore` is missing, create `specs/.gitignore` with:
 
 This is the same convention the `spec-planning` skill uses, applied upfront so the
 workspace layout is complete immediately rather than waiting for the first
-`/spec-write-plan` run.
+`/spec-write` run.
 
 ## Phase 3 — Report
 
@@ -114,8 +114,8 @@ Report:
 - Any subdirectories found without `.git` (informational only).
 - What was created, updated, or left untouched at the workspace root (custom blocks
   preserved verbatim).
-- A reminder to run `/ai-repo-setup` inside each sub-repo separately for its own
-  AGENTS.md/CLAUDE.md, and to use `/spec-plan` + `/spec-write-plan` from the workspace
+- A reminder to run `/setup-ai` inside each sub-repo separately for its own
+  AGENTS.md/CLAUDE.md, and to use `/spec-clarify` + `/spec-write` from the workspace
   root for cross-repo plans.
 
 ## Constraints

@@ -1,0 +1,30 @@
+---
+description: "Generate C4 model architecture diagrams for the current project"
+name: "Diagram C4"
+argument-hint: "C4 level (context, container, component) and optional service name"
+agent: "tech-lead"
+---
+Generate C4 model architecture diagrams using Mermaid (default) or Draw.io XML.
+
+Requirements:
+- Read the project's architecture source material first: `AGENTS.md`, `CLAUDE.md`, `README.md`, or an `architecture/` docs folder.
+- Read any existing C4 diagrams to avoid duplication and stay consistent.
+- If no architecture docs exist, ask the user to describe the system before generating.
+
+C4 levels:
+- **L1 — System Context**: System as a whole, external actors and systems. For managers, stakeholders, security reviewers.
+- **L2 — Container**: Internal services, applications, data stores. For engineers, security reviewers, lead developers. Show protocols (HTTP, SQL, gRPC).
+- **L3 — Component**: Internals of a single service. For developers. Ask which service if not specified.
+- **L4 — Code**: Class/function level. Only when explicitly requested.
+
+Output format:
+- Default: Mermaid diagrams (text-based, version-controllable, renders in GitHub markdown).
+- Use the `drawio-author` skill for Draw.io XML output.
+
+Save in `docs/architecture/` or `docs/01-architecture/`:
+- Mermaid: `c4-{level}-diagram.md`
+- Draw.io: `c4-{level}.drawio`
+
+After generating, state: file path, C4 level(s), target audience, and how to view the output.
+
+Arguments: $ARGUMENTS

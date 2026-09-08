@@ -1,5 +1,4 @@
 ---
-name: terraform
 description: Terraform and OpenTofu infrastructure agent for module design, plan review, state safety, provider/backends, imports, moved blocks, IAM/security, and CI/CD workflow guidance.
 mode: subagent
 ---

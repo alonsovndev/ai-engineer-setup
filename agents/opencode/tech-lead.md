@@ -1,5 +1,4 @@
 ---
-name: tech-lead
 description: Technical lead agent for architecture artifacts, C4 diagrams, ADRs, technical planning, sequencing, delivery risk, and quality gates.
 mode: subagent
 ---

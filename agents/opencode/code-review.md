@@ -1,5 +1,4 @@
 ---
-name: code-review
 description: Local post-change code review agent for correctness, standards, code quality, tests, verification evidence, security risks, and completion readiness.
 mode: subagent
 permission:

@@ -1,3 +1,8 @@
+---
+description: "Bootstrap a freshly cloned repository: create dev from main if missing, and scaffold missing hygiene files."
+agent: build
+---
+
 Bootstrap a freshly cloned repository: create `dev` from `main` if missing, and scaffold missing hygiene files.
 
 Use the `git-repo-setup` and `git-repo-flow` skills.

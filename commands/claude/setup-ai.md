@@ -1,3 +1,7 @@
+---
+description: "Wire AI-agent tooling into a target repo with frontend, backend, and/or docs areas."
+---
+
 Wire AI-agent tooling into a target repo with frontend, backend, and/or docs areas.
 
 Use the `ai-repo-setup` skill.

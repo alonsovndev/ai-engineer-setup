@@ -1,3 +1,7 @@
+---
+description: "Review UI code for visual polish, animation quality, and responsive behavior using the `frontend-design` skill and agent."
+---
+
 Review UI code for visual polish, animation quality, and responsive behavior using the `frontend-design` skill and agent.
 
 ## How To Use This Command

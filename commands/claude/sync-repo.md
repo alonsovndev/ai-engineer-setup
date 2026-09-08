@@ -1,3 +1,7 @@
+---
+description: "Inspect and synchronize a fork-based or direct repository safely."
+---
+
 Inspect and synchronize a fork-based or direct repository safely.
 
 Use the `git-repo-flow` skill.

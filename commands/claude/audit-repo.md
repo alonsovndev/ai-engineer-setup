@@ -1,3 +1,7 @@
+---
+description: "Scan, evaluate, and produce a prioritized enhancement plan for the current repository."
+---
+
 Scan, evaluate, and produce a prioritized enhancement plan for the current repository.
 
 ## How To Use This Command

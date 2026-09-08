@@ -1,3 +1,7 @@
+---
+description: "Write, improve, or review Markdown documentation using the `markdown-author` skill as the canonical formatting standard."
+---
+
 Write, improve, or review Markdown documentation using the `markdown-author` skill as the canonical formatting standard.
 
 ## How To Use This Command

@@ -1,3 +1,7 @@
+---
+description: "Create a conventional git commit from current changes."
+---
+
 Create a conventional git commit from current changes.
 
 Use the `git-commit` skill.

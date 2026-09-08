@@ -1,3 +1,7 @@
+---
+description: "Generate, improve, or review Mermaid diagrams using the `mermaid-author` skill as the canonical syntax and rendering standard."
+---
+
 Generate, improve, or review Mermaid diagrams using the `mermaid-author` skill as the canonical syntax and rendering standard.
 
 ## How To Use This Command

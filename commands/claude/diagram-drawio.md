@@ -1,3 +1,7 @@
+---
+description: "Generate, improve, or review Draw.io diagrams using the `drawio-author` skill as the canonical `.drawio` XML and layout standard."
+---
+
 Generate, improve, or review Draw.io diagrams using the `drawio-author` skill as the canonical `.drawio` XML and layout standard.
 
 ## How To Use This Command

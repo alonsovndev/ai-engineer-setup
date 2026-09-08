@@ -1,3 +1,7 @@
+---
+description: "Generate C4 model architecture diagrams for the current project."
+---
+
 Generate C4 model architecture diagrams for the current project.
 
 ## How to use this command

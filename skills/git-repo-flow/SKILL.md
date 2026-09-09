@@ -1,6 +1,6 @@
 ---
 name: git-repo-flow
-description: "Use when starting feature work, syncing repositories, creating feature or hotfix branches, preparing dev/main pull requests, or explaining fork/direct git flows. Keywords: git workflow, fork workflow, direct repo, git feature, git sync, git resync, origin upstream dev main, feature branch, hotfix branch, release tag."
+description: "Use when starting feature work, syncing repositories, creating feature or hotfix branches, preparing dev/main pull requests, or explaining fork/direct git flows. Keywords: git workflow, fork workflow, direct repo, git feature, git sync, git resync, origin upstream dev main, feature branch, hotfix branch, release tag, dev behind main, post-release back-sync, sync dev."
 argument-hint: "Provide repository path, desired branch name, target base branch, and whether sync/resync/push actions are approved."
 user-invocable: true
 allowed-tools: Bash
@@ -42,6 +42,7 @@ Detection rules:
 - Never force-push a feature branch unless the user explicitly approves and the target branch is not protected.
 - Never create release tags without explicit approval for the version and target commit.
 - Never bypass hooks, branch protections, PR reviews, or CI checks.
+- Never push a `dev` back-sync merge or fast-forward without explicit approval, and never force-push or hard-reset `dev` while back-syncing it from `main`.
 
 ## Required Preflight
 
@@ -139,10 +140,59 @@ Normal production release:
 
 1. Merge feature PRs into `dev`.
 2. Open PR from `dev` to `main`.
-3. Merge to `main` after required approvals and checks.
+3. Merge to `main` after required approvals and checks, using a real merge commit rather than squash or rebase, so `dev`'s commits remain ancestors of `main` and `dev` can fast-forward during back-sync.
 4. Tag `main` with `vX.Y.Z` after final sign-off.
 
 Do not tag an unreleased candidate unless the user confirms the candidate is safe.
+
+## Post-Release Back-Sync (dev ← main)
+
+Merging the `dev` → `main` PR only advances `main` on GitHub — it never advances `dev`. Immediately afterward, `dev` will show as behind `main`. This is expected Git behavior, not an error; use the `sync-dev` command to fix it.
+
+Detection:
+
+```bash
+git fetch upstream   # fork mode
+git fetch origin     # direct mode
+git merge-base --is-ancestor dev upstream/main   # fork mode
+git merge-base --is-ancestor dev origin/main     # direct mode
+```
+
+If the command exits `0`, the `dev` → `main` PR was merged as a real merge commit and `dev`'s commits are already ancestors of `main` — fast-forward is safe.
+
+Fork mode, fast-forward case:
+
+```bash
+git checkout dev
+git merge --ff-only upstream/main
+git push origin dev
+```
+
+Fork mode, merge case (the `dev` → `main` PR was squashed or rebased):
+
+```bash
+git checkout dev
+git merge --no-ff upstream/main -m "Merge main into dev after release"
+git push origin dev
+```
+
+Direct mode, fast-forward case:
+
+```bash
+git checkout dev
+git merge --ff-only origin/main
+git push origin dev
+```
+
+Direct mode, merge case:
+
+```bash
+git checkout dev
+git merge --no-ff origin/main -m "Merge main into dev after release"
+git push origin dev
+```
+
+Never rebase `dev` onto `main` — `dev` may already be pushed and shared. Never force-push or hard-reset `dev` during back-sync. Require explicit approval before any push.
 
 ## Final Response
 

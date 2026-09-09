@@ -59,18 +59,18 @@ case "$profile" in
   deep)
     claude_model="opus"
     claude_effort="high"
-    copilot_model="claude-opus-4.8"
+    copilot_model="claude-opus-4.7"
     copilot_effort="high"
     opencode_model="anthropic/claude-opus-5"
-    antigravity_model="Gemini 3.5 Pro"
+    antigravity_model="gemini-3.1-pro-high"
     ;;
   balanced)
     claude_model="sonnet"
     claude_effort="medium"
-    copilot_model="gpt-5.5"
+    copilot_model="gpt-5.4"
     copilot_effort="medium"
     opencode_model="anthropic/claude-sonnet-5"
-    antigravity_model="Gemini 3.5 Flash"
+    antigravity_model="gemini-3.8-flash-medium"
     ;;
   fast)
     claude_model="fable"
@@ -78,7 +78,7 @@ case "$profile" in
     copilot_model="gpt-5.4-mini"
     copilot_effort="low"
     opencode_model="anthropic/claude-haiku-4-5"
-    antigravity_model="Gemini 3.5 Flash"
+    antigravity_model="gemini-3.8-flash-low"
     ;;
   *)
     printf 'Unknown profile: %s\n' "$profile" >&2

@@ -181,7 +181,7 @@ check_parity() {
   for name in "$@"; do
     total=$((total + 1))
     expected_path="$repo_root/${relative_template//@/$name}"
-    if [ ! -e "$expected_path" ]; then
+    if [ ! -f "$expected_path" ]; then
       printf 'missing: %s (%s)\n' "$expected_path" "$label"
       missing=$((missing + 1))
       failed=1
@@ -213,14 +213,20 @@ check_extras() {
   local found_path
   local found_name
 
+  # Directories are enumerated too: one named like an agent file would otherwise
+  # satisfy neither this check nor check_parity.
   while IFS= read -r found_path; do
     found_name="$(basename "$found_path" "$strip_suffix")"
     if ! name_in_list "$found_name" "$@"; then
       printf 'unexpected: %s has no counterpart in the canonical set (%s)\n' "$found_path" "$label"
       extras=$((extras + 1))
       failed=1
+    elif [ ! -f "$found_path" ]; then
+      printf 'unexpected: %s is not a regular file (%s)\n' "$found_path" "$label"
+      extras=$((extras + 1))
+      failed=1
     fi
-  done < <(find "$search_dir" -maxdepth 1 -type f -name "$file_pattern" | sort)
+  done < <(find "$search_dir" -maxdepth 1 -name "$file_pattern" | sort)
 
   if [ "$extras" -eq 0 ]; then
     printf 'ok: %s: no unexpected entries\n' "$label"
@@ -248,7 +254,8 @@ check_antigravity_extras() {
       extras=$((extras + 1))
       failed=1
     fi
-  done < <(find "$search_dir" -mindepth 1 -maxdepth 1 | sort)
+    # Dotfiles (.DS_Store and friends) are gitignored worktree noise, not agents.
+  done < <(find "$search_dir" -mindepth 1 -maxdepth 1 ! -name '.*' | sort)
 
   if [ "$extras" -eq 0 ]; then
     printf 'ok: antigravity agents: no unexpected entries\n'
@@ -262,19 +269,39 @@ check_frontmatter_description() {
   # A missing file is already reported by check_parity.
   [ -f "$path_to_check" ] || return 0
 
-  if [ "$(head -n 1 "$path_to_check")" != "---" ]; then
-    printf 'missing frontmatter: %s\n' "$path_to_check"
-    failed=1
-    return 1
-  fi
+  # Decided inside awk rather than piping to grep -q: grep would exit on the
+  # first match, give awk a SIGPIPE, and turn a valid file into a false failure
+  # under pipefail. awk's exit always runs END, so the verdict travels in flags.
+  # Requiring `closed` means an unterminated block cannot pass on body text.
+  # Exit 2 = no frontmatter, 1 = no usable description, 0 = ok.
+  local awk_status=0
+  awk 'NR==1 { if ($0 != "---") { bad=1; exit } next }
+       /^---$/ { closed=1; exit }
+       /^description:[[:space:]]*[^[:space:]]/ {
+         found=1
+         value = substr($0, index($0, ":") + 1)
+         sub(/^[[:space:]]+/, "", value)
+         first = substr(value, 1, 1)
+         if (first != "\"" && first != "'"'"'" && value ~ /: /) unsafe=1
+       }
+       END { if (bad) exit 2; if (!closed || !found) exit 1; if (unsafe) exit 3; exit 0 }' \
+    "$path_to_check" || awk_status=$?
 
-  # Stops at the closing delimiter, so body text cannot satisfy the check.
-  if awk 'NR==1{next} /^---$/{exit} {print}' "$path_to_check" \
-    | grep -qE '^description:[[:space:]]*[^[:space:]]'; then
-    return 0
-  fi
+  case "$awk_status" in
+    0)
+      return 0
+      ;;
+    2)
+      printf 'missing frontmatter: %s\n' "$path_to_check"
+      ;;
+    3)
+      printf 'unsafe frontmatter description (unquoted value contains ": ", which YAML reads as a mapping and silently drops the agent): %s\n' "$path_to_check"
+      ;;
+    *)
+      printf 'missing frontmatter description: %s\n' "$path_to_check"
+      ;;
+  esac
 
-  printf 'missing frontmatter description: %s\n' "$path_to_check"
   failed=1
   return 1
 }
@@ -359,6 +386,7 @@ else
     check_descriptions 'copilot agent descriptions' 'agents/copilot/@.agent.md' "${agent_names[@]}"
     check_parity 'copilot prompts' 'commands/copilot-prompts/@.prompt.md' "${command_names[@]}"
     check_extras 'copilot prompts' 'commands/copilot-prompts' '*.prompt.md' '.prompt.md' "${command_names[@]}"
+    check_metadata 'copilot prompt argument-hint' 'commands/copilot-prompts/@.prompt.md' '^argument-hint:[[:space:]]*[^[:space:]]' "${command_names[@]}"
 
     # The registry in copilot-instructions.md is the routing contract Copilot
     # reads; an agent missing from it is invisible even though its file exists.
@@ -378,8 +406,36 @@ else
           failed=1
         fi
       done
+      # Reverse direction: an entry left behind for a deleted agent must fail
+      # too, which is what copilot-instructions.md promises is enforced.
+      while IFS= read -r registry_name; do
+        if ! name_in_list "$registry_name" "${agent_names[@]}"; then
+          printf 'stale Copilot Agent Registry entry: %s (%s)\n' "$registry_name" "$registry_file"
+          registry_missing=$((registry_missing + 1))
+          failed=1
+        fi
+      done < <(printf '%s\n' "$registry_section" | sed -n 's/^[0-9]\{1,\}\. `\([^`]*\)`.*/\1/p')
+
       if [ "$registry_missing" -eq 0 ]; then
-        printf 'ok: copilot Agent Registry lists all %d agents\n' "${#agent_names[@]}"
+        printf 'ok: copilot Agent Registry matches all %d agents\n' "${#agent_names[@]}"
+      fi
+    fi
+
+    budget_file="$repo_root/adapters/copilot/instructions/PERFORMANCE-BUDGET.md"
+    if [ ! -f "$budget_file" ]; then
+      printf 'missing: %s\n' "$budget_file"
+      failed=1
+    else
+      budget_missing=0
+      for agent_name in "${agent_names[@]}"; do
+        if ! grep -Fq "$(printf '| `%s` |' "$agent_name")" "$budget_file"; then
+          printf 'missing from Copilot performance budget table: %s (%s)\n' "$agent_name" "$budget_file"
+          budget_missing=$((budget_missing + 1))
+          failed=1
+        fi
+      done
+      if [ "$budget_missing" -eq 0 ]; then
+        printf 'ok: copilot performance budget covers all %d agents\n' "${#agent_names[@]}"
       fi
     fi
   fi
@@ -425,16 +481,19 @@ fi
 
 printf '\nChecking model profile consistency.\n'
 if command -v python3 >/dev/null 2>&1; then
-  python3 -c "
-import json, sys, re
+  model_check_status=0
+  python3 - "$repo_root" <<'PYTHON' || model_check_status=$?
+import json, sys, re, os
+
+repo_root = sys.argv[1]
 
 # Parse profiles JSON (strip comments)
-with open('$repo_root/profiles/model-profiles.jsonc') as f:
+with open(os.path.join(repo_root, 'profiles/model-profiles.jsonc')) as f:
     content = ''.join(l for l in f if not l.strip().startswith('//'))
 profiles = json.loads(content)
 
 # Parse run-agent.sh model mappings
-with open('$repo_root/scripts/run-agent.sh') as f:
+with open(os.path.join(repo_root, 'scripts/run-agent.sh')) as f:
     script = f.read()
 
 script_models = {}
@@ -470,7 +529,8 @@ if ok:
 else:
     print('WARN: Model profile drift detected. Update profiles/model-profiles.jsonc or scripts/run-agent.sh.')
     sys.exit(1)
-" || warnings=1
+PYTHON
+  [ "$model_check_status" -eq 0 ] || warnings=1
 else
   printf 'warn: python3 not available for model cross-check\n'
   warnings=1

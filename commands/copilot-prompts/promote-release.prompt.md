@@ -4,7 +4,7 @@ name: "Promote Release"
 argument-hint: "Title, issue links, and whether push/create is approved"
 agent: "agent"
 ---
-Use the `create-pr`, `gh-prs`, and `git-repo-flow` skills to prepare a pull request.
+Use the `git-create-pr`, `gh-prs`, and `git-repo-flow` skills to prepare a pull request.
 
 Requirements:
 - Run read-only preflight first: status, branch, remotes, log, diff stat.

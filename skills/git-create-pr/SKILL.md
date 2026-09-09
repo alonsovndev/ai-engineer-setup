@@ -1,7 +1,7 @@
 ---
-name: create-pr
-description: Use when creating GitHub pull requests, drafting PR titles/bodies, preparing branches for review, or when the user says create PR, open PR, pull request, merge request, or review request. Handles safe preflight checks, branch push approval, PR body generation, and GitHub CLI fallback guidance.
-argument-hint: Provide target branch/base branch, PR goal, issue links, and whether pushing/creating the PR is approved.
+name: git-create-pr
+description: "Use when creating GitHub pull requests, drafting PR titles/bodies, preparing branches for review, or when the user says create PR, open PR, pull request, merge request, or review request. Handles safe preflight checks, branch push approval, PR body generation, and GitHub CLI fallback guidance. Keywords: create pr, open pr, pull request, merge request, review request, PR body, PR template."
+argument-hint: "Provide target branch/base branch, PR goal, issue links, and whether pushing/creating the PR is approved."
 user-invocable: true
 allowed-tools: Bash
 ---
@@ -102,27 +102,7 @@ If branch type and base branch conflict, stop and ask for confirmation.
 
 Draft PR content from actual changes only. Do not invent work, tests, issue numbers, reviewers, owners, risks, or deployment details.
 
-Recommended structure:
-
-```markdown
-## Summary
-
-- {what changed}
-- {why it matters}
-
-## Verification
-
-- {command run and result}
-- {manual check or "Not run: {reason}"}
-
-## Risk
-
-- {deployment, migration, compatibility, or rollback risk}
-
-## Related
-
-- Closes #{issue}
-```
+Use the canonical template at `assets/pr-body-template.md` (also used by the `gh-prs` skill, so PR bodies stay consistent regardless of which skill created them). Read it before drafting and fill in each section from real changes.
 
 If no verification was run, state that directly. Do not imply tests passed.
 

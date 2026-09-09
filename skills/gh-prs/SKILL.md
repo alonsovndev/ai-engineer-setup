@@ -112,23 +112,7 @@ Prefer `--body-file` over inline body text.
 
 ## PR Body Template
 
-```markdown
-## Summary
-
-- {what changed}
-
-## Verification
-
-- {command and result, or Not run: reason}
-
-## Risk
-
-- {risk or None identified}
-
-## Related
-
-- {issue links if provided}
-```
+Use the canonical template at `../git-create-pr/assets/pr-body-template.md` (shared with the `git-create-pr` skill so PR bodies stay consistent regardless of which skill created them). Read it before drafting and fill in each section from real changes.
 
 ## Manual Fallback
 

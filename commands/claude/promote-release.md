@@ -4,7 +4,7 @@ description: "Prepare or create the pre-release pull request promoting `dev` int
 
 Prepare or create the pre-release pull request promoting `dev` into `main` using the GitHub Enterprise workflow.
 
-Use the `create-pr`, `gh-prs`, and `git-repo-flow` skills.
+Use the `git-create-pr`, `gh-prs`, and `git-repo-flow` skills.
 
 Arguments: $ARGUMENTS
 

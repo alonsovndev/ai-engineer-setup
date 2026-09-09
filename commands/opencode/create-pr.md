@@ -3,7 +3,7 @@ description: Prepare or create a pull request from a feature branch into dev usi
 agent: build
 ---
 
-Use the `create-pr`, `gh-prs`, and `git-repo-flow` skills to prepare a pull request.
+Use the `git-create-pr`, `gh-prs`, and `git-repo-flow` skills to prepare a pull request.
 
 Arguments: $ARGUMENTS
 

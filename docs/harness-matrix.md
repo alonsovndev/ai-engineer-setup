@@ -19,8 +19,8 @@ Do not symlink whole harness config roots because they contain local auth, sessi
 | Start feature/hotfix | `git-repo-flow` | `/start-feature` | `/start-feature` | `Start Feature` | `git-repo-flow` |
 | Sync repo | `git-repo-flow` | `/sync-repo` | `/sync-repo` | `Sync Repo` | `git-repo-flow` |
 | Commit changes | `git-commit` | `/commit` | `/commit` | `Commit` | `git-commit` |
-| Create PR (feature → dev) | `create-pr`, `gh-prs` | `/create-pr` | `/create-pr` | `Create PR` | `gh-prs` |
-| Promote release (dev → main) | `create-pr`, `gh-prs`, `git-repo-flow` | `/promote-release` | `/promote-release` | `Promote Release` | `gh-prs` |
+| Create PR (feature → dev) | `git-create-pr`, `gh-prs` | `/create-pr` | `/create-pr` | `Create PR` | `gh-prs` |
+| Promote release (dev → main) | `git-create-pr`, `gh-prs`, `git-repo-flow` | `/promote-release` | `/promote-release` | `Promote Release` | `gh-prs` |
 | Tag release (create vX.Y.Z tag from main) | `git-repo-flow`, `pr-review` | `/tag-release` | `/tag-release` | `Tag Release` | `pr-review` |
 | Frontend design review | `frontend-design` | `/review-design` | `/review-design` | `Review Design` | `frontend-design` |
 | Refine a raw idea into a requirement | `spec-planning` | `/spec-clarify` | `/spec-clarify` | `Spec Clarify` | `spec-planning` |

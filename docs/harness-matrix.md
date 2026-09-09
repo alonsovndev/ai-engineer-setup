@@ -28,6 +28,8 @@ Do not symlink whole harness config roots because they contain local auth, sessi
 | Wire AI tooling into a target repo | `ai-repo-setup` | `/setup-ai` | `/setup-ai` | `Setup AI` | `ai-repo-setup` |
 | Scaffold a multi-repo project workspace | `workspace-setup` | `/setup-workspace` | `/setup-workspace` | `Setup Workspace` | `workspace-setup` |
 | Post-clone repo bootstrap (dev branch, hygiene files) | `git-repo-setup` | `/setup-repo` | `/setup-repo` | `Setup Repo` | `git-repo-setup` |
+| Proactive bug/defect sweep | `bug-finder` | `/find-bugs` | `/find-bugs` | `Find Bugs` | `bug-finder` |
+| Sync docs with code changes | `doc-tracker` | `/update-docs` | `/update-docs` | `Update Docs` | `doc-tracker` |
 
 The `code-review` agent is available in all harnesses for local post-change review before completion.
 

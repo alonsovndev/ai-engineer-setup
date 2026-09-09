@@ -21,7 +21,7 @@ This repository tracks only reusable instructions, skills, agents, commands, mod
 | `profiles/`                 | Model/profile mapping by harness.                                                                                                                                  |
 | `scripts/`                  | Local install, uninstall, and validation scripts.                                                                                                                  |
 
-Core agents currently include `code-review`, `product-ba`, `tech-lead`, `python-api`, `react-ui`, `postgresql`, and `terraform`.
+Core agents currently include `code-review`, `product-ba`, `tech-lead`, `python-api`, `react-ui`, `postgresql`, `terraform`, `bug-finder`, and `doc-tracker`.
 
 Core development workflow skills include `git-repo-flow`, `git-commit`, `git-create-pr`, `gh-prs`, `pr-review`, `branch-protection`, `auto-delete-branches`, `local-repo-setup`, `git-repo-setup`, `ai-repo-setup`, `workspace-setup`, `github-actions`, and `spec-planning`.
 

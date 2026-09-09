@@ -15,6 +15,8 @@ Routes work to the appropriate domain subagent. Prefer one primary subagent at a
 | **Requirements** | Backlog, acceptance criteria, user stories, prioritization | `product-ba` | `agile-planning`, `technical-writer` |
 | **Architecture Planning** | C4 diagrams, ADRs, technical planning, sequencing, risk analysis | `tech-lead` | `diagram-author`, `technical-writer` |
 | **Post-change Review** | Correctness, security, tests, verification before completion | `code-review` | `quality-gates`, `secure-code-generation` |
+| **Bug Sweep** | Proactive correctness scan of a module/repo, not tied to a diff | `bug-finder` | `test-strategy` (for reproduction context) |
+| **Documentation Maintenance** | Docs drifted from code, stale docs, updating docs after code changes | `doc-tracker` | `technical-writer`, `markdown-author` |
 
 ## Secondary (Triggered) Routing
 

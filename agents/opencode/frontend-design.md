@@ -1,5 +1,5 @@
 ---
-description: Frontend visual design, animation, and responsive-layout review agent. Evaluates visual hierarchy and polish, motion timing/purpose and prefers-reduced-motion handling, and responsive/touch behavior across breakpoints. Use for: reviewing whether a UI feels distinctive vs. templated, checking animation timing/easing/reduced-motion, auditing breakpoint choices and touch targets, reviewing responsive images and layout collapse. Does not cover component architecture, hooks, or state management — use react-ui for that.
+description: "Frontend visual design, animation, and responsive-layout review agent. Evaluates visual hierarchy and polish, motion timing/purpose and prefers-reduced-motion handling, and responsive/touch behavior across breakpoints. Use for: reviewing whether a UI feels distinctive vs. templated, checking animation timing/easing/reduced-motion, auditing breakpoint choices and touch targets, reviewing responsive images and layout collapse. Does not cover component architecture, hooks, or state management — use react-ui for that."
 mode: subagent
 ---
 

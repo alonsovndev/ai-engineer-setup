@@ -8,10 +8,11 @@
   //           two --permission-mode values used by run-agent.sh (plan, auto) are both in its
   //           accepted set (acceptEdits, auto, bypassPermissions, manual, dontAsk, plan).
   // opencode  VERIFIED 2026-08-21 against `opencode models` output.
-  // copilot   NOT VERIFIED — no authenticated `copilot` session was available to query the
-  //           model catalog. Re-check with `copilot --help`, or `/model` inside a session.
-  // antigravity NOT VERIFIED — no authenticated `agy` session was available. Re-check with
-  //           `agy --help`, or the model picker inside a session.
+  // copilot   VERIFIED 2026-09-09 against `copilot help config`, which lists the accepted
+  //           `model` values. --effort accepts low|medium|high|xhigh.
+  // antigravity VERIFIED 2026-09-09 against `agy models`. Its IDs already encode the reasoning
+  //           level as a suffix (-high/-medium/-low), so run-agent.sh sets the level by
+  //           choosing the ID and does not also pass --effort.
   "defaultProfile": "balanced",
   "profiles": {
     "deep": {
@@ -21,14 +22,14 @@
         "effort": "high"
       },
       "copilot": {
-        "model": "claude-opus-4.8",
+        "model": "claude-opus-4.7",
         "effort": "high"
       },
       "opencode": {
         "model": "anthropic/claude-opus-5"
       },
       "antigravity": {
-        "model": "Gemini 3.5 Pro"
+        "model": "gemini-3.1-pro-high"
       }
     },
     "balanced": {
@@ -38,14 +39,14 @@
         "effort": "medium"
       },
       "copilot": {
-        "model": "gpt-5.5",
+        "model": "gpt-5.4",
         "effort": "medium"
       },
       "opencode": {
         "model": "anthropic/claude-sonnet-5"
       },
       "antigravity": {
-        "model": "Gemini 3.5 Flash"
+        "model": "gemini-3.8-flash-medium"
       }
     },
     "fast": {
@@ -62,7 +63,7 @@
         "model": "anthropic/claude-haiku-4-5"
       },
       "antigravity": {
-        "model": "Gemini 3.5 Flash"
+        "model": "gemini-3.8-flash-low"
       }
     }
   }

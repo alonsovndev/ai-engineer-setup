@@ -1,6 +1,6 @@
 ---
 name: python-api
-description: Python DDD architecture review agent. Pre-reads project structure and evaluates layer placement, dependency direction violations, testability gaps, and FastAPI/DDD fitness. Use for: reviewing whether new code belongs in its current layer, identifying domain/infrastructure bleeding, checking use case design, reviewing repository port contracts, auditing Composition Root wiring.
+description: "Python DDD architecture review agent. Pre-reads project structure and evaluates layer placement, dependency direction violations, testability gaps, and FastAPI/DDD fitness. Use for: reviewing whether new code belongs in its current layer, identifying domain/infrastructure bleeding, checking use case design, reviewing repository port contracts, auditing Composition Root wiring."
 subagent: true
 ---
 

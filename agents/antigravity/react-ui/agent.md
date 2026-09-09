@@ -1,6 +1,6 @@
 ---
 name: react-ui
-description: React/TypeScript/Vite/Ant Design architecture review agent. Pre-reads project structure and evaluates component placement, hooks correctness, state-management fit, Ant Design usage, type safety, and accessibility. Use for: reviewing whether a component belongs in feature vs. shared, checking hooks-rules violations, reviewing TanStack Query/context usage, auditing AntD form/theme/statics usage, checking prop typing and re-render risk.
+description: "React/TypeScript/Vite/Ant Design architecture review agent. Pre-reads project structure and evaluates component placement, hooks correctness, state-management fit, Ant Design usage, type safety, and accessibility. Use for: reviewing whether a component belongs in feature vs. shared, checking hooks-rules violations, reviewing TanStack Query/context usage, auditing AntD form/theme/statics usage, checking prop typing and re-render risk."
 subagent: true
 ---
 

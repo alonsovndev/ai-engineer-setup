@@ -1,5 +1,6 @@
 ---
 description: "Compare a project's documentation against current code, flag drift, and draft or apply targeted updates."
+argument-hint: "Doc location(s) to check, the code scope or change range to compare against, and whether applying edits is approved"
 ---
 
 Compare a project's documentation against current code, flag drift, and draft or apply targeted updates.

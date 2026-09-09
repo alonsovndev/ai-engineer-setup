@@ -38,6 +38,8 @@ Run from this repository:
 
 `install.sh` backs up existing portable config paths before replacing them with symlinks. It does not touch auth, session, cache, or telemetry files.
 
+`verify.sh` checks the managed symlinks and then enforces cross-harness parity: `agents/claude/` and `commands/claude/` are the canonical sets, and verification fails if opencode, Copilot, or Antigravity is missing an agent or command, carries one the canonical set does not have, ships an agent without a frontmatter description, or (for Copilot) leaves an agent out of the Agent Registry in `adapters/copilot/instructions/copilot-instructions.md`. Add a new agent or command to every harness in the same change.
+
 Preview changes before installing with:
 
 ```bash

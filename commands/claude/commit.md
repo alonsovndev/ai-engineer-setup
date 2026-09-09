@@ -1,5 +1,6 @@
 ---
 description: "Create a conventional git commit from current changes."
+argument-hint: "Optional type, scope, description, and files to include"
 ---
 
 Create a conventional git commit from current changes.

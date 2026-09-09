@@ -3,6 +3,8 @@ description: Inspect and synchronize a fork-based or direct repository safely.
 agent: build
 ---
 
+Usage: Optional branch, topology, or sync goal.
+
 Use the `git-repo-flow` skill to inspect repository topology and recommend the safest sync option.
 
 Arguments: $ARGUMENTS

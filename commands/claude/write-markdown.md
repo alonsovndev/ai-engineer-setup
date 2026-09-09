@@ -1,5 +1,6 @@
 ---
 description: "Write, improve, or review Markdown documentation using the `markdown-author` skill as the canonical formatting standard."
+argument-hint: "Action (new, improve, review) and document type (adr, runbook, spec, readme)"
 ---
 
 Write, improve, or review Markdown documentation using the `markdown-author` skill as the canonical formatting standard.

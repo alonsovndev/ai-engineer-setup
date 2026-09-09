@@ -1,6 +1,7 @@
 ---
 name: code-review
 description: Local post-change code review agent for correctness, standards, code quality, tests, verification evidence, security risks, and completion readiness. Use before declaring non-trivial code or configuration changes done.
+tools: Read, Grep, Glob, Bash, Skill, Agent, TodoWrite
 ---
 
 # Code Review Agent

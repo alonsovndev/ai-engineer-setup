@@ -1,5 +1,6 @@
 ---
 description: "Generate, improve, or review Mermaid diagrams using the `mermaid-author` skill as the canonical syntax and rendering standard."
+argument-hint: "Diagram type (flowchart, sequence, c4context, c4container, c4component, er, state, gantt) and embed vs standalone"
 ---
 
 Generate, improve, or review Mermaid diagrams using the `mermaid-author` skill as the canonical syntax and rendering standard.

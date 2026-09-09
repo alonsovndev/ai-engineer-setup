@@ -41,8 +41,9 @@ Routes work to the appropriate domain subagent. Prefer one primary subagent at a
 
 ## Platform Notes
 
-- **opencode**: Subagents are defined in `agents/opencode/*.md`. Skills in `skills/`.
 - **Claude Code**: Subagents are defined in `agents/claude/*.md`. Skills in `skills/`.
-- **Copilot CLI**: Agents are defined in `agents/copilot/*.agent.md`. Skills in `skills/`.
+- **opencode**: Subagents are defined in `agents/opencode/*.md`. Skills in `skills/`.
+- **Copilot CLI**: Agents are defined in `agents/copilot/*.agent.md`, and every agent must also be listed in the Agent Registry in `adapters/copilot/instructions/copilot-instructions.md`. Skills in `skills/`.
+- **Antigravity CLI**: Agents are defined in `agents/antigravity/<name>/agent.md`. Skills in `skills/`.
 
-All three platforms share the same skill directory and instructions. Router logic is identical; only the agent file format differs.
+All four platforms share the same skill directory and instructions. Router logic is identical; only the agent file format differs. `scripts/verify.sh` fails if the four agent sets diverge.

@@ -1,5 +1,6 @@
 ---
 description: "Scaffold a project workspace folder holding sibling BE/FE/docs repos."
+argument-hint: "Optional workspace path (default: current directory)"
 ---
 
 Scaffold a project workspace folder holding sibling BE/FE/docs repos.

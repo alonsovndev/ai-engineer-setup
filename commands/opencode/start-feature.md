@@ -3,6 +3,8 @@ description: Start a feature or hotfix branch using the standard GitHub workflow
 agent: build
 ---
 
+Usage: Branch name, ticket, and optional target base.
+
 Use the `git-repo-flow` skill to prepare a new branch, and the `git-commit` skill for commits made on it.
 
 Arguments: $ARGUMENTS

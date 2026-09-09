@@ -134,32 +134,261 @@ check_required_path "$repo_root/profiles/model-profiles.jsonc"
 
 if [ "$check_claude" -eq 1 ]; then
   check_required_path "$repo_root/instructions/CLAUDE.md"
-  check_required_path "$repo_root/agents/claude/code-review.md"
-  check_required_path "$repo_root/agents/claude/tech-lead.md"
-  check_required_path "$repo_root/agents/claude/postgresql.md"
-  check_required_path "$repo_root/agents/claude/terraform.md"
 fi
 
 if [ "$check_opencode" -eq 1 ]; then
-  check_required_path "$repo_root/agents/opencode/code-review.md"
-  check_required_path "$repo_root/agents/opencode/tech-lead.md"
-  check_required_path "$repo_root/agents/opencode/postgresql.md"
-  check_required_path "$repo_root/agents/opencode/terraform.md"
   check_required_path "$repo_root/adapters/opencode/opencode.jsonc"
 fi
 
-if [ "$check_copilot" -eq 1 ]; then
-  check_required_path "$repo_root/agents/copilot/code-review.agent.md"
-  check_required_path "$repo_root/agents/copilot/product-ba.agent.md"
-  check_required_path "$repo_root/agents/copilot/postgresql.agent.md"
-  check_required_path "$repo_root/agents/copilot/terraform.agent.md"
+printf '\nChecking agent and command parity across harnesses.\n'
+
+# agents/claude and commands/claude are the canonical sets; every other harness
+# must expose the same names in its own layout. Path templates below are
+# repo-relative and use "@" as the name placeholder, so an "@" in the clone path
+# cannot be substituted by mistake.
+agent_names=()
+while IFS= read -r canonical_name; do
+  agent_names+=("$canonical_name")
+done < <(find "$repo_root/agents/claude" -maxdepth 1 -type f -name '*.md' -exec basename {} .md \; | sort)
+
+command_names=()
+while IFS= read -r canonical_name; do
+  command_names+=("$canonical_name")
+done < <(find "$repo_root/commands/claude" -maxdepth 1 -type f -name '*.md' -exec basename {} .md \; | sort)
+
+name_in_list() {
+  local needle="$1"
+  shift
+  local item
+  for item in "$@"; do
+    if [ "$item" = "$needle" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+check_parity() {
+  local label="$1"
+  local relative_template="$2"
+  shift 2
+
+  local total=0
+  local missing=0
+  local name
+  local expected_path
+
+  for name in "$@"; do
+    total=$((total + 1))
+    expected_path="$repo_root/${relative_template//@/$name}"
+    if [ ! -e "$expected_path" ]; then
+      printf 'missing: %s (%s)\n' "$expected_path" "$label"
+      missing=$((missing + 1))
+      failed=1
+    fi
+  done
+
+  if [ "$missing" -eq 0 ]; then
+    printf 'ok: %s: %d/%d present\n' "$label" "$total" "$total"
+  fi
+}
+
+# Fails on files a harness has but the canonical set does not, so a one-off
+# addition to a single harness cannot pass verification.
+check_extras() {
+  local label="$1"
+  local relative_dir="$2"
+  local file_pattern="$3"
+  local strip_suffix="$4"
+  shift 4
+
+  local search_dir="$repo_root/$relative_dir"
+  if [ ! -d "$search_dir" ]; then
+    printf 'missing directory: %s (%s)\n' "$search_dir" "$label"
+    failed=1
+    return 0
+  fi
+
+  local extras=0
+  local found_path
+  local found_name
+
+  while IFS= read -r found_path; do
+    found_name="$(basename "$found_path" "$strip_suffix")"
+    if ! name_in_list "$found_name" "$@"; then
+      printf 'unexpected: %s has no counterpart in the canonical set (%s)\n' "$found_path" "$label"
+      extras=$((extras + 1))
+      failed=1
+    fi
+  done < <(find "$search_dir" -maxdepth 1 -type f -name "$file_pattern" | sort)
+
+  if [ "$extras" -eq 0 ]; then
+    printf 'ok: %s: no unexpected entries\n' "$label"
+  fi
+}
+
+# Antigravity uses <name>/agent.md, so both stray directories and stray loose
+# files under agents/antigravity/ have to be caught by name.
+check_antigravity_extras() {
+  local search_dir="$repo_root/agents/antigravity"
+  if [ ! -d "$search_dir" ]; then
+    printf 'missing directory: %s (antigravity agents)\n' "$search_dir"
+    failed=1
+    return 0
+  fi
+
+  local extras=0
+  local entry_path
+  local entry_name
+
+  while IFS= read -r entry_path; do
+    entry_name="$(basename "$entry_path")"
+    if ! name_in_list "$entry_name" "$@"; then
+      printf 'unexpected: %s has no counterpart in the canonical set (antigravity agents)\n' "$entry_path"
+      extras=$((extras + 1))
+      failed=1
+    fi
+  done < <(find "$search_dir" -mindepth 1 -maxdepth 1 | sort)
+
+  if [ "$extras" -eq 0 ]; then
+    printf 'ok: antigravity agents: no unexpected entries\n'
+  fi
+}
+
+# Returns 1 when the file exists but carries no usable frontmatter description.
+check_frontmatter_description() {
+  local path_to_check="$1"
+
+  # A missing file is already reported by check_parity.
+  [ -f "$path_to_check" ] || return 0
+
+  if [ "$(head -n 1 "$path_to_check")" != "---" ]; then
+    printf 'missing frontmatter: %s\n' "$path_to_check"
+    failed=1
+    return 1
+  fi
+
+  # Stops at the closing delimiter, so body text cannot satisfy the check.
+  if awk 'NR==1{next} /^---$/{exit} {print}' "$path_to_check" \
+    | grep -qE '^description:[[:space:]]*[^[:space:]]'; then
+    return 0
+  fi
+
+  printf 'missing frontmatter description: %s\n' "$path_to_check"
+  failed=1
+  return 1
+}
+
+check_descriptions() {
+  local label="$1"
+  local relative_template="$2"
+  shift 2
+
+  local name
+  local bad=0
+  for name in "$@"; do
+    if ! check_frontmatter_description "$repo_root/${relative_template//@/$name}"; then
+      bad=$((bad + 1))
+    fi
+  done
+
+  if [ "$bad" -eq 0 ]; then
+    printf 'ok: %s: all present\n' "$label"
+  fi
+}
+
+# Keeps per-command metadata (Claude argument hints, opencode usage lines) from
+# drifting as new commands are added.
+check_metadata() {
+  local label="$1"
+  local relative_template="$2"
+  local required_pattern="$3"
+  shift 3
+
+  local name
+  local path_to_check
+  local missing=0
+
+  for name in "$@"; do
+    path_to_check="$repo_root/${relative_template//@/$name}"
+    [ -f "$path_to_check" ] || continue
+    if ! grep -qE "$required_pattern" "$path_to_check"; then
+      printf 'missing %s: %s\n' "$label" "$path_to_check"
+      missing=$((missing + 1))
+      failed=1
+    fi
+  done
+
+  if [ "$missing" -eq 0 ]; then
+    printf 'ok: %s: all present\n' "$label"
+  fi
+}
+
+if [ "${#agent_names[@]}" -eq 0 ]; then
+  printf 'missing: no agent definitions found in agents/claude\n'
+  failed=1
 fi
 
-if [ "$check_antigravity" -eq 1 ]; then
-  check_required_path "$repo_root/agents/antigravity/code-review/agent.md"
-  check_required_path "$repo_root/agents/antigravity/product-ba/agent.md"
-  check_required_path "$repo_root/agents/antigravity/postgresql/agent.md"
-  check_required_path "$repo_root/agents/antigravity/terraform/agent.md"
+if [ "${#command_names[@]}" -eq 0 ]; then
+  printf 'missing: no command definitions found in commands/claude\n'
+  failed=1
+fi
+
+if [ "${#agent_names[@]}" -eq 0 ] || [ "${#command_names[@]}" -eq 0 ]; then
+  printf 'skipped: parity checks need a non-empty canonical set\n'
+else
+  printf 'canonical set: %d agents, %d commands\n' "${#agent_names[@]}" "${#command_names[@]}"
+
+  if [ "$check_claude" -eq 1 ]; then
+    check_descriptions 'claude agent descriptions' 'agents/claude/@.md' "${agent_names[@]}"
+    check_metadata 'claude command argument-hint' 'commands/claude/@.md' '^argument-hint:[[:space:]]*[^[:space:]]' "${command_names[@]}"
+  fi
+
+  if [ "$check_opencode" -eq 1 ]; then
+    check_parity 'opencode agents' 'agents/opencode/@.md' "${agent_names[@]}"
+    check_extras 'opencode agents' 'agents/opencode' '*.md' '.md' "${agent_names[@]}"
+    check_descriptions 'opencode agent descriptions' 'agents/opencode/@.md' "${agent_names[@]}"
+    check_parity 'opencode commands' 'commands/opencode/@.md' "${command_names[@]}"
+    check_extras 'opencode commands' 'commands/opencode' '*.md' '.md' "${command_names[@]}"
+    check_metadata 'opencode command usage line' 'commands/opencode/@.md' '^Usage:[[:space:]]*[^[:space:]]' "${command_names[@]}"
+  fi
+
+  if [ "$check_copilot" -eq 1 ]; then
+    check_parity 'copilot agents' 'agents/copilot/@.agent.md' "${agent_names[@]}"
+    check_extras 'copilot agents' 'agents/copilot' '*.agent.md' '.agent.md' "${agent_names[@]}"
+    check_descriptions 'copilot agent descriptions' 'agents/copilot/@.agent.md' "${agent_names[@]}"
+    check_parity 'copilot prompts' 'commands/copilot-prompts/@.prompt.md' "${command_names[@]}"
+    check_extras 'copilot prompts' 'commands/copilot-prompts' '*.prompt.md' '.prompt.md' "${command_names[@]}"
+
+    # The registry in copilot-instructions.md is the routing contract Copilot
+    # reads; an agent missing from it is invisible even though its file exists.
+    registry_file="$repo_root/adapters/copilot/instructions/copilot-instructions.md"
+    if [ ! -f "$registry_file" ]; then
+      printf 'missing: %s\n' "$registry_file"
+      failed=1
+    else
+      registry_section="$(awk '/^## Agent Registry/{inside=1; next} /^## /{inside=0} inside' "$registry_file")"
+      registry_missing=0
+      for agent_name in "${agent_names[@]}"; do
+        # Only a numbered entry of its own counts as registration; a mention
+        # inside another entry or in the routing notes must not satisfy this.
+        if ! printf '%s\n' "$registry_section" | grep -qE "^[0-9]+\. \`${agent_name}\`"; then
+          printf 'missing from Copilot Agent Registry: %s (%s)\n' "$agent_name" "$registry_file"
+          registry_missing=$((registry_missing + 1))
+          failed=1
+        fi
+      done
+      if [ "$registry_missing" -eq 0 ]; then
+        printf 'ok: copilot Agent Registry lists all %d agents\n' "${#agent_names[@]}"
+      fi
+    fi
+  fi
+
+  if [ "$check_antigravity" -eq 1 ]; then
+    check_parity 'antigravity agents' 'agents/antigravity/@/agent.md' "${agent_names[@]}"
+    check_antigravity_extras "${agent_names[@]}"
+    check_descriptions 'antigravity agent descriptions' 'agents/antigravity/@/agent.md' "${agent_names[@]}"
+  fi
 fi
 
 printf '\nChecking symlinks.\n'

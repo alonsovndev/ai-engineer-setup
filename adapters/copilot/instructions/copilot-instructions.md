@@ -1,32 +1,45 @@
 # Workspace Guidelines
 
-These guidelines apply to all chat requests across the workspace. They establish baseline expectations for code style, architecture patterns, and operational practices used by leadership, and business-analysis agents.
+These guidelines apply to all chat requests across the workspace. They establish baseline expectations for code style, architecture patterns, and operational practices across all agents in this workspace.
 
 Instruction governance for multi-project usage:
 - See [Instruction Precedence](./INSTRUCTION-PRECEDENCE.md) for source priority and conflict handling.
-- See [Agent Registry](#agent-registry) for active two-agent routing.
+- See [Agent Registry](#agent-registry) for the active agents and how work routes between them.
 - See [Performance Budget](./PERFORMANCE-BUDGET.md) for response-size and context-size limits.
 
 ## Agent Registry
 
-Active agents in this workspace:
+Active agents in this workspace. Every file in `agents/` is listed here; keep this list in sync when agents are added or removed (`scripts/verify.sh` enforces it).
 
-1. `product-ba` (`agents/product-ba.agent.md`)
-	- Purpose: product ownership, business analysis, requirements discovery, backlog definition, and delivery-ready planning artifacts.
-2. `tech-lead` (`agents/tech-lead.agent.md`)
-	- Purpose: technical planning, architecture guidance, sequencing, and risk control.
+1. `react-ui` (`agents/react-ui.agent.md`)
+   - Purpose: React components, hooks, state management, Ant Design usage, type safety, and accessibility.
+2. `python-api` (`agents/python-api.agent.md`)
+   - Purpose: FastAPI routes, use cases, domain logic, DI wiring, and layer placement in Python DDD codebases.
 3. `postgresql` (`agents/postgresql.agent.md`)
-	- Purpose: PostgreSQL schema, SQL, migration, indexing, transaction, access-control, and ORM integration work.
-	- Use `relational-db-orm` for cross-RDBMS schema design, SQLAlchemy/JPA/Hibernate mapping, table normalization, constraints, and ORM tradeoffs before PostgreSQL-specific review.
+   - Purpose: PostgreSQL schema, SQL, migration, indexing, transaction, access-control, and ORM integration work.
+   - Use `relational-db-orm` for cross-RDBMS schema design, SQLAlchemy/JPA/Hibernate mapping, table normalization, constraints, and ORM tradeoffs before PostgreSQL-specific review.
 4. `terraform` (`agents/terraform.agent.md`)
-	- Purpose: Terraform/OpenTofu module, plan, state, provider/backend, import, IAM/security, and CI/CD workflow work.
+   - Purpose: Terraform/OpenTofu module, plan, state, provider/backend, import, IAM/security, and CI/CD workflow work.
+5. `clean-architecture` (`agents/clean-architecture.agent.md`)
+   - Purpose: cross-stack layer boundaries, dependency direction, ports and adapters, and DDD aggregate design.
+6. `frontend-design` (`agents/frontend-design.agent.md`)
+   - Purpose: visual hierarchy, animation, responsive behavior, and UI polish. Not component architecture — use `react-ui` for that.
+7. `product-ba` (`agents/product-ba.agent.md`)
+   - Purpose: product ownership, business analysis, requirements discovery, backlog definition, and delivery-ready planning artifacts.
+8. `tech-lead` (`agents/tech-lead.agent.md`)
+   - Purpose: C4 diagrams, ADRs, technical planning, sequencing, delivery risk, and quality gates.
+9. `code-review` (`agents/code-review.agent.md`)
+   - Purpose: post-change review for correctness, security, tests, and verification evidence before completion.
+10. `bug-finder` (`agents/bug-finder.agent.md`)
+    - Purpose: proactive correctness sweep of a file, module, or repository, independent of any specific diff.
+11. `doc-tracker` (`agents/doc-tracker.agent.md`)
+    - Purpose: documentation drift detection and targeted corrections when docs no longer match the code.
 
-Scope note:
-- This setup is intentionally limited to the agents listed above for now.
-- Route discovery and requirement clarification to `product-ba`.
-- Route architecture and execution planning to `tech-lead`.
-- Route PostgreSQL database work to `postgresql`.
-- Route Terraform/OpenTofu infrastructure work to `terraform`.
+Routing notes:
+- Route discovery and requirement clarification to `product-ba`; route architecture and execution planning to `tech-lead`.
+- Route stack work to the matching domain agent: `react-ui` (frontend), `python-api` (backend), `postgresql` (database), `terraform` (infrastructure).
+- Route review work by intent: `code-review` for a just-made change, `bug-finder` for an untargeted sweep, `clean-architecture` for boundary and dependency-direction questions, `frontend-design` for visual and motion quality, `doc-tracker` for stale documentation.
+- Prefer one primary agent at a time; add a second only when findings reveal a cross-domain concern.
 
 ## Documentation
 - Write clear, actionable documentation.

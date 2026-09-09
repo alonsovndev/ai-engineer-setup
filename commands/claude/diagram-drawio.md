@@ -1,5 +1,6 @@
 ---
 description: "Generate, improve, or review Draw.io diagrams using the `drawio-author` skill as the canonical `.drawio` XML and layout standard."
+argument-hint: "Action (generate, update, review), file path, and diagram type"
 ---
 
 Generate, improve, or review Draw.io diagrams using the `drawio-author` skill as the canonical `.drawio` XML and layout standard.

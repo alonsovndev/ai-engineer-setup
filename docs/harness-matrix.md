@@ -9,6 +9,9 @@ This setup keeps reusable content in this repository and exposes it through harn
 | Agents | `~/.claude/agents` | `~/.config/opencode/agent` | `~/.copilot/agents` | `~/.gemini/config/agents` |
 | Commands/prompts | `~/.claude/commands` | `~/.config/opencode/command` | `~/.copilot/.github/prompts` | Skills auto-convert to slash commands |
 | Model switching | `--model`, `--effort` | `--model` | `--model`, `--effort` | `--model` |
+| Per-agent tool limits | `tools:` frontmatter | `permission:` frontmatter | `tools:` frontmatter | Not available |
+| Command argument hints | `argument-hint:` frontmatter | `Usage:` line in command body | `argument-hint:` frontmatter | No commands directory |
+| Command-level guardrails | Full command set | Full command set | Full prompt set | Skills auto-convert only |
 
 Do not symlink whole harness config roots because they contain local auth, sessions, caches, telemetry, and trust state.
 
@@ -34,6 +37,19 @@ Do not symlink whole harness config roots because they contain local auth, sessi
 The `code-review` agent is available in all harnesses for local post-change review before completion.
 
 Commands and prompts are convenience entry points. Skills remain the source of truth for workflow rules and safety gates. Antigravity CLI has no separate commands directory — shared skills with Markdown frontmatter auto-convert to slash commands (e.g. `/git-repo-flow`).
+
+## Known limitations
+
+Accepted gaps, recorded so they are not rediscovered as bugs.
+
+- **No managed `~/.claude/settings.json`.** opencode gets a generated config that denies `git push`, `git reset --hard`, and `rm -rf` at the harness level; Claude Code has no equivalent managed denylist here, because its `settings.json` also holds personal state (model, theme, MCP permissions) that this repo deliberately does not own. Claude relies on its own permission prompts plus the rules in `instructions/CLAUDE.md`. Add the denies by hand if you want parity.
+- **Antigravity agents have no tool or permission scoping.** The supported frontmatter keys beyond `name`, `description`, and `subagent` are unconfirmed, so nothing is declared rather than guessing. Its `code-review` and `bug-finder` agents are therefore not read-only, unlike the other three harnesses.
+- **Antigravity has no commands directory.** Workflow entry points reach it only through skill auto-conversion, so the extra approval gates written into the commands apply only via each skill's own text.
+- **Copilot and Antigravity model IDs are unverified.** See the header of `profiles/model-profiles.jsonc` for the re-check command per harness.
+
+## Parity enforcement
+
+`scripts/verify.sh` derives the canonical agent set from `agents/claude/*.md` and the canonical command set from `commands/claude/*.md`, then fails if any harness is missing an entry, carries an entry the canonical set does not have, has an agent without a frontmatter `description`, or (for Copilot) has an agent absent from the Agent Registry in `adapters/copilot/instructions/copilot-instructions.md`.
 
 ## Related docs
 

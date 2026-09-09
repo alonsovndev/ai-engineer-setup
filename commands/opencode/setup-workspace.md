@@ -3,6 +3,8 @@ description: Scaffold a project workspace folder holding sibling BE/FE/docs repo
 agent: build
 ---
 
+Usage: Optional workspace path (default: current directory).
+
 Scaffold a project workspace folder holding sibling BE/FE/docs repos.
 
 Use the `workspace-setup` skill.

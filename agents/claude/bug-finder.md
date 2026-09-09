@@ -1,6 +1,7 @@
 ---
 name: bug-finder
 description: Proactive, correctness-only bug-sweep agent for a file, module, directory, or whole repository, independent of any specific diff. Use when hunting for latent defects rather than reviewing a just-made change.
+tools: Read, Grep, Glob, Bash, Skill, Agent, TodoWrite
 ---
 
 # Bug Finder Agent

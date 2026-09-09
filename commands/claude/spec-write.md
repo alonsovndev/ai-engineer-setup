@@ -1,5 +1,6 @@
 ---
 description: "Write the refined requirement from this conversation into a phased implementation plan under `specs/` in the current project's repo root."
+argument-hint: "Optional raw idea if not already refined in this conversation"
 ---
 
 Write the refined requirement from this conversation into a phased implementation plan under `specs/` in the current project's repo root.

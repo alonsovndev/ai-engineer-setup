@@ -3,6 +3,8 @@ description: Scan, evaluate, and produce a prioritized enhancement plan for the 
 agent: build
 ---
 
+Usage: Optional --scope (architecture|principles|security|tests|style), --fix, or --quick.
+
 Scan, evaluate, and produce a prioritized enhancement plan for the current repository.
 
 ## How To Use This Command

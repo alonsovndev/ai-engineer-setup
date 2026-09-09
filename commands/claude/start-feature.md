@@ -1,5 +1,6 @@
 ---
 description: "Start a feature or hotfix branch using the standard GitHub workflow."
+argument-hint: "Branch name, ticket, and optional target base"
 ---
 
 Start a feature or hotfix branch using the standard GitHub workflow.

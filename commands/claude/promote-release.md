@@ -1,5 +1,6 @@
 ---
 description: "Prepare or create the pre-release pull request promoting `dev` into `main` using the GitHub Enterprise workflow."
+argument-hint: "Title, issue links, and whether push/create is approved"
 ---
 
 Prepare or create the pre-release pull request promoting `dev` into `main` using the GitHub Enterprise workflow.

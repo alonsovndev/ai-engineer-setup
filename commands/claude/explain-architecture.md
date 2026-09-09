@@ -1,5 +1,6 @@
 ---
 description: "Generate a clear, audience-tailored architecture explanation for the current project."
+argument-hint: "Audience (manager, security, engineer, all) and optional topic focus"
 ---
 
 Generate a clear, audience-tailored architecture explanation for the current project.

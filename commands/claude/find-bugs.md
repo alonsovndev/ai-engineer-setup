@@ -1,5 +1,6 @@
 ---
 description: "Proactively sweep a file, module, directory, or the whole repository for latent correctness bugs, independent of any recent diff."
+argument-hint: "Scope to sweep (file/module/directory/whole repo) and any known symptom or area of suspicion"
 ---
 
 Proactively sweep a file, module, directory, or the whole repository for latent correctness bugs, independent of any recent diff.

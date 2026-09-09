@@ -3,6 +3,8 @@ description: Proactively sweep a file, module, directory, or the whole repositor
 agent: bug-finder
 ---
 
+Usage: Scope to sweep (file/module/directory/whole repo) and any known symptom or area of suspicion.
+
 Use the `bug-finder` skill and agent to proactively sweep for latent correctness bugs.
 
 Arguments: $ARGUMENTS

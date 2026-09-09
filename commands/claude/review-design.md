@@ -1,5 +1,6 @@
 ---
 description: "Review UI code for visual polish, animation quality, and responsive behavior using the `frontend-design` skill and agent."
+argument-hint: "Target files/component and whether to focus on visual polish, animation, or responsive behavior"
 ---
 
 Review UI code for visual polish, animation quality, and responsive behavior using the `frontend-design` skill and agent.

@@ -3,6 +3,8 @@ description: Prepare or create the pre-release pull request promoting dev into m
 agent: build
 ---
 
+Usage: Title, issue links, and whether push/create is approved.
+
 Use the `git-create-pr`, `gh-prs`, and `git-repo-flow` skills to prepare a pull request.
 
 Arguments: $ARGUMENTS

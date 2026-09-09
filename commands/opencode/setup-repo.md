@@ -3,6 +3,8 @@ description: "Bootstrap a freshly cloned repository: create dev from main if mis
 agent: build
 ---
 
+Usage: Repo path, license choice or skip, whether branch changes are approved.
+
 Bootstrap a freshly cloned repository: create `dev` from `main` if missing, and scaffold missing hygiene files.
 
 Use the `git-repo-setup` and `git-repo-flow` skills.

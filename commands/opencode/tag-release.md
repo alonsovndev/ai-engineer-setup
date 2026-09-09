@@ -3,6 +3,8 @@ description: Check readiness and create the vX.Y.Z production tag from main.
 agent: tech-lead
 ---
 
+Usage: Release version, target repo, and candidate branch details.
+
 Use the `git-repo-flow`, `gh-prs`, and `pr-review` skills to check release readiness.
 
 Arguments: $ARGUMENTS

@@ -3,6 +3,8 @@ description: Wire AI-agent tooling into a target repo with frontend, backend, an
 agent: build
 ---
 
+Usage: Optional target path (default: current repo); optional --fe/--be/--docs stack overrides.
+
 Wire AI-agent tooling into a target repo with frontend, backend, and/or docs areas.
 
 Use the `ai-repo-setup` skill.

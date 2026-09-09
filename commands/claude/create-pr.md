@@ -1,5 +1,6 @@
 ---
 description: "Prepare or create a pull request from a feature branch into `dev` using the GitHub Enterprise workflow."
+argument-hint: "Title, issue links, and whether push/create is approved"
 ---
 
 Prepare or create a pull request from a feature branch into `dev` using the GitHub Enterprise workflow.

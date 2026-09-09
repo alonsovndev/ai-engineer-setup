@@ -3,6 +3,8 @@ description: Compare a project's documentation against current code, flag drift,
 agent: doc-tracker
 ---
 
+Usage: Doc location(s) to check, the code scope or change range to compare against, and whether applying edits is approved.
+
 Use the `doc-tracker` skill and agent, delegating prose/formatting to `technical-writer` and `markdown-author`.
 
 Arguments: $ARGUMENTS

@@ -1,5 +1,6 @@
 ---
 description: "Generate C4 model architecture diagrams for the current project."
+argument-hint: "C4 level (context, container, component) and optional service name"
 ---
 
 Generate C4 model architecture diagrams for the current project.

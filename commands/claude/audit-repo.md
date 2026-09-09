@@ -1,5 +1,6 @@
 ---
 description: "Scan, evaluate, and produce a prioritized enhancement plan for the current repository."
+argument-hint: "Optional --scope (architecture|principles|security|tests|style), --fix, or --quick"
 ---
 
 Scan, evaluate, and produce a prioritized enhancement plan for the current repository.

@@ -1,10 +1,17 @@
 {
-  // opencode model IDs are verified against `opencode models` output as of 2026-08-21.
-  // copilot model IDs are NOT independently verified here (no authenticated `copilot` session
-  // was available to query its model catalog) — recheck against `copilot --help` / `/model`
-  // periodically and update alongside scripts/run-agent.sh.
-  // antigravity model IDs are NOT verified (no authenticated `agy` session) — confirm against
-  // `agy --help` / the model catalog and update alongside scripts/run-agent.sh.
+  // Verification status per harness. Re-check with the listed command and update
+  // scripts/run-agent.sh in the same change; scripts/verify.sh compares the model IDs in
+  // this file against that script and reports drift as a warning (it does not fail the run).
+  //
+  // claude    VERIFIED 2026-09-08 against `claude --help` (CLI 2.1.266): --model accepts the
+  //           aliases opus/sonnet/fable, --effort accepts low|medium|high|xhigh|max, and the
+  //           two --permission-mode values used by run-agent.sh (plan, auto) are both in its
+  //           accepted set (acceptEdits, auto, bypassPermissions, manual, dontAsk, plan).
+  // opencode  VERIFIED 2026-08-21 against `opencode models` output.
+  // copilot   NOT VERIFIED — no authenticated `copilot` session was available to query the
+  //           model catalog. Re-check with `copilot --help`, or `/model` inside a session.
+  // antigravity NOT VERIFIED — no authenticated `agy` session was available. Re-check with
+  //           `agy --help`, or the model picker inside a session.
   "defaultProfile": "balanced",
   "profiles": {
     "deep": {

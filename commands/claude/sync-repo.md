@@ -1,5 +1,6 @@
 ---
 description: "Inspect and synchronize a fork-based or direct repository safely."
+argument-hint: "Optional branch, topology, or sync goal"
 ---
 
 Inspect and synchronize a fork-based or direct repository safely.

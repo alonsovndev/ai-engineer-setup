@@ -1,5 +1,6 @@
 ---
 description: "Capture a raw idea or requirement and refine it through a short round of clarifying questions."
+argument-hint: "Raw idea or requirement text"
 ---
 
 Capture a raw idea or requirement and refine it through a short round of clarifying questions.

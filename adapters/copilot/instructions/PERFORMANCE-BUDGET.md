@@ -20,10 +20,19 @@ Use these budgets to control token usage and response depth across orchestration
 
 | Agent | Recommended mode | Input cap | Output cap |
 |---|---|---:|---:|
-| `product-ba` | `standard` | 1500 | 900 |
-| `tech-lead` | `standard` | 1900 | 1100 |
+| `react-ui` | `standard` | 1800 | 1000 |
+| `python-api` | `standard` | 1800 | 1000 |
 | `postgresql` | `standard` | 1800 | 1000 |
 | `terraform` | `standard` | 1800 | 1000 |
+| `clean-architecture` | `standard` | 1900 | 1100 |
+| `frontend-design` | `standard` | 1600 | 900 |
+| `product-ba` | `standard` | 1500 | 900 |
+| `tech-lead` | `standard` | 1900 | 1100 |
+| `code-review` | `standard` | 2000 | 1200 |
+| `bug-finder` | `standard` | 2000 | 1100 |
+| `doc-tracker` | `standard` | 1800 | 1000 |
+
+Use `detailed` only for release-gate or high-risk passes; use `minimal` for triage.
 
 ## Rules
 

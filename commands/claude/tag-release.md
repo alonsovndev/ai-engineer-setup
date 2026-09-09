@@ -1,5 +1,6 @@
 ---
 description: "Check readiness and create the vX.Y.Z production tag from `main`."
+argument-hint: "Release version, target repo, and candidate branch details"
 ---
 
 Check readiness and create the vX.Y.Z production tag from `main`.

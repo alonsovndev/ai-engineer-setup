@@ -132,7 +132,31 @@ Normal production release:
 
 1. Merge feature PRs into `dev`.
 2. Open a PR from `dev` to `main`.
-3. Merge to `main` after required approvals and checks.
+3. Merge to `main` after required approvals and checks, using a real merge commit rather than squash or rebase, so `dev`'s commits remain ancestors of `main` and can fast-forward back later.
 4. Tag `main` with `vX.Y.Z` after final sign-off.
 
 Do not create release tags without explicit approval for the version and target commit.
+
+## Post-release back-sync
+
+Merging a promote-release PR only advances `main` on GitHub — it never advances `dev`. Immediately afterward `dev` will show as behind `main` in GitHub's UI. This is expected, not an error.
+
+Run `/sync-dev` right after a promote-release PR merges to bring `dev` back in line with `main`.
+
+Fork mode:
+
+```bash
+git fetch upstream
+git merge-base --is-ancestor dev upstream/main && git checkout dev && git merge --ff-only upstream/main || git merge --no-ff upstream/main -m "Merge main into dev after release"
+git push origin dev
+```
+
+Direct mode:
+
+```bash
+git fetch origin
+git merge-base --is-ancestor dev origin/main && git checkout dev && git merge --ff-only origin/main || git merge --no-ff origin/main -m "Merge main into dev after release"
+git push origin dev
+```
+
+Fast-forward only works when the `dev` → `main` PR was merged with a real merge commit. If it was squashed or rebased on GitHub, `dev` cannot fast-forward and a real merge (never a rebase) is required instead.

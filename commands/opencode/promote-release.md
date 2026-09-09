@@ -16,3 +16,4 @@ Required behavior:
 - Target `main` for `dev` (and `hotfix/*`) release PRs.
 - Require explicit approval before pushing, creating, editing, commenting, or calling GitHub APIs.
 - If `gh` is unavailable, provide a compare URL plus PR title/body.
+- After the PR merges, tell the user to run `/sync-dev` so `dev` does not show as behind `main`.

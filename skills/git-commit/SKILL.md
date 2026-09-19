@@ -109,7 +109,7 @@ fix(api): handle missing user id
 docs: update README
 ```
 
-If the subject does not include a Conventional Commit type, stop and rewrite it before running `git commit`.
+If the subject does not include a Conventional Commit type, stop and rewrite it before running `git commit`. Never add AI or tool co-author trailers or signatures (e.g., `Co-authored-by: ...`) to commit subjects, bodies, or footers.
 
 ### 4. Execute Commit
 
@@ -135,6 +135,7 @@ EOF
 - Imperative mood: "fix bug" not "fixes bug"
 - Reference issues: `Closes #123`, `Refs #456`
 - Keep description under 72 characters
+- Never add AI or tool co-author trailers or attribution footers (e.g. `Co-authored-by: Claude <...>`, `Co-authored-by: Copilot <...>`, `Co-authored-by: Cursor <...>`, `Co-authored-by: OpenCode <...>`, `Co-authored-by: Gemini <...>`)
 
 ## Fork Workflow Examples
 
@@ -154,4 +155,5 @@ docs: add fork setup steps
 - NEVER run destructive commands (--force, hard reset) without explicit request
 - NEVER skip hooks (--no-verify) unless user asks
 - NEVER force push to main/master
+- NEVER add AI or tool co-author trailers or signatures (e.g., `Co-authored-by: ...`)
 - If commit fails due to hooks, fix and create NEW commit (don't amend)

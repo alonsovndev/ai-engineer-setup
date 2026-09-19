@@ -51,6 +51,7 @@ Routing notes:
 
 ## Git and Version Control
 - Keep commits focused; use clear, descriptive messages.
+- Do not add AI or tool co-author trailers or attribution (e.g., `Co-authored-by: ...`) to commit messages.
 - Use feature branches; require tests and review before merging.
 - Never commit directly to `main`, `master`, or `dev` — always work on a `feature/*` or `hotfix/*` branch.
 - Use the `git-repo-flow`, `git-commit`, and `git-create-pr` skills for detailed workflow rules.

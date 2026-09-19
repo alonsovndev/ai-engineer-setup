@@ -31,6 +31,7 @@ These baseline rules apply to every project. Do not apply stack-specific archite
 - Never force-push to protected branches such as `main` or `master`.
 - Do not use bypass flags such as `--no-verify` unless the user explicitly requests it.
 - Do not commit secrets, credentials, `.env` files, or sensitive configuration.
+- Do not add AI or tool co-author trailers or attribution (e.g. `Co-authored-by: ...`) to commit messages.
 - Before any requested commit, inspect `git status`, `git diff`, and recent commits.
 
 ## Safety Rules

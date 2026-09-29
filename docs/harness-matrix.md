@@ -55,7 +55,7 @@ Accepted gaps, recorded so they are not rediscovered as bugs.
 
 ## Model verification
 
-Codex was checked with `codex --help` on 2026-09-24 (CLI 0.156.1); it keeps the configured model and varies `model_reasoning_effort`. The other harnesses' model IDs were checked against their own CLIs on 2026-09-09 — `claude --help`, `opencode models`, `copilot help config`, and `agy models`. The header of `profiles/model-profiles.jsonc` records the command per harness; re-run them when a harness updates, and change `scripts/run-agent.sh` in the same commit (`verify.sh` compares the two and warns on drift).
+Codex was checked with `codex --help` on 2026-09-24 (CLI 0.156.1); it keeps the configured model and varies `model_reasoning_effort`. The other harnesses' model IDs were checked against their own CLIs on 2026-09-09 — `claude --help`, `opencode models`, `copilot help config`, and `agy models` (re-verified 2026-09-28 on CLI 1.2.12, including the `--agent` flag added in 1.1.1). The header of `profiles/model-profiles.jsonc` records the command per harness; re-run them when a harness updates, and change `scripts/run-agent.sh` in the same commit (`verify.sh` compares the two and warns on drift).
 
 Antigravity's IDs carry the reasoning level as a suffix (`-high`, `-medium`, `-low`), so `run-agent.sh` selects the level by choosing the ID rather than also passing `--effort`.
 

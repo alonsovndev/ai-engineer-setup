@@ -125,13 +125,13 @@ case "$harness" in
     ;;
   antigravity)
     command_args=(--model "$antigravity_model")
+    [ -n "$agent" ] && command_args+=(--agent "$agent")
     case "$mode" in
       work) ;;
       plan) command_args+=(--mode=plan) ;;
       auto) command_args+=(--mode=accept-edits) ;;
       *) printf 'Unknown mode: %s\n' "$mode" >&2; exit 2 ;;
     esac
-    # Agent selection is interactive via /agents; there is no --agent CLI flag.
     exec agy "${command_args[@]}" ${arguments[@]+"${arguments[@]}"}
     ;;
   codex)

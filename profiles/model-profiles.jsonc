@@ -10,9 +10,10 @@
   // opencode  VERIFIED 2026-08-21 against `opencode models` output.
   // copilot   VERIFIED 2026-09-09 against `copilot help config`, which lists the accepted
   //           `model` values. --effort accepts low|medium|high|xhigh.
-  // antigravity VERIFIED 2026-09-09 against `agy models`. Its IDs already encode the reasoning
-  //           level as a suffix (-high/-medium/-low), so run-agent.sh sets the level by
-  //           choosing the ID and does not also pass --effort.
+  // antigravity VERIFIED 2026-09-28 against `agy models` (CLI 1.2.12). Its IDs already encode the
+  //           reasoning level as a suffix (-high/-medium/-low), so run-agent.sh sets the level by
+  //           choosing the ID and does not also pass --effort. `--agent` (added in 1.1.1) forwards
+  //           the selected custom agent at launch.
   // codex VERIFIED 2026-09-24 against `codex --help` (CLI 0.156.1); uses the configured model
   // and `model_reasoning_effort` overrides instead of pinning a model ID.
   "defaultProfile": "balanced",

@@ -33,6 +33,7 @@ Use these patterns:
 - `hotfix/<ticket>-<short-desc>` for urgent production fixes.
 
 If no ticket exists, use a short kebab-case description after the branch type.
+Other named working branches, such as `fix/*` and `chore/*`, may also hold commits. Never commit on `main`, `master`, `dev`, or a detached HEAD.
 
 ## Required preflight
 
@@ -78,7 +79,7 @@ git checkout -b feature/<ticket>-<short-desc>
 
 ## Keeping branches current
 
-Fork mode, preserving local commits:
+Fork mode, preserving local commits on a working branch:
 
 ```bash
 git sync
@@ -90,12 +91,14 @@ Fork mode, disposable local copies of shared branches:
 git resync
 ```
 
-Direct mode, preserving local commits:
+Direct mode, preserving local commits on a working branch:
 
 ```bash
 git fetch origin
 git merge origin/$(git branch --show-current)
 ```
+
+For normal sync of `main`, `master`, or `dev`, fetch the owning remote and use `git merge --ff-only <remote>/<branch>`; stop if it cannot fast-forward. Never run `git sync` or create a merge commit on these branches. Approved `git resync` remains available for disposable local/fork copies of shared branches.
 
 Direct mode, fast-forward only for shared branches:
 
@@ -143,20 +146,24 @@ Merging a promote-release PR only advances `main` on GitHub — it never advance
 
 Run `/sync-dev` right after a promote-release PR merges to bring `dev` back in line with `main`.
 
-Fork mode:
+Fork mode, when `dev` can fast-forward:
 
 ```bash
 git fetch upstream
-git merge-base --is-ancestor dev upstream/main && git checkout dev && git merge --ff-only upstream/main || git merge --no-ff upstream/main -m "Merge main into dev after release"
+git merge-base --is-ancestor dev upstream/main
+git checkout dev
+git merge --ff-only upstream/main
 git push origin dev
 ```
 
-Direct mode:
+Direct mode, when `dev` can fast-forward:
 
 ```bash
 git fetch origin
-git merge-base --is-ancestor dev origin/main && git checkout dev && git merge --ff-only origin/main || git merge --no-ff origin/main -m "Merge main into dev after release"
+git merge-base --is-ancestor dev origin/main
+git checkout dev
+git merge --ff-only origin/main
 git push origin dev
 ```
 
-Fast-forward only works when the `dev` → `main` PR was merged with a real merge commit. If it was squashed or rebased on GitHub, `dev` cannot fast-forward and a real merge (never a rebase) is required instead.
+Only run the fast-forward commands when the ancestor check succeeds, and push only with explicit approval. If the `dev` → `main` PR was squashed or rebased, create a named working branch from `upstream/dev` (fork mode) or `origin/dev` (direct mode), merge the corresponding remote `main` into that branch, then open a PR into `dev` with approval. Never create the merge commit directly on `dev` or rebase `dev`.

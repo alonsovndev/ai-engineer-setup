@@ -11,6 +11,12 @@ printf '%s\n' "$@"
 MOCK
 chmod +x "$temporary_dir/codex"
 
+cat >"$temporary_dir/agy" <<'MOCK'
+#!/usr/bin/env bash
+printf '%s\n' "$@"
+MOCK
+chmod +x "$temporary_dir/agy"
+
 assert_contains() {
   local output="$1"
   local expected="$2"
@@ -55,5 +61,22 @@ assert_contains "$output" 'fix docs' 'auto mode forwards prompt'
 output="$(PATH="$temporary_dir:$PATH" "$repo_root/scripts/run-agent.sh" --harness codex --profile balanced --mode work)"
 assert_contains "$output" 'model_reasoning_effort="medium"' 'no-args launch sets reasoning effort'
 assert_contains "$output" 'workspace-write' 'no-args launch uses workspace-write sandbox'
+
+output="$(PATH="$temporary_dir:$PATH" "$repo_root/scripts/run-agent.sh" --harness antigravity --profile deep --mode plan --agent code-review -- 'inspect the diff')"
+assert_contains "$output" 'gemini-3.1-pro-high' 'antigravity deep profile selects gemini-3.1-pro-high'
+assert_contains "$output" '--mode=plan' 'antigravity plan mode uses --mode=plan'
+assert_contains "$output" '--agent' 'antigravity forwards the selected agent'
+assert_contains "$output" 'code-review' 'antigravity forwards the agent name'
+assert_contains "$output" 'inspect the diff' 'antigravity plan mode forwards prompt'
+
+output="$(PATH="$temporary_dir:$PATH" "$repo_root/scripts/run-agent.sh" --harness antigravity --profile fast --mode auto -- 'small task')"
+assert_contains "$output" 'gemini-3.8-flash-low' 'antigravity fast profile selects gemini-3.8-flash-low'
+assert_contains "$output" '--mode=accept-edits' 'antigravity auto mode uses --mode=accept-edits'
+assert_contains "$output" 'small task' 'antigravity auto mode forwards prompt'
+
+# Empty arguments must not trip set -u on bash 3.2 (macOS default bash).
+output="$(PATH="$temporary_dir:$PATH" "$repo_root/scripts/run-agent.sh" --harness antigravity --profile balanced --mode work)"
+assert_contains "$output" 'gemini-3.8-flash-medium' 'antigravity no-args launch selects the balanced model'
+assert_not_contains "$output" '--agent' 'antigravity no-args launch omits --agent'
 
 printf '\nLauncher self-test passed.\n'

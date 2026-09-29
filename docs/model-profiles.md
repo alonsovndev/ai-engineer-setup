@@ -39,7 +39,7 @@ Modes are harness-specific wrappers:
 | `plan` | Planning or read-only mode where supported. |
 | `auto` | Higher-autonomy mode where supported. |
 
-For Antigravity CLI, `plan` maps to `--mode=plan` and `auto` maps to `--mode=accept-edits` (the CLI has no `auto` mode; `accept-edits` is the closest autonomy level). Antigravity custom agents are selected interactively via `/agents`, so `run-agent.sh --agent` is not supported for this harness.
+For Antigravity CLI, `plan` maps to `--mode=plan` and `auto` maps to `--mode=accept-edits` (the CLI has no `auto` mode; `accept-edits` is the closest autonomy level). Antigravity custom agents are selected at launch with `--agent` (agy 1.1.1+) or interactively via `/agents`.
 
 The launcher does not bypass permissions by default.
 

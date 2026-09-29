@@ -30,11 +30,12 @@ Detection rules:
 - `main` is the production-candidate branch.
 - `feature/<ticket>-<short-desc>` branches target `dev`.
 - `hotfix/<ticket>-<short-desc>` branches target `main`.
+- Other named working branches, such as `fix/*` and `chore/*`, may also hold commits.
 - Production deploys are promoted by release tags `vX.Y.Z` from `main`.
 
 ## Safety Rules
 
-- Never commit directly to `main`, `master`, or `dev` — create or switch to a `feature/*` or `hotfix/*` branch before making any commit.
+- Never stage or commit on `main`, `master`, `dev`, or a detached HEAD. Check the branch first, then create or switch to any named working branch before making a commit.
 - Never add AI or tool co-author trailers (e.g., `Co-authored-by: ...`) to commit messages.
 - Never run `git resync` without explicit approval. It performs `reset --hard` and `push --force-with-lease`.
 - Never run `git feature` unless topology is fork mode, worktree is clean, and branch name is confirmed.
@@ -87,7 +88,7 @@ If the working tree is dirty, stop before syncing or creating a branch.
 
 ## Keeping Branches Current
 
-Fork mode preserving local commits:
+Fork mode preserving local commits on a working branch:
 
 ```bash
 git sync
@@ -99,12 +100,14 @@ Fork mode hard reset for disposable local copies of shared branches:
 git resync
 ```
 
-Direct mode preserving local commits:
+Direct mode preserving local commits on a working branch:
 
 ```bash
 git fetch origin
 git merge origin/$(git branch --show-current)
 ```
+
+For normal sync of `main`, `master`, or `dev`, fetch the owning remote and use `git merge --ff-only <remote>/<branch>`; stop if it cannot fast-forward. Never run `git sync` or create a merge commit on these branches. Approved `git resync` remains available for disposable local/fork copies of shared branches.
 
 Direct mode fast-forward only for shared branches:
 
@@ -169,12 +172,12 @@ git merge --ff-only upstream/main
 git push origin dev
 ```
 
-Fork mode, merge case (the `dev` → `main` PR was squashed or rebased):
+Fork mode, non-fast-forward case (the `dev` → `main` PR was squashed or rebased):
 
 ```bash
-git checkout dev
+git checkout -b <working-branch> upstream/dev
 git merge --no-ff upstream/main -m "Merge main into dev after release"
-git push origin dev
+# Push the working branch only with approval, then open a PR into upstream/dev.
 ```
 
 Direct mode, fast-forward case:
@@ -185,15 +188,15 @@ git merge --ff-only origin/main
 git push origin dev
 ```
 
-Direct mode, merge case:
+Direct mode, non-fast-forward case:
 
 ```bash
-git checkout dev
+git checkout -b <working-branch> origin/dev
 git merge --no-ff origin/main -m "Merge main into dev after release"
-git push origin dev
+# Push the working branch only with approval, then open a PR into origin/dev.
 ```
 
-Never rebase `dev` onto `main` — `dev` may already be pushed and shared. Never force-push or hard-reset `dev` during back-sync. Require explicit approval before any push.
+Never create a merge commit directly on `dev` or rebase it onto `main` — `dev` may already be pushed and shared. Never force-push or hard-reset `dev` during back-sync. Require explicit approval before any push or PR creation.
 
 ## Final Response
 

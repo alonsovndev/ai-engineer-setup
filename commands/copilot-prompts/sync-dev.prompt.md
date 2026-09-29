@@ -12,8 +12,8 @@ Requirements:
 - Fetch the remote that owns `main`: `upstream` in fork mode, `origin` in direct mode.
 - Check fast-forward eligibility with `git merge-base --is-ancestor dev <remote>/main`.
   - If it succeeds, fast-forward: `git checkout dev && git merge --ff-only <remote>/main`.
-  - If it fails, merge instead of rebasing: `git merge --no-ff <remote>/main -m "Merge main into dev after release"`.
-- Push the updated `dev` to `origin` only after explicit approval.
+  - If it fails, create a named working branch from `<remote>/dev`, merge `<remote>/main` there, and open a PR into `dev`. Never create a merge commit on `dev` or rebase it.
+- Push the fast-forwarded `dev` or working branch only after explicit approval; require approval for PR creation.
 - Never force-push or hard-reset `dev`.
 - Never run this on a dirty worktree.
 

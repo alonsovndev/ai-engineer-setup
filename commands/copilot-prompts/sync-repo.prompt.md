@@ -10,10 +10,10 @@ Requirements:
 - Run read-only preflight first.
 - Detect fork mode (`origin` + `upstream`) or direct mode (`origin` only).
 - Explain and recommend the appropriate sync command for the situation:
-  - Fork mode, preserving local commits: `git sync`.
+  - Fork mode, preserving local commits on a working branch: `git sync`.
   - Fork mode, disposable local copy of a shared branch: `git resync`.
-  - Direct mode, preserving local commits: `git fetch origin && git merge origin/$(git branch --show-current)`.
-  - Direct mode, fast-forward only (shared branches): `git fetch origin && git pull --ff-only origin $(git branch --show-current)`.
+  - Direct mode, preserving local commits on a working branch: `git fetch origin && git merge origin/$(git branch --show-current)`.
+  - Normal sync of protected branches (`main`, `master`, `dev`): fetch, then `git merge --ff-only <remote>/<branch>`; stop if fast-forward is impossible. Never run `git sync` or a merge that creates a commit on these branches. Approved `git resync` remains available for disposable local/fork copies.
 - Require explicit approval before any sync operation.
 - Treat `git resync`, hard reset, and force push as destructive — `git resync` performs `reset --hard` and `push --force-with-lease`.
 - Never hard-reset or force-push a branch that contains unmerged or unpushed local work.

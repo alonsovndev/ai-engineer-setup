@@ -59,7 +59,7 @@ BREAKING CHANGE: `extends` key behavior changed
 git branch --show-current
 ```
 
-If the result is `main`, `master`, or `dev`, stop. Do not stage or commit anything. Tell the user to create or switch to a feature/hotfix branch first (see the `git-repo-flow` skill or `/start-feature`).
+If the command fails or returns an empty branch name (detached HEAD), `main`, `master`, or `dev`, stop before staging. Do not change the index or working tree. Tell the user to create or switch to a named working branch (see the `git-repo-flow` skill or `/start-feature`). Any other named branch is allowed.
 
 ### 1. Analyze Diff
 
@@ -113,6 +113,8 @@ If the subject does not include a Conventional Commit type, stop and rewrite it 
 
 ### 4. Execute Commit
 
+Recheck the current branch immediately before `git commit`; stop if the check fails or the branch is empty, `main`, `master`, or `dev`.
+
 ```bash
 # Single line
 git commit -m "<type>[scope]: <description>"
@@ -150,7 +152,7 @@ docs: add fork setup steps
 
 ## Git Safety Protocol
 
-- NEVER commit directly to `main`, `master`, or `dev`
+- NEVER stage or commit on `main`, `master`, `dev`, or a detached HEAD
 - NEVER update git config
 - NEVER run destructive commands (--force, hard reset) without explicit request
 - NEVER skip hooks (--no-verify) unless user asks

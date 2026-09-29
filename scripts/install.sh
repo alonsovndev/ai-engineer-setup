@@ -238,6 +238,16 @@ link_path "$repo_root/commands/copilot-prompts" "$HOME/.copilot/.github/prompts"
 
 link_path "$repo_root/instructions/AGENTS.md" "$HOME/.gemini/config/AGENTS.md"
 link_path "$repo_root/skills" "$HOME/.gemini/config/skills"
+link_path "$repo_root/instructions/AGENTS.md" "$HOME/.codex/AGENTS.md"
+link_path "$repo_root/agents/codex" "$HOME/.codex/agents"
+
+# Codex workflow skills are linked per skill so the Codex-managed .system
+# skills and curated installs already in ~/.codex/skills are left untouched.
+for codex_skill_path in "$repo_root"/adapters/codex/skills/*/; do
+  [ -d "$codex_skill_path" ] || continue
+  codex_skill_path="${codex_skill_path%/}"
+  link_path "$codex_skill_path" "$HOME/.codex/skills/$(basename "$codex_skill_path")"
+done
 link_path "$repo_root/agents/antigravity" "$HOME/.gemini/config/agents"
 
 printf '\nRestart opencode after config changes; it does not hot-reload config.\n'

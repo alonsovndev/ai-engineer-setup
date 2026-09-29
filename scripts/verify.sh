@@ -8,10 +8,11 @@ check_claude=0
 check_opencode=0
 check_copilot=0
 check_antigravity=0
+check_codex=0
 
 usage() {
   cat <<'USAGE'
-Usage: verify.sh [--harness claude|opencode|copilot|antigravity]... [--all]
+Usage: verify.sh [--harness claude|opencode|copilot|antigravity|codex]... [--all]
 
 Validates the portable AI-agent setup for this clone.
 When no harness is specified, all supported harnesses are checked.
@@ -23,6 +24,7 @@ select_all_harnesses() {
   check_opencode=1
   check_copilot=1
   check_antigravity=1
+  check_codex=1
 }
 
 if [ "$#" -eq 0 ]; then
@@ -37,6 +39,7 @@ while [ "$#" -gt 0 ]; do
         opencode) check_opencode=1 ;;
         copilot) check_copilot=1 ;;
         antigravity) check_antigravity=1 ;;
+        codex) check_codex=1 ;;
         *) printf 'Unknown harness: %s\n' "${2:-}" >&2; usage >&2; exit 2 ;;
       esac
       shift 2
@@ -122,6 +125,7 @@ printf 'Checking local commands only. No model/provider calls are made.\n\n'
 [ "$check_opencode" -eq 1 ] && check_command opencode
 [ "$check_copilot" -eq 1 ] && check_command copilot
 [ "$check_antigravity" -eq 1 ] && check_command agy
+[ "$check_codex" -eq 1 ] && check_command codex
 
 printf '\nChecking required repository paths.\n'
 check_required_path "$repo_root/instructions/AGENTS.md"
@@ -138,6 +142,11 @@ fi
 
 if [ "$check_opencode" -eq 1 ]; then
   check_required_path "$repo_root/adapters/opencode/opencode.jsonc"
+fi
+
+if [ "$check_codex" -eq 1 ]; then
+  check_required_path "$repo_root/agents/codex"
+  check_required_path "$repo_root/adapters/codex/skills"
 fi
 
 printf '\nChecking agent and command parity across harnesses.\n'
@@ -259,6 +268,42 @@ check_antigravity_extras() {
 
   if [ "$extras" -eq 0 ]; then
     printf 'ok: antigravity agents: no unexpected entries\n'
+  fi
+}
+
+check_codex_workflow_extras() {
+  local search_dir="$repo_root/adapters/codex/skills"
+  local extras=0
+  local skill_dir
+  local command_name
+  if [ ! -d "$search_dir" ]; then
+    printf 'missing directory: %s (Codex workflow skills)\n' "$search_dir"
+    failed=1
+    return 0
+  fi
+  for skill_dir in "$search_dir"/*/; do
+    [ -d "$skill_dir" ] || continue
+    command_name="$(basename "$skill_dir")"
+    if ! name_in_list "$command_name" "${command_names[@]}"; then
+      printf 'unexpected: %s has no counterpart in the canonical command set (Codex workflow skills)\n' "$skill_dir"
+      extras=$((extras + 1))
+    elif [ ! -f "$skill_dir/SKILL.md" ]; then
+      printf 'missing Codex workflow skill manifest: %s/SKILL.md\n' "${skill_dir%/}"
+      extras=$((extras + 1))
+    fi
+  done
+  # Codex workflow skills must not live in the shared skills tree, which every
+  # other harness also loads.
+  for command_name in "${command_names[@]}"; do
+    if [ -d "$repo_root/skills/$command_name" ]; then
+      printf 'unexpected: %s — Codex workflow skills belong in adapters/codex/skills, not the shared skills tree\n' "$repo_root/skills/$command_name"
+      extras=$((extras + 1))
+    fi
+  done
+  if [ "$extras" -gt 0 ]; then
+    failed=1
+  else
+    printf 'ok: codex workflow skills: no unexpected entries\n'
   fi
 }
 
@@ -445,6 +490,57 @@ else
     check_antigravity_extras "${agent_names[@]}"
     check_descriptions 'antigravity agent descriptions' 'agents/antigravity/@/agent.md' "${agent_names[@]}"
   fi
+
+  if [ "$check_codex" -eq 1 ]; then
+    check_parity 'codex agents' 'agents/codex/@.toml' "${agent_names[@]}"
+    check_extras 'codex agents' 'agents/codex' '*.toml' '.toml' "${agent_names[@]}"
+    if command -v python3 >/dev/null 2>&1 && python3 -c 'import tomllib' >/dev/null 2>&1; then
+      if ! python3 - "$repo_root/agents/codex" "${agent_names[@]}" <<'PYTHON'
+import pathlib, sys, tomllib
+
+directory = pathlib.Path(sys.argv[1])
+for name in sys.argv[2:]:
+    path = directory / f"{name}.toml"
+    try:
+        config = tomllib.loads(path.read_text())
+    except (OSError, tomllib.TOMLDecodeError) as error:
+        print(f"invalid Codex agent TOML: {path} ({error})")
+        raise SystemExit(1)
+    for field in ("name", "description", "developer_instructions"):
+        if not isinstance(config.get(field), str) or not config[field].strip():
+            print(f"missing or empty Codex agent field {field}: {path}")
+            raise SystemExit(1)
+PYTHON
+      then
+        failed=1
+      fi
+    else
+      printf 'warn: Python 3.11+ not available to parse Codex agent TOML; falling back to a field grep\n'
+      warnings=1
+      for agent_name in "${agent_names[@]}"; do
+        codex_agent_file="$repo_root/agents/codex/$agent_name.toml"
+        [ -f "$codex_agent_file" ] || continue
+        for required_field in 'name = ' 'description = ' 'developer_instructions = '; do
+          if ! grep -Fq "$required_field" "$codex_agent_file"; then
+            printf 'missing Codex agent field %s: %s\n' "$required_field" "$codex_agent_file"
+            failed=1
+          fi
+        done
+      done
+    fi
+    for command_name in "${command_names[@]}"; do
+      codex_skill_file="$repo_root/adapters/codex/skills/$command_name/SKILL.md"
+      check_required_path "$codex_skill_file"
+      if [ -f "$codex_skill_file" ]; then
+        check_frontmatter_description "$codex_skill_file"
+        if ! grep -Eq "^name: ${command_name}\$" "$codex_skill_file"; then
+          printf 'wrong Codex skill name: %s (expected %s)\n' "$codex_skill_file" "$command_name"
+          failed=1
+        fi
+      fi
+    done
+    check_codex_workflow_extras
+  fi
 fi
 
 printf '\nChecking symlinks.\n'
@@ -479,6 +575,28 @@ if [ "$check_antigravity" -eq 1 ]; then
   check_link "$HOME/.gemini/config/agents" "$repo_root/agents/antigravity"
 fi
 
+if [ "$check_codex" -eq 1 ]; then
+  check_link "$HOME/.codex/AGENTS.md" "$repo_root/instructions/AGENTS.md"
+  check_link "$HOME/.codex/agents" "$repo_root/agents/codex"
+  for command_name in "${command_names[@]}"; do
+    check_link "$HOME/.codex/skills/$command_name" "$repo_root/adapters/codex/skills/$command_name"
+  done
+  # install.sh only adds links, so a renamed or removed canonical command can
+  # leave a stale repo-pointing link behind. Whole-directory links used by the
+  # other harnesses cannot go stale this way.
+  for codex_skill_link in "$HOME/.codex/skills"/*; do
+    [ -L "$codex_skill_link" ] || continue
+    case "$(readlink "$codex_skill_link")" in
+      "$repo_root"*) ;;
+      *) continue ;;
+    esac
+    if ! name_in_list "$(basename "$codex_skill_link")" "${command_names[@]}"; then
+      printf 'unexpected symlink: %s has no counterpart in the canonical command set (Codex workflow skills)\n' "$codex_skill_link"
+      failed=1
+    fi
+  done
+fi
+
 printf '\nChecking model profile consistency.\n'
 if command -v python3 >/dev/null 2>&1; then
   model_check_status=0
@@ -505,6 +623,7 @@ for profile in ['deep', 'balanced', 'fast']:
             ('copilot_model', 'copilot'),
             ('opencode_model', 'opencode'),
             ('antigravity_model', 'antigravity'),
+            ('codex_effort', 'codex_effort'),
         ]:
             m = re.search(rf'{harness_var}=\"([^\"]+)\"', block.group(1))
             if m:
@@ -513,7 +632,17 @@ for profile in ['deep', 'balanced', 'fast']:
 # Compare
 ok = True
 for pname, p in profiles.get('profiles', {}).items():
-    for h in ['claude', 'copilot', 'opencode', 'antigravity']:
+    for h in ['claude', 'copilot', 'opencode', 'antigravity', 'codex']:
+        if h == 'codex':
+            # Codex profile intentionally leaves model selection to user config.
+            profile_effort = p[h].get('effort', '') if h in p else ''
+            script_effort = script_models.get(f'{pname}/codex_effort', 'NOT_FOUND')
+            if profile_effort and profile_effort == script_effort:
+                print(f'ok: {pname}/codex effort = {profile_effort}')
+            elif profile_effort:
+                print(f'mismatch: {pname}/codex effort profiles.jsonc={profile_effort} run-agent.sh={script_effort}')
+                ok = False
+            continue
         if h in p:
             key = f'{pname}/{h}'
             profile_model = p[h].get('model', '')

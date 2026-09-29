@@ -22,6 +22,7 @@ Install only the harnesses you plan to use:
 
 | Harness | Expected command |
 |---|---|
+| Codex CLI | `codex` |
 | Claude Code | `claude` |
 | opencode | `opencode` |
 | GitHub Copilot CLI | `copilot` |
@@ -93,13 +94,13 @@ git diff
 
 ## What install changes
 
-The installer creates symlinks for portable directories and writes one generated opencode config file.
+The installer creates symlinks for portable directories and writes one generated opencode config file. For Codex, it manages only `~/.codex/AGENTS.md`, `~/.codex/agents`, and its own per-skill links under `~/.codex/skills`; it leaves `config.toml`, auth, sessions, caches, the Codex-managed `.system` skills, and other Codex state untouched.
 
 See [Symlink map](./symlink-map.md) for the full source-to-target mapping.
 
 The opencode config is generated at `~/.config/opencode/opencode.jsonc` because opencode needs an absolute instructions path for the local clone. The generated file includes a marker comment and should not be committed.
 
-The generated opencode config also sets `skills.paths` to this repository's absolute `skills/` path so opencode loads the same portable skills as Claude Code and Copilot CLI.
+The generated opencode config also sets `skills.paths` to this repository's absolute `skills/` path. Codex discovers the same portable skills through `~/.agents/skills`; its workflow command skills (named after the canonical commands) are linked per skill into `~/.codex/skills` so they do not appear in other harnesses.
 
 ## Validate
 
@@ -120,6 +121,7 @@ The verifier checks:
 Missing selected harness commands are reported as issues. Install only the tools you need, then rerun the verifier for those harnesses:
 
 ```bash
+./scripts/verify.sh --harness codex
 ./scripts/verify.sh --harness claude
 ./scripts/verify.sh --harness opencode
 ./scripts/verify.sh --harness copilot
@@ -161,7 +163,7 @@ Run:
 ./scripts/uninstall.sh
 ```
 
-`uninstall.sh` removes only symlinks that point into this repository and the generated opencode config created by `install.sh`. It does not automatically restore backups.
+`uninstall.sh` removes only symlinks that point into this repository and the generated opencode config created by `install.sh`, including the managed Codex instruction and agent links. It does not automatically restore backups.
 
 ## Restore a backup
 

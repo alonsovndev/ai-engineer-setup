@@ -4,11 +4,12 @@ Use this guide when setup validation fails or a harness does not load the expect
 
 ## Verify reports missing commands
 
-`scripts/verify.sh` checks selected harness commands on `PATH`. With no options, it checks `claude`, `opencode`, `copilot`, and `agy`.
+`scripts/verify.sh` checks selected harness commands on `PATH`. With no options, it checks `codex`, `claude`, `opencode`, `copilot`, and `agy`.
 
 Install the missing harness or verify only the harnesses you use:
 
 ```bash
+./scripts/verify.sh --harness codex
 ./scripts/verify.sh --harness claude
 ./scripts/verify.sh --harness opencode
 ./scripts/verify.sh --harness copilot
@@ -94,3 +95,15 @@ mv <target>.backup-<timestamp> <target>
 ```
 
 Only restore files you recognize. Do not restore auth, session, cache, or telemetry files into this repository.
+
+## Codex does not load shared instructions, agents, or workflows
+
+Confirm the managed global paths and Codex CLI version:
+
+```bash
+./scripts/install.sh
+./scripts/verify.sh --harness codex
+codex --version
+```
+
+Codex reads global instructions from `~/.codex/AGENTS.md`, custom agents from `~/.codex/agents/`, and shared skills from `~/.agents/skills/`. Workflow command equivalents use `$<command>` (for example, `$commit`) and are linked per skill from `adapters/codex/skills/` in this repo into `~/.codex/skills/` — check those links if a workflow skill is missing. Restart Codex if a changed skill does not appear.

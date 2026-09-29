@@ -1,6 +1,6 @@
 # ai-agent-setup
 
-Portable AI coding-agent setup for Claude Code, opencode, GitHub Copilot CLI, and Antigravity CLI.
+Portable AI coding-agent setup for Codex CLI, Claude Code, opencode, GitHub Copilot CLI, and Antigravity CLI.
 
 This repository tracks only reusable instructions, skills, agents, commands, model profiles, and harness adapters. It intentionally excludes auth, sessions, telemetry, logs, caches, and machine-specific state.
 
@@ -14,9 +14,11 @@ This repository tracks only reusable instructions, skills, agents, commands, mod
 | `agents/copilot/`           | Copilot CLI agent definitions.                                                                                                                                     |
 | `agents/opencode/`          | opencode agent definitions.                                                                                                                                         |
 | `agents/antigravity/`       | Antigravity CLI agent definitions.                                                                                                                                  |
+| `agents/codex/`             | Codex custom subagents in TOML format.                                                                                                                               |
 | `commands/claude/`          | Claude Code slash commands.                                                                                                                                        |
 | `commands/opencode/`        | opencode command wrappers.                                                                                                                                         |
 | `commands/copilot-prompts/` | Copilot prompt files.                                                                                                                                              |
+| `adapters/codex/skills/`    | Codex skill equivalents for shared workflow commands (linked per skill into `~/.codex/skills`, not the shared skills tree).                                            |
 | `adapters/`                 | Harness-specific config files that are safe to version.                                                                                                            |
 | `profiles/`                 | Model/profile mapping by harness.                                                                                                                                  |
 | `scripts/`                  | Local install, uninstall, and validation scripts.                                                                                                                  |
@@ -38,9 +40,9 @@ Run from this repository:
 
 `install.sh` backs up existing portable config paths before replacing them with symlinks. It does not touch auth, session, cache, or telemetry files.
 
-`verify.sh` checks the managed symlinks and then enforces cross-harness parity: `agents/claude/` and `commands/claude/` are the canonical sets, and verification fails if any harness is missing an agent, carries one the canonical set does not have, or ships an agent without a frontmatter description; if opencode or Copilot is missing a command or prompt, or carries one the canonical set does not have; or if the Copilot Agent Registry in `adapters/copilot/instructions/copilot-instructions.md` does not match the agent set exactly. Antigravity has no commands directory, so only its agents are checked. Add a new agent or command to every harness in the same change.
+`verify.sh` checks the managed symlinks and enforces parity against `agents/claude/` and `commands/claude/`. Codex custom agents live under `agents/codex/`; each canonical command has a Codex skill equivalent under `adapters/codex/skills/<command>/`, linked per skill into `~/.codex/skills` so it stays out of the shared skills tree the other harnesses load. Add new agents and commands to every supported harness in the same change.
 
-`./scripts/test-verify.sh` self-tests that guard — it copies the repo to a throwaway path, breaks it one way at a time, and asserts each breakage is caught. Run it after changing `verify.sh`.
+`./scripts/test-verify.sh` self-tests verifier parity, and `./scripts/test-run-agent.sh` checks launcher arguments through a stub Codex executable without model calls. Run the matching self-test after changing either script.
 
 Preview changes before installing with:
 
@@ -63,7 +65,7 @@ git status
 ./scripts/verify.sh
 ```
 
-If the new skill appears as `skills/<skill-name>/SKILL.md`, it is portable and exposed through the managed symlinks for Claude Code, GitHub Copilot CLI, Antigravity CLI, shared agent paths, and opencode's generated `skills.paths` config. Review the diff before committing community skills or skill updates.
+If the new skill appears as `skills/<skill-name>/SKILL.md`, it is portable and exposed through the managed paths for Codex, Claude Code, GitHub Copilot CLI, Antigravity CLI, shared agent paths, and opencode's generated `skills.paths` config. Review the diff before committing community skills or skill updates.
 
 ## Update Existing Install
 
@@ -86,6 +88,7 @@ Deep setup docs:
 
 ## Safety
 
+- Do not commit auth or local session state from `~/.codex`; the installer only manages `AGENTS.md`, `agents/`, and its own workflow skill links there.
 - Do not commit auth files from `~/.claude`, `~/.copilot`, `~/.config/github-copilot`, or provider credential stores.
 - Do not symlink whole config roots. Only symlink the portable paths handled by `scripts/install.sh`.
 - Restart opencode after config changes; it loads config once at startup.

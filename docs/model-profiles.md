@@ -24,6 +24,7 @@ Keep these files aligned when changing model names or effort levels. `run-agent.
 Run from this repository:
 
 ```bash
+./scripts/run-agent.sh --harness codex --profile balanced --mode work
 ./scripts/run-agent.sh --harness claude --profile balanced --mode work
 ./scripts/run-agent.sh --harness opencode --profile fast --mode plan
 ./scripts/run-agent.sh --harness copilot --profile deep --mode auto
@@ -41,3 +42,5 @@ Modes are harness-specific wrappers:
 For Antigravity CLI, `plan` maps to `--mode=plan` and `auto` maps to `--mode=accept-edits` (the CLI has no `auto` mode; `accept-edits` is the closest autonomy level). Antigravity custom agents are selected interactively via `/agents`, so `run-agent.sh --agent` is not supported for this harness.
 
 The launcher does not bypass permissions by default.
+
+For Codex, profiles keep the model selected in Codex config and set `model_reasoning_effort` to `high`, `medium`, or `low`. `plan` uses the read-only sandbox; `auto` uses Codex automatic approval review with the workspace-write sandbox. When `--agent` is supplied, the launcher asks Codex to delegate to that named custom subagent.

@@ -66,4 +66,16 @@ unlink_if_repo_link "$HOME/.gemini/config/AGENTS.md"
 unlink_if_repo_link "$HOME/.gemini/config/skills"
 unlink_if_repo_link "$HOME/.gemini/config/agents"
 
+unlink_if_repo_link "$HOME/.codex/AGENTS.md"
+unlink_if_repo_link "$HOME/.codex/agents"
+
+# Per-skill workflow links under ~/.codex/skills. Non-symlink entries
+# (Codex-managed .system skills, curated installs) are not ours to remove.
+if [ -d "$HOME/.codex/skills" ]; then
+  for codex_skill_link in "$HOME/.codex/skills"/*; do
+    [ -L "$codex_skill_link" ] || continue
+    unlink_if_repo_link "$codex_skill_link"
+  done
+fi
+
 printf '\nBackups are not restored automatically. Restore the matching *.backup-* path manually if needed.\n'

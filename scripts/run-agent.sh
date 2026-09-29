@@ -3,7 +3,7 @@ set -euo pipefail
 
 usage() {
   cat <<'USAGE'
-Usage: run-agent.sh --harness claude|opencode|copilot|antigravity [--profile deep|balanced|fast] [--mode work|plan|auto] [--agent name] [--] [prompt...]
+Usage: run-agent.sh --harness claude|opencode|copilot|antigravity|codex [--profile deep|balanced|fast] [--mode work|plan|auto] [--agent name] [--] [prompt...]
 
 Starts the selected AI harness with a consistent profile vocabulary.
 This script does not bypass permissions by default.
@@ -63,6 +63,7 @@ case "$profile" in
     copilot_effort="high"
     opencode_model="anthropic/claude-opus-5"
     antigravity_model="gemini-3.1-pro-high"
+    codex_effort="high"
     ;;
   balanced)
     claude_model="sonnet"
@@ -71,6 +72,7 @@ case "$profile" in
     copilot_effort="medium"
     opencode_model="anthropic/claude-sonnet-5"
     antigravity_model="gemini-3.8-flash-medium"
+    codex_effort="medium"
     ;;
   fast)
     claude_model="fable"
@@ -79,6 +81,7 @@ case "$profile" in
     copilot_effort="low"
     opencode_model="anthropic/claude-haiku-4-5"
     antigravity_model="gemini-3.8-flash-low"
+    codex_effort="low"
     ;;
   *)
     printf 'Unknown profile: %s\n' "$profile" >&2
@@ -130,6 +133,38 @@ case "$harness" in
     esac
     # Agent selection is interactive via /agents; there is no --agent CLI flag.
     exec agy "${command_args[@]}" ${arguments[@]+"${arguments[@]}"}
+    ;;
+  codex)
+    command_args=(-c "model_reasoning_effort=\"$codex_effort\"")
+    codex_mode_prefix=""
+    case "$mode" in
+      work)
+        command_args+=(--sandbox workspace-write --ask-for-approval on-request)
+        ;;
+      plan)
+        command_args+=(--sandbox read-only --ask-for-approval on-request)
+        codex_mode_prefix="Plan the requested work without making changes. State assumptions and a concrete implementation plan. Task:"
+        ;;
+      auto)
+        command_args+=(--approve-for-me)
+        ;;
+      *) printf 'Unknown mode: %s\n' "$mode" >&2; exit 2 ;;
+    esac
+    codex_prompt="$codex_mode_prefix"
+    if [ -n "$agent" ]; then
+      [ -n "$codex_prompt" ] && codex_prompt+=" "
+      codex_prompt+="Ask the Codex custom subagent '$agent' to handle this task."
+    fi
+    for argument in ${arguments[@]+"${arguments[@]}"}; do
+      if [ -n "$codex_prompt" ]; then
+        codex_prompt+=" "
+      fi
+      codex_prompt+="$argument"
+    done
+    if [ -n "$codex_prompt" ]; then
+      exec codex "${command_args[@]}" "$codex_prompt"
+    fi
+    exec codex "${command_args[@]}"
     ;;
   *)
     printf 'Unknown harness: %s\n' "$harness" >&2

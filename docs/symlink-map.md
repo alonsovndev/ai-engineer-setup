@@ -60,3 +60,14 @@ Backup format:
 ```
 
 `uninstall.sh` does not restore backups automatically.
+
+## Codex CLI
+
+| Source | Target | Type |
+|---|---|---|
+| `instructions/AGENTS.md` | `~/.codex/AGENTS.md` | Symlink |
+| `agents/codex/` | `~/.codex/agents` | Symlink |
+| `skills/` | `~/.agents/skills` | Symlink |
+| `adapters/codex/skills/<command>/` | `~/.codex/skills/<command>` | Per-skill symlinks |
+
+Codex discovers shared user skills from `~/.agents/skills`; that link is installed once and serves Codex alongside the other supported harnesses. Codex workflow command equivalents are skills named after the canonical commands, invoked with `$<command>`; they live in `adapters/codex/skills/` and are linked per skill into `~/.codex/skills` so they never appear in another harness's skill list. The per-skill links also leave the Codex-managed `.system` skills and any curated installs in `~/.codex/skills` untouched. The installer does not manage `~/.codex/config.toml`, auth, sessions, or cache.

@@ -13,6 +13,8 @@
   // antigravity VERIFIED 2026-09-09 against `agy models`. Its IDs already encode the reasoning
   //           level as a suffix (-high/-medium/-low), so run-agent.sh sets the level by
   //           choosing the ID and does not also pass --effort.
+  // codex VERIFIED 2026-09-24 against `codex --help` (CLI 0.156.1); uses the configured model
+  // and `model_reasoning_effort` overrides instead of pinning a model ID.
   "defaultProfile": "balanced",
   "profiles": {
     "deep": {
@@ -30,6 +32,9 @@
       },
       "antigravity": {
         "model": "gemini-3.1-pro-high"
+      },
+      "codex": {
+        "effort": "high"
       }
     },
     "balanced": {
@@ -47,6 +52,9 @@
       },
       "antigravity": {
         "model": "gemini-3.8-flash-medium"
+      },
+      "codex": {
+        "effort": "medium"
       }
     },
     "fast": {
@@ -64,6 +72,9 @@
       },
       "antigravity": {
         "model": "gemini-3.8-flash-low"
+      },
+      "codex": {
+        "effort": "low"
       }
     }
   }

@@ -44,7 +44,7 @@ parity_failed() {
   output="$("$clone/scripts/verify.sh" --harness "$harness" 2>&1 || true)"
   printf '%s\n' "$output" \
     | awk '/parity across harnesses/{inside=1; next} /^Checking symlinks/{inside=0} inside' \
-    | grep -qvE '^ok:|^canonical set:|^$'
+    | grep -qvE '^ok:|^warn:|^canonical set:|^$'
 }
 
 # assert <expectation> <harness> <description>
@@ -80,7 +80,7 @@ restore() {
 printf 'Self-testing the parity guard from: %s\n\n' "$clone"
 
 printf 'Baseline\n'
-for harness in claude opencode copilot antigravity; do
+for harness in claude opencode copilot antigravity codex; do
   assert clean "$harness" "clean tree passes ($harness)"
 done
 
@@ -98,6 +98,22 @@ mv "$clone/agents/antigravity/terraform" "$work_root/held-dir"
 assert fails antigravity 'a missing antigravity agent directory is caught'
 mv "$work_root/held-dir" "$clone/agents/antigravity/terraform"
 
+mv "$clone/agents/codex/terraform.toml" "$work_root/held-codex-agent.toml"
+assert fails codex 'a missing Codex custom agent is caught'
+mv "$work_root/held-codex-agent.toml" "$clone/agents/codex/terraform.toml"
+
+if command -v python3 >/dev/null 2>&1 && python3 -c 'import tomllib' >/dev/null 2>&1; then
+  sed 's/^description = .*/description = [invalid/' "$repo_root/agents/codex/terraform.toml" > "$clone/agents/codex/terraform.toml"
+  assert fails codex 'invalid Codex custom-agent TOML is caught'
+  restore agents/codex/terraform.toml
+else
+  printf '  SKIP  invalid Codex custom-agent TOML is caught (needs Python 3.11+ tomllib; grep fallback cannot detect it)\n'
+fi
+
+mv "$clone/adapters/codex/skills/commit/SKILL.md" "$work_root/held-codex-skill.md"
+assert fails codex 'a missing Codex workflow skill is caught'
+mv "$work_root/held-codex-skill.md" "$clone/adapters/codex/skills/commit/SKILL.md"
+
 printf '\nUnexpected extras\n'
 cp "$clone/commands/copilot-prompts/commit.prompt.md" "$clone/commands/copilot-prompts/orphan.prompt.md"
 assert fails copilot 'a Copilot-only prompt is caught'
@@ -110,6 +126,20 @@ rm "$clone/agents/antigravity/orphan.md"
 mkdir -p "$clone/agents/antigravity/orphan-agent"
 assert fails antigravity 'a stray directory without agent.md is caught'
 rmdir "$clone/agents/antigravity/orphan-agent"
+
+cp "$clone/agents/codex/terraform.toml" "$clone/agents/codex/orphan.toml"
+assert fails codex 'a Codex-only custom agent is caught'
+rm "$clone/agents/codex/orphan.toml"
+
+mkdir -p "$clone/adapters/codex/skills/orphan"
+printf '%s\n' '---' 'name: orphan' 'description: orphan workflow' '---' 'instructions' > "$clone/adapters/codex/skills/orphan/SKILL.md"
+assert fails codex 'a Codex-only workflow skill is caught'
+rm -r "$clone/adapters/codex/skills/orphan"
+
+mkdir -p "$clone/skills/commit"
+printf '%s\n' '---' 'name: commit' 'description: stray workflow' '---' 'instructions' > "$clone/skills/commit/SKILL.md"
+assert fails codex 'a Codex workflow skill in the shared skills tree is caught'
+rm -r "$clone/skills/commit"
 
 printf '\nWrong file type\n'
 mkdir -p "$clone/agents/opencode/orphan.md"
@@ -176,7 +206,7 @@ assert fails copilot 'an agent missing from the performance budget table is caug
 restore adapters/copilot/instructions/PERFORMANCE-BUDGET.md
 
 printf '\nRestored baseline\n'
-for harness in claude opencode copilot antigravity; do
+for harness in claude opencode copilot antigravity codex; do
   assert clean "$harness" "tree restored cleanly ($harness)"
 done
 

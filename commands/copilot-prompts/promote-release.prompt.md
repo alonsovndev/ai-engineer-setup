@@ -1,12 +1,14 @@
 ---
-description: "Prepare or create the pre-release pull request promoting dev into main using the GitHub Enterprise workflow"
+description: "Prepare or create the pre-release pull request promoting dev into main using the GitHub workflow"
 name: "Promote Release"
 argument-hint: "Title, issue links, and whether push/create is approved"
 agent: "agent"
 ---
+
 Use the `git-create-pr`, `gh-prs`, and `git-repo-flow` skills to prepare a pull request.
 
 Requirements:
+
 - Run read-only preflight first: status, branch, remotes, log, diff stat.
 - Choose the PR target from detected topology: fork mode targets `upstream`, direct mode targets `origin`.
 - Target `main` for `dev` (and `hotfix/*`) release PRs.

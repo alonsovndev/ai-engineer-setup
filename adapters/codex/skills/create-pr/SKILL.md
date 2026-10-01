@@ -1,11 +1,11 @@
 ---
 name: create-pr
-description: "Prepare or create a pull request from a feature branch into `dev` using the GitHub Enterprise workflow."
+description: "Prepare or create a pull request from a feature branch into `dev` using the GitHub workflow."
 ---
 
 Use this skill when the user invokes `$create-pr` or asks for this workflow. Apply any scope, options, and details supplied with the invocation.
 
-Prepare or create a pull request from a feature branch into `dev` using the GitHub Enterprise workflow.
+Prepare or create a pull request from a feature branch into `dev` using the GitHub workflow.
 
 Use the `git-create-pr`, `gh-prs`, and `git-repo-flow` skills.
 

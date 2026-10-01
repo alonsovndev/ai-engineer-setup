@@ -1,11 +1,11 @@
 ---
 name: promote-release
-description: "Prepare or create the pre-release pull request promoting `dev` into `main` using the GitHub Enterprise workflow."
+description: "Prepare or create the pre-release pull request promoting `dev` into `main` using the GitHub workflow."
 ---
 
 Use this skill when the user invokes `$promote-release` or asks for this workflow. Apply any scope, options, and details supplied with the invocation.
 
-Prepare or create the pre-release pull request promoting `dev` into `main` using the GitHub Enterprise workflow.
+Prepare or create the pre-release pull request promoting `dev` into `main` using the GitHub workflow.
 
 Use the `git-create-pr`, `gh-prs`, and `git-repo-flow` skills.
 

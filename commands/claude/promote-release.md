@@ -1,9 +1,9 @@
 ---
-description: "Prepare or create the pre-release pull request promoting `dev` into `main` using the GitHub Enterprise workflow."
+description: "Prepare or create the pre-release pull request promoting `dev` into `main` using the GitHub workflow."
 argument-hint: "Title, issue links, and whether push/create is approved"
 ---
 
-Prepare or create the pre-release pull request promoting `dev` into `main` using the GitHub Enterprise workflow.
+Prepare or create the pre-release pull request promoting `dev` into `main` using the GitHub workflow.
 
 Use the `git-create-pr`, `gh-prs`, and `git-repo-flow` skills.
 

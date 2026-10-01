@@ -28,6 +28,7 @@ These baseline rules apply to every project. Do not apply stack-specific archite
 - Do not commit changes unless the user explicitly asks for a commit.
 - Before staging and again before a requested commit, check the current branch. Do not stage or commit on `main`, `master`, `dev`, or a detached HEAD; ask the user to create or switch to a named working branch. Any other named branch is allowed.
 - Do not push or force-push unless the user explicitly asks.
+- Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch), and only when the user explicitly asks. If a protected branch needs a push, do the local step and give the user the exact command to run.
 - Never force-push to protected branches such as `main` or `master`.
 - Do not use bypass flags such as `--no-verify` unless the user explicitly requests it.
 - Do not commit secrets, credentials, `.env` files, or sensitive configuration.

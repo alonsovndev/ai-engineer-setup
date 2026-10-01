@@ -102,6 +102,8 @@ The opencode config is generated at `~/.config/opencode/opencode.jsonc` because 
 
 The generated opencode config also sets `skills.paths` to this repository's absolute `skills/` path. Codex discovers the same portable skills through `~/.agents/skills`; its workflow command skills (named after the canonical commands) are linked per skill into `~/.codex/skills` so they do not appear in other harnesses.
 
+The installer also links `instructions/AGENTS.md` to `~/.config/opencode/AGENTS.md` so opencode's auto-loaded global instructions cannot drift from the canonical file.
+
 ## Validate
 
 Run:
@@ -140,6 +142,8 @@ The repository workflow expects these user-level aliases:
 ```
 
 These aliases are for fork-mode repositories. In direct-mode repositories, use the manual workflow documented in [Git repo flow](./git-repo-flow.md).
+
+`git sync`, `git resync`, and `git feature` all push the current branch, so agents never run them on a protected branch (`main`, `master`, `dev`) — run them yourself when needed; see the [push policy](./git-repo-flow.md#push-policy).
 
 ## Update an existing setup
 

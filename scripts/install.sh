@@ -228,6 +228,7 @@ link_path "$repo_root/agents/claude" "$HOME/.claude/agents"
 link_path "$repo_root/commands/claude" "$HOME/.claude/commands"
 
 write_opencode_config
+link_path "$repo_root/instructions/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
 link_path "$repo_root/agents/opencode" "$HOME/.config/opencode/agent"
 link_path "$repo_root/commands/opencode" "$HOME/.config/opencode/command"
 

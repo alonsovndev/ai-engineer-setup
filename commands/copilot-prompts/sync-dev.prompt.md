@@ -13,7 +13,8 @@ Requirements:
 - Check fast-forward eligibility with `git merge-base --is-ancestor dev <remote>/main`.
   - If it succeeds, fast-forward: `git checkout dev && git merge --ff-only <remote>/main`.
   - If it fails, create a named working branch from `<remote>/dev`, merge `<remote>/main` there, and open a PR into `dev`. Never create a merge commit on `dev` or rebase it.
-- Push the fast-forwarded `dev` or working branch only after explicit approval; require approval for PR creation.
+- Never push `dev` yourself — not even with explicit approval; after the local fast-forward, give the user the exact command to run (`git push origin dev`).
+- Push a working branch only after explicit approval; require approval for PR creation.
 - Never force-push or hard-reset `dev`.
 - Never run this on a dirty worktree.
 

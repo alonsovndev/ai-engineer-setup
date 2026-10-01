@@ -54,6 +54,7 @@ unlink_if_repo_link "$HOME/.claude/agents"
 unlink_if_repo_link "$HOME/.claude/commands"
 
 unlink_generated_opencode_config
+unlink_if_repo_link "$HOME/.config/opencode/AGENTS.md"
 unlink_if_repo_link "$HOME/.config/opencode/agent"
 unlink_if_repo_link "$HOME/.config/opencode/command"
 

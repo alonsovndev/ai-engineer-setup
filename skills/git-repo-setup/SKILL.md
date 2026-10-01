@@ -45,12 +45,10 @@ If `dev` is missing, confirm with the user before writing anything, then:
 ```bash
 git fetch <remote>
 git checkout -B dev <remote>/main
-git push -u <remote> dev
 ```
 
-This pushes a new branch (not a force-push), but it still writes to a shared remote —
-require explicit approval before running it, per `git-repo-flow`'s safety rules on
-pushing to `dev`/`main`.
+Then give the user the exact command to run themselves: `git push -u <remote> dev`.
+Never push `dev` yourself — not even with explicit approval.
 
 ## Step 2 — Scaffold repo hygiene files
 
@@ -86,7 +84,7 @@ to overwrite it.
 
 Report:
 
-- Whether `dev` already existed or was created (and pushed to which remote).
+- Whether `dev` already existed or was created (and the push command handed to the user).
 - Which hygiene files were created vs. already existed.
 - Any `TBD` items (license choice deferred, undetected stack, etc.).
 - A reminder that branch protection/rulesets are not configured by this skill — set them
@@ -95,6 +93,6 @@ Report:
 ## Constraints
 
 - Never overwrite an existing README/.gitignore/LICENSE/CONTRIBUTING.
-- Never push branches without explicit approval.
+- Never push branches yourself — a `dev` bootstrap push is always handed to the user as the exact command to run.
 - Do not configure branch protection or rulesets — out of scope for this skill.
 - Mark unknowns `TBD`; do not invent license choice, org name, or project details.

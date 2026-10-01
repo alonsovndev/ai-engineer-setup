@@ -22,6 +22,7 @@ Create safe, review-ready GitHub pull requests from the current repository state
 
 - Never create a PR from `main` or `master` unless the user explicitly confirms this is intentional.
 - Never push a branch unless the user explicitly approves pushing to the named remote and branch.
+- Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch). If a protected branch needs a push, give the user the exact command to run.
 - Never force-push unless the user explicitly requests it and the branch is not protected.
 - Never bypass hooks, CI, branch protections, or review rules.
 - Never commit, stage, or amend changes unless the user explicitly asks for that action.

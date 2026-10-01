@@ -11,6 +11,7 @@ Requirements:
 - Verify `dev` to `main` candidate flow and release tag assumptions.
 - Confirm main HEAD versus latest release tag for hotfixes.
 - Check PR approvals, unresolved threads, CI status, and verification evidence when data is available.
-- Require explicit approval before creating or pushing the release tag, merging, or calling GitHub APIs.
+- Require explicit approval before creating the release tag, merging, or calling GitHub APIs.
+- Never push the release tag yourself — create the tag locally and give the user the exact command to run (`git push <remote> vX.Y.Z`).
 
 Arguments: $ARGUMENTS

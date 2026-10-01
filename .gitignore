@@ -23,6 +23,7 @@ history.jsonl
 daemon.*
 *.lock
 *.log
+skills/synced/
 
 # Installer backups (scripts/install.sh)
 *.backup-*

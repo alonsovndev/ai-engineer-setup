@@ -1,5 +1,5 @@
 ---
-description: Prepare or create the pre-release pull request promoting dev into main using the GitHub Enterprise workflow.
+description: Prepare or create the pre-release pull request promoting dev into main using the GitHub workflow.
 agent: build
 ---
 

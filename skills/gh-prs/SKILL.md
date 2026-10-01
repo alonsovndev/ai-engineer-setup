@@ -12,7 +12,7 @@ Read, create, and inspect pull requests using GitHub CLI.
 
 ## Safety Rules
 
-- Never create, edit, comment on, close, merge, or push for a PR without explicit approval.
+- Never create, edit, comment on, close, merge, or push for a PR without explicit approval — except that invoking a create-PR command or the `git-create-pr` skill counts as approval to commit current changes, push the working branch, and create the PR.
 - Never include secrets, tokens, credentials, private config, or `.env` values in PR text or comments.
 - Never claim a PR was created or updated unless the command succeeded.
 - Prefer read-only commands before write commands.
@@ -68,7 +68,7 @@ Summarize comments by theme, blocker, owner, and required action. Do not resolve
 
 ## Create PR
 
-Only after explicit approval to push and create the PR, and only when the current branch is a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch):
+Only after explicit approval to push and create the PR — or when invoked from the create-pr flow, which pre-approves both — and only when the current branch is a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch):
 
 ```bash
 git push -u origin <branch>

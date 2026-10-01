@@ -1,7 +1,7 @@
 ---
 description: "Prepare or create a pull request from a feature branch into dev using the GitHub workflow"
 name: "Create PR"
-argument-hint: "Title, issue links, and whether push/create is approved"
+argument-hint: "Optional title, issue links, and PR details"
 agent: "agent"
 ---
 
@@ -12,8 +12,12 @@ Requirements:
 - Run read-only preflight first: status, branch, remotes, log, diff stat.
 - Choose the PR target from detected topology: fork mode targets `upstream`, direct mode targets `origin`.
 - Target `dev` for `feature/*` branches.
-- Require explicit approval before pushing, creating, editing, commenting, or calling GitHub APIs.
-- Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch) — never push on `main`, `master`, `dev`, or a detached HEAD; if the current branch is protected, stop and hand the push command to the user.
+- The invocation pre-approves committing, pushing, and PR creation — do not ask for approval again inside this flow.
+- Commit the current changes first: split them into logical Conventional Commits per the `git-commit` skill, split silently, and stop to ask only if changes cannot be grouped confidently or secrets are detected — never stage secrets.
+- Refuse to start on `main`, `master`, `dev`, or a detached HEAD; tell the user to run start-feature first.
+- Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch) — never push a protected branch.
+- Still gated: force-push, PR edits, comments, and merges require explicit approval.
+- Report the result: PR created or not (never claim success unless the command succeeded), PR URL, number, title, base ← head, commit subjects, a short change summary, and verification status.
 - If `gh` is unavailable, provide a compare URL plus PR title/body.
 
 Arguments: $ARGUMENTS

@@ -68,12 +68,14 @@ Summarize comments by theme, blocker, owner, and required action. Do not resolve
 
 ## Create PR
 
-Only after explicit approval to push and create the PR:
+Only after explicit approval to push and create the PR, and only when the current branch is a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch):
 
 ```bash
 git push -u origin <branch>
 gh pr create --repo <owner>/<repo> --base <base> --head <branch> --title "<title>" --body-file <body-file>
 ```
+
+If the current branch is `main`, `master`, `dev`, or detached, stop — never push a protected branch; give the user the exact push command to run instead.
 
 Fork feature PR example:
 

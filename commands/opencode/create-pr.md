@@ -15,4 +15,5 @@ Required behavior:
 - Choose the PR target from detected topology: fork mode targets `upstream`, direct mode targets `origin`.
 - Target `dev` for `feature/*` branches.
 - Require explicit approval before pushing, creating, editing, commenting, or calling GitHub APIs.
+- Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch) — never push on `main`, `master`, `dev`, or a detached HEAD; if the current branch is protected, stop and hand the push command to the user.
 - If `gh` is unavailable, provide a compare URL plus PR title/body.

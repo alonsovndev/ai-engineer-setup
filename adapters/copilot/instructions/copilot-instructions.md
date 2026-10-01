@@ -54,6 +54,7 @@ Routing notes:
 - Do not add AI or tool co-author trailers or attribution (e.g., `Co-authored-by: ...`) to commit messages.
 - Prefer feature branches; require tests and review before merging.
 - Before staging and again before a requested commit, check the current branch. Never stage or commit on `main`, `master`, `dev`, or a detached HEAD. Commit on any other named working branch; `feature/*`, `fix/*`, and `hotfix/*` are examples.
+- Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch), and only when the user explicitly asks. If a protected branch needs a push, do the local step and give the user the exact command to run.
 - Use the `git-repo-flow`, `git-commit`, and `git-create-pr` skills for detailed workflow rules.
 
 ## Repository Conventions

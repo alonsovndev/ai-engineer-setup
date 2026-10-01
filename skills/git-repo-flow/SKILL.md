@@ -36,15 +36,16 @@ Detection rules:
 ## Safety Rules
 
 - Never stage or commit on `main`, `master`, `dev`, or a detached HEAD. Check the branch first, then create or switch to any named working branch before making a commit.
+- Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch), and only when the user explicitly asks. If a protected branch needs a push, do the local step and give the user the exact command to run.
 - Never add AI or tool co-author trailers (e.g., `Co-authored-by: ...`) to commit messages.
-- Never run `git resync` without explicit approval. It performs `reset --hard` and `push --force-with-lease`.
-- Never run `git feature` unless topology is fork mode, worktree is clean, and branch name is confirmed.
+- Never run `git resync` yourself — it performs `reset --hard` and `push --force-with-lease`, so it is user-run only. Never run `git sync` while on a protected branch — it pushes the current branch; on a protected branch, the user runs these aliases themselves.
+- Never run `git feature` yourself — it runs `git resync` on `dev`. The user may run it when topology is fork mode, the worktree is clean, and the branch name is confirmed; otherwise use the non-pushing manual workflow below.
 - In direct mode, do not use `git feature`; use the manual direct-mode feature workflow unless a direct-mode alias exists.
-- Never push directly to `dev` or `main` unless the user explicitly confirms a release, sync, or hotfix operation.
+- Never push directly to `dev` or `main` — not even when the user explicitly confirms a release, sync, or hotfix operation. Do the local step (merge, fast-forward, tag) and give the user the exact push command to run.
 - Never force-push a feature branch unless the user explicitly approves and the target branch is not protected.
 - Never create release tags without explicit approval for the version and target commit.
 - Never bypass hooks, branch protections, PR reviews, or CI checks.
-- Never push a `dev` back-sync merge or fast-forward without explicit approval, and never force-push or hard-reset `dev` while back-syncing it from `main`.
+- Never push a `dev` back-sync merge or fast-forward — hand the push command to the user — and never force-push or hard-reset `dev` while back-syncing it from `main`.
 
 ## Required Preflight
 
@@ -73,7 +74,16 @@ This alias is expected to:
 2. Run `git resync` to align local/fork `dev` with `upstream/dev`.
 3. Create the feature branch from refreshed `dev`.
 
-Because `git resync` is destructive, ask for explicit approval before running `git feature`.
+Because `git resync` hard-resets and force-pushes `dev`, never run `git feature` yourself — ask the user to run it. Use the non-pushing fork-mode manual workflow instead:
+
+```bash
+git fetch upstream
+git checkout dev
+git merge --ff-only upstream/dev
+git checkout -b feature/<ticket>-<short-desc>
+```
+
+If the `--ff-only` merge fails (local/fork `dev` diverged from `upstream/dev`), stop and ask the user to run `git feature` or `git resync` themselves.
 
 Direct mode manual workflow:
 
@@ -100,6 +110,8 @@ Fork mode hard reset for disposable local copies of shared branches:
 git resync
 ```
 
+Never run `git sync` or `git resync` while on `main`, `master`, or `dev` — both aliases push the current branch. On a protected branch, use the local fast-forward sync below and let the user handle any push. `git resync` on a protected branch is user-run only, even for disposable local/fork copies of shared branches.
+
 Direct mode preserving local commits on a working branch:
 
 ```bash
@@ -107,7 +119,7 @@ git fetch origin
 git merge origin/$(git branch --show-current)
 ```
 
-For normal sync of `main`, `master`, or `dev`, fetch the owning remote and use `git merge --ff-only <remote>/<branch>`; stop if it cannot fast-forward. Never run `git sync` or create a merge commit on these branches. Approved `git resync` remains available for disposable local/fork copies of shared branches.
+For normal sync of `main`, `master`, or `dev`, fetch the owning remote and use `git merge --ff-only <remote>/<branch>`; stop if it cannot fast-forward. Never run `git sync` or create a merge commit on these branches. `git resync` on these branches is user-run only — the agent never pushes them.
 
 Direct mode fast-forward only for shared branches:
 
@@ -169,8 +181,9 @@ Fork mode, fast-forward case:
 ```bash
 git checkout dev
 git merge --ff-only upstream/main
-git push origin dev
 ```
+
+Then give the user the exact command to run: `git push origin dev`. Never push `dev` yourself.
 
 Fork mode, non-fast-forward case (the `dev` → `main` PR was squashed or rebased):
 
@@ -185,8 +198,9 @@ Direct mode, fast-forward case:
 ```bash
 git checkout dev
 git merge --ff-only origin/main
-git push origin dev
 ```
+
+Then give the user the exact command to run: `git push origin dev`. Never push `dev` yourself.
 
 Direct mode, non-fast-forward case:
 
@@ -196,7 +210,7 @@ git merge --no-ff origin/main -m "Merge main into dev after release"
 # Push the working branch only with approval, then open a PR into origin/dev.
 ```
 
-Never create a merge commit directly on `dev` or rebase it onto `main` — `dev` may already be pushed and shared. Never force-push or hard-reset `dev` during back-sync. Require explicit approval before any push or PR creation.
+Never create a merge commit directly on `dev` or rebase it onto `main` — `dev` may already be pushed and shared. Never force-push or hard-reset `dev` during back-sync. Require explicit approval before pushing a working branch or creating any PR; never push `dev` yourself — give the user the exact command.
 
 ## Final Response
 

@@ -36,7 +36,7 @@ Detection rules:
 ## Safety Rules
 
 - Never stage or commit on `main`, `master`, `dev`, or a detached HEAD. Check the branch first, then create or switch to any named working branch before making a commit.
-- Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch), and only when the user explicitly asks. If a protected branch needs a push, do the local step and give the user the exact command to run.
+- Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch), and only when the user explicitly asks or the create-PR flow has been invoked — that invocation pre-approves committing the current changes, pushing the working branch, and creating the PR. If a protected branch needs a push, do the local step and give the user the exact command to run.
 - Never add AI or tool co-author trailers (e.g., `Co-authored-by: ...`) to commit messages.
 - Never run `git resync` yourself — it performs `reset --hard` and `push --force-with-lease`, so it is user-run only. Never run `git sync` while on a protected branch — it pushes the current branch; on a protected branch, the user runs these aliases themselves.
 - Never run `git feature` yourself — it runs `git resync` on `dev`. The user may run it when topology is fork mode, the worktree is clean, and the branch name is confirmed; otherwise use the non-pushing manual workflow below.
@@ -210,7 +210,7 @@ git merge --no-ff origin/main -m "Merge main into dev after release"
 # Push the working branch only with approval, then open a PR into origin/dev.
 ```
 
-Never create a merge commit directly on `dev` or rebase it onto `main` — `dev` may already be pushed and shared. Never force-push or hard-reset `dev` during back-sync. Require explicit approval before pushing a working branch or creating any PR; never push `dev` yourself — give the user the exact command.
+Never create a merge commit directly on `dev` or rebase it onto `main` — `dev` may already be pushed and shared. Never force-push or hard-reset `dev` during back-sync. Require explicit approval before pushing a back-sync working branch or creating a back-sync PR (outside the pre-approved create-PR flow); never push `dev` yourself — give the user the exact command.
 
 ## Final Response
 

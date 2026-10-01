@@ -11,6 +11,8 @@ allowed-tools: Bash
 
 Create standardized, semantic git commits using the Conventional Commits specification. Analyze the actual diff to determine appropriate type, scope, and message.
 
+Invoking a create-PR command or skill counts as an explicit request to commit the current changes, including splitting them into logical commits. All other commit safety rules still apply — never commit on a protected branch, never stage secrets.
+
 ## Conventional Commit Format
 
 ```

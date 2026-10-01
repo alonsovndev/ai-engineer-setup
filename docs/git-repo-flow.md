@@ -37,7 +37,7 @@ Other named working branches, such as `fix/*` and `chore/*`, may also hold commi
 
 ## Push policy
 
-Agents push commits only from named working branches (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch), and only when the user explicitly asks. Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval. When a protected branch needs a push (release back-sync, `dev` bootstrap, release tag), the agent performs the local step and hands the user the exact command to run.
+Agents push commits only from named working branches (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch), and only when the user explicitly asks — or when the create-PR flow has been invoked, which pre-approves committing the current changes (with logical splits), pushing the working branch, and creating the PR without further approval prompts. Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval, and not within the create-PR flow. When a protected branch needs a push (release back-sync, `dev` bootstrap, release tag), the agent performs the local step and hands the user the exact command to run.
 
 ## Required preflight
 

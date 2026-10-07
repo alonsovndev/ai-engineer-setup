@@ -102,7 +102,6 @@ print_opencode_config() {
   printf '%s\n' '    "edit": "ask",'
   printf '%s\n' '    "bash": {'
   printf '%s\n' '      "*": "allow",'
-  printf '%s\n' '      "git push*": "deny",'
   printf '%s\n' '      "git reset --hard*": "deny",'
   printf '%s\n' '      "rm -rf*": "deny"'
   printf '%s\n' '    },'
@@ -228,6 +227,7 @@ link_path "$repo_root/agents/claude" "$HOME/.claude/agents"
 link_path "$repo_root/commands/claude" "$HOME/.claude/commands"
 
 write_opencode_config
+link_path "$repo_root/instructions/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
 link_path "$repo_root/agents/opencode" "$HOME/.config/opencode/agent"
 link_path "$repo_root/commands/opencode" "$HOME/.config/opencode/command"
 

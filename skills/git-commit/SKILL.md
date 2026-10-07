@@ -11,6 +11,8 @@ allowed-tools: Bash
 
 Create standardized, semantic git commits using the Conventional Commits specification. Analyze the actual diff to determine appropriate type, scope, and message.
 
+Invoking a create-PR command or skill counts as an explicit request to commit the current changes, including splitting them into logical commits. All other commit safety rules still apply — never commit on a protected branch, never stage secrets.
+
 ## Conventional Commit Format
 
 ```
@@ -153,6 +155,7 @@ docs: add fork setup steps
 ## Git Safety Protocol
 
 - NEVER stage or commit on `main`, `master`, `dev`, or a detached HEAD
+- NEVER push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch) when the user explicitly asks; if a protected branch needs a push, give the user the exact command to run
 - NEVER update git config
 - NEVER run destructive commands (--force, hard reset) without explicit request
 - NEVER skip hooks (--no-verify) unless user asks

@@ -35,6 +35,10 @@ Use these patterns:
 If no ticket exists, use a short kebab-case description after the branch type.
 Other named working branches, such as `fix/*` and `chore/*`, may also hold commits. Never commit on `main`, `master`, `dev`, or a detached HEAD.
 
+## Push policy
+
+Agents push commits only from named working branches (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch), and only when the user explicitly asks — or when the create-PR flow has been invoked, which pre-approves committing the current changes (with logical splits), pushing the working branch, and creating the PR without further approval prompts. Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval, and not within the create-PR flow. When a protected branch needs a push (release back-sync, `dev` bootstrap, release tag), the agent performs the local step and hands the user the exact command to run.
+
 ## Required preflight
 
 Run read-only checks before changing branches or syncing:
@@ -62,7 +66,7 @@ The alias is expected to:
 2. Run `git resync` to align local and fork `dev` with `upstream/dev`.
 3. Create the feature branch from refreshed `dev`.
 
-`git feature` requires explicit approval before an agent runs it because it calls `git resync`, which performs `reset --hard` and `push --force-with-lease`.
+`git feature` is user-run only — it calls `git resync`, which performs `reset --hard` and `push --force-with-lease` on `dev`. Agents use the non-pushing manual equivalent instead (`git fetch upstream && git checkout dev && git merge --ff-only upstream/dev && git checkout -b feature/<ticket>-<short-desc>`) and stop to ask the user to run `git feature` when the fast-forward fails.
 
 ## Direct-mode feature workflow
 
@@ -91,6 +95,8 @@ Fork mode, disposable local copies of shared branches:
 git resync
 ```
 
+`git resync` is user-run only, and neither alias is ever run by an agent on a protected branch — both push the current branch.
+
 Direct mode, preserving local commits on a working branch:
 
 ```bash
@@ -98,7 +104,7 @@ git fetch origin
 git merge origin/$(git branch --show-current)
 ```
 
-For normal sync of `main`, `master`, or `dev`, fetch the owning remote and use `git merge --ff-only <remote>/<branch>`; stop if it cannot fast-forward. Never run `git sync` or create a merge commit on these branches. Approved `git resync` remains available for disposable local/fork copies of shared branches.
+For normal sync of `main`, `master`, or `dev`, fetch the owning remote and use `git merge --ff-only <remote>/<branch>`; stop if it cannot fast-forward. Never run `git sync` or create a merge commit on these branches. `git resync` on these branches is user-run only — the agent never pushes them.
 
 Direct mode, fast-forward only for shared branches:
 
@@ -153,7 +159,7 @@ git fetch upstream
 git merge-base --is-ancestor dev upstream/main
 git checkout dev
 git merge --ff-only upstream/main
-git push origin dev
+# Agent stops here — user runs: git push origin dev
 ```
 
 Direct mode, when `dev` can fast-forward:
@@ -163,7 +169,7 @@ git fetch origin
 git merge-base --is-ancestor dev origin/main
 git checkout dev
 git merge --ff-only origin/main
-git push origin dev
+# Agent stops here — user runs: git push origin dev
 ```
 
-Only run the fast-forward commands when the ancestor check succeeds, and push only with explicit approval. If the `dev` → `main` PR was squashed or rebased, create a named working branch from `upstream/dev` (fork mode) or `origin/dev` (direct mode), merge the corresponding remote `main` into that branch, then open a PR into `dev` with approval. Never create the merge commit directly on `dev` or rebase `dev`.
+Only run the fast-forward commands when the ancestor check succeeds. Agents never push `dev` — after the local fast-forward, hand the user the exact command (`git push origin dev`). If the `dev` → `main` PR was squashed or rebased, create a named working branch from `upstream/dev` (fork mode) or `origin/dev` (direct mode), merge the corresponding remote `main` into that branch, then open a PR into `dev` with approval. Never create the merge commit directly on `dev` or rebase `dev`.

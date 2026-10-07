@@ -1,7 +1,7 @@
 ---
 name: git-create-pr
-description: "Use when creating GitHub pull requests, drafting PR titles/bodies, preparing branches for review, or when the user says create PR, open PR, pull request, merge request, or review request. Handles safe preflight checks, branch push approval, PR body generation, and GitHub CLI fallback guidance. Keywords: create pr, open pr, pull request, merge request, review request, PR body, PR template."
-argument-hint: "Provide target branch/base branch, PR goal, issue links, and whether pushing/creating the PR is approved."
+description: "Use when creating GitHub pull requests, drafting PR titles/bodies, preparing branches for review, or when the user says create PR, open PR, pull request, merge request, or review request. Handles committing current changes with logical splits, pushing the branch, PR body generation, and GitHub CLI fallback guidance. Invoking this skill pre-approves committing, pushing, and PR creation. Keywords: create pr, open pr, pull request, merge request, review request, PR body, PR template."
+argument-hint: "Provide target branch/base branch, PR goal, issue links, and PR details."
 user-invocable: true
 allowed-tools: Bash
 ---
@@ -20,13 +20,16 @@ Create safe, review-ready GitHub pull requests from the current repository state
 
 ## Safety Rules
 
-- Never create a PR from `main` or `master` unless the user explicitly confirms this is intentional.
-- Never push a branch unless the user explicitly approves pushing to the named remote and branch.
-- Never force-push unless the user explicitly requests it and the branch is not protected.
+- The create-pr invocation itself pre-approves: committing the current changes (with logical splits), pushing the working branch, and creating the PR. Do not ask for approval again inside this flow.
+- Outside this flow, never create a PR from `main` or `master` unless the user explicitly confirms this is intentional.
+- Refuse to start the flow on `main`, `master`, `dev`, or a detached HEAD — tell the user to run the start-feature command first. Any other named working branch is allowed.
+- Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval or inside this flow.
+- Stop and ask before committing only when changes cannot be grouped confidently, or secrets are detected — then never stage secrets.
+- Still gated inside the flow: force-push (explicit approval), PR edits, comments, and merges (explicit approval).
 - Never bypass hooks, CI, branch protections, or review rules.
-- Never commit, stage, or amend changes unless the user explicitly asks for that action.
+- Never commit, stage, or amend changes beyond the current working set without the user explicitly asking.
 - Never include secrets, tokens, credentials, `.env` contents, private URLs, or sensitive config in a PR body.
-- Do not call GitHub APIs, create PRs, edit PRs, or trigger workflows without explicit user approval.
+- Do not call GitHub APIs beyond this flow (edit PRs, comment, trigger workflows) without explicit user approval.
 
 ## Preflight Checks
 
@@ -59,6 +62,15 @@ command -v gh
 gh auth status
 ```
 
+## Commit Current Changes First
+
+The create-pr invocation counts as an explicit request to commit the current changes. Commit them before opening the PR:
+
+- Refuse to start on `main`, `master`, `dev`, or a detached HEAD; tell the user to run the start-feature command first.
+- Split many or mixed changes into logical commits following the `git-commit` skill (Conventional Commits, one logical change per commit). Split silently — do not ask for approval per split.
+- Stop and ask only when changes cannot be grouped confidently or secrets are detected; never stage secrets, credentials, `.env` files, or sensitive configuration.
+- Do not amend, skip hooks, or push protected branches; pushing the working branch is pre-approved and happens in the PR step below.
+
 ## Branch Readiness
 
 Before opening a PR, confirm:
@@ -67,7 +79,7 @@ Before opening a PR, confirm:
 - Working tree is clean, or uncommitted changes are intentionally excluded.
 - Branch has at least one commit not present on the base branch.
 - Base branch is explicit or can be inferred safely from tracking/default branch.
-- Remote branch exists, or the user approves pushing it.
+- Remote branch exists, or the flow pushes it (pre-approved by the invocation).
 - Tests/build/lint status is known or clearly marked as not run.
 
 ## Topology-Aware Defaults
@@ -108,7 +120,7 @@ If no verification was run, state that directly. Do not imply tests passed.
 
 ## Creating The PR With GitHub CLI
 
-Only run these after explicit user approval.
+These steps are pre-approved by the create-pr invocation — run them without asking again. Still gated: force-push, PR edits, PR comments, and PR merges require explicit approval.
 
 Push the branch when needed:
 
@@ -169,7 +181,7 @@ Do not tell the user a PR exists unless it was actually created or found.
 
 ## Existing PRs
 
-Before creating a duplicate, check if a PR already exists for the branch when `gh` is available and user approves GitHub access:
+Before creating a duplicate, check if a PR already exists for the branch when `gh` is available (read access is pre-approved inside this flow):
 
 ```bash
 gh pr status
@@ -182,7 +194,9 @@ If a PR exists, ask whether to update the existing PR body or leave it unchanged
 
 When complete, report:
 
-- PR URL, if created.
-- Branch and base branch.
-- Verification status.
+- Whether the PR was created — PR URL, number, and title. Never claim a PR exists unless the command succeeded.
+- Base ← head branches, and topology (fork or direct mode).
+- Commits included: list each commit subject created or already on the branch.
+- A short summary of what the PR changes and why.
+- Verification status (tests, lint, checks run or explicitly not run).
 - Any skipped safety step and reason.

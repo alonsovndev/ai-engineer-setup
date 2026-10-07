@@ -92,6 +92,19 @@ git diff
 ./scripts/verify.sh
 ```
 
+## Install Claude Code plugins
+
+Claude Code plugins are tracked in `plugins/claude-plugins.txt` (one `<marketplace-github-repo> <plugin>@<marketplace-name>` per line). `./scripts/install.sh` does not install them because it makes no network calls; run the plugin installer separately:
+
+```bash
+./scripts/install-plugins.sh --dry-run
+./scripts/install-plugins.sh
+```
+
+It clones each marketplace from GitHub and installs the plugin at user scope, skipping anything already installed. `./scripts/verify.sh` only warns when a listed plugin is missing. Plugin-specific setup stays manual, for example `/seo setup` after installing `claude-seo`.
+
+To add a plugin, append a line to the manifest and rerun the script. To remove one, delete the line and run `claude plugin uninstall <plugin>@<marketplace>`; the script never uninstalls.
+
 ## What install changes
 
 The installer creates symlinks for portable directories and writes one generated opencode config file. For Codex, it manages only `~/.codex/AGENTS.md`, `~/.codex/agents`, and its own per-skill links under `~/.codex/skills`; it leaves `config.toml`, auth, sessions, caches, the Codex-managed `.system` skills, and other Codex state untouched.

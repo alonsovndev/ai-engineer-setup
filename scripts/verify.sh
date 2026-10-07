@@ -666,6 +666,20 @@ else
   warnings=1
 fi
 
+if [ "$check_claude" -eq 1 ] && [ -f "$repo_root/plugins/claude-plugins.txt" ] && command -v claude >/dev/null 2>&1; then
+  printf '\nChecking Claude Code plugins.\n'
+  installed_plugins="$(claude plugin list --json 2>/dev/null || true)"
+  while read -r marketplace_repo plugin_id || [ -n "$marketplace_repo" ]; do
+    case "$marketplace_repo" in ''|'#'*) continue ;; esac
+    if printf '%s' "$installed_plugins" | grep -Fq "\"id\": \"$plugin_id\""; then
+      printf 'ok: Claude Code plugin installed: %s\n' "$plugin_id"
+    else
+      printf 'warn: Claude Code plugin not installed: %s (run ./scripts/install-plugins.sh)\n' "$plugin_id"
+      warnings=1
+    fi
+  done < "$repo_root/plugins/claude-plugins.txt"
+fi
+
 printf '\nChecking git aliases.\n'
 for alias_name in sync resync feature; do
   if git config --global --get "alias.${alias_name}" >/dev/null 2>&1; then

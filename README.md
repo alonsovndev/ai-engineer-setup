@@ -40,6 +40,8 @@ Run from this repository:
 
 `install.sh` backs up existing portable config paths before replacing them with symlinks. It does not touch auth, session, cache, or telemetry files.
 
+Claude Code plugins listed in `plugins/claude-plugins.txt` are installed separately with `./scripts/install-plugins.sh` (it clones marketplaces from GitHub, so `install.sh` does not run it); `verify.sh` only warns when one is missing.
+
 `verify.sh` checks the managed symlinks and enforces parity against `agents/claude/` and `commands/claude/`. Codex custom agents live under `agents/codex/`; each canonical command has a Codex skill equivalent under `adapters/codex/skills/<command>/`, linked per skill into `~/.codex/skills` so it stays out of the shared skills tree the other harnesses load. Add new agents and commands to every supported harness in the same change.
 
 `./scripts/test-verify.sh` self-tests verifier parity, and `./scripts/test-run-agent.sh` checks launcher arguments through a stub Codex executable without model calls. Run the matching self-test after changing either script.

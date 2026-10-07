@@ -13,7 +13,7 @@ This repo stores portable AI-agent configuration, not application code.
 - Install or refresh symlinks with `./scripts/install.sh`, then validate with `./scripts/verify.sh`.
 - `scripts/install.sh` backs up existing managed targets as `<target>.backup-<timestamp>` and intentionally does not touch auth, session, cache, telemetry, or credential files.
 - `scripts/uninstall.sh` removes only symlinks pointing into this repo and the generated opencode config; it does not restore backups. Codex links are limited to `~/.codex/AGENTS.md`, `~/.codex/agents`, and repo-pointing workflow skill links under `~/.codex/skills`.
-- `scripts/verify.sh` checks local commands, required repo files, symlink targets, generated opencode config content, Codex agent/workflow parity, and global git aliases `sync`, `resync`, and `feature`.
+- `scripts/verify.sh` checks local commands, required repo files, symlink targets, generated opencode config content, Codex agent/workflow parity, warns on missing Claude Code plugins listed in `plugins/claude-plugins.txt` (install them with `./scripts/install-plugins.sh`), and global git aliases `sync`, `resync`, and `feature`.
 
 ## Harness Layout
 

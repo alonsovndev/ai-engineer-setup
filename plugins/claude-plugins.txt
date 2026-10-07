@@ -1,0 +1,3 @@
+# Claude Code plugins installed by scripts/install-plugins.sh.
+# Format: <marketplace-github-repo> <plugin>@<marketplace-name>
+AgriciDaniel/claude-seo claude-seo@agricidaniel-claude-seo

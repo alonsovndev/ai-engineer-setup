@@ -13,6 +13,7 @@ Set up a `github.com` repository from a semantic local path with safe defaults.
 ## Safety Rules
 
 - Never create a remote repository, push code, or change remotes without explicit approval.
+- Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch). If a protected branch or a bootstrap push is needed, give the user the exact command to run.
 - Never commit or push secrets, `.env` files, credentials, private keys, local caches, session stores, or generated artifacts.
 - Never overwrite an existing remote without confirming owner, repository, host, and URL.
 - Prefer private repositories unless the user explicitly requests public visibility.
@@ -102,12 +103,17 @@ Create local tracking branches only after approval:
 
 ```bash
 git checkout -B dev upstream/dev
-git push -u origin dev --force-with-lease
 git checkout -B main upstream/main
+```
+
+Then give the user the exact commands to run themselves:
+
+```bash
+git push -u origin dev --force-with-lease
 git push -u origin main --force-with-lease
 ```
 
-The `--force-with-lease` operations are destructive for fork branches; require explicit approval.
+Never push `dev` or `main` yourself — not even with explicit approval. The `--force-with-lease` operations are destructive for fork branches, which is why they stay user-run.
 
 ## Direct Remote Setup
 
@@ -141,11 +147,13 @@ git remote add origin https://github.com/<owner>/<repo>.git
 
 ## First Push
 
-Only after explicit approval:
+Only after explicit approval, and only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch):
 
 ```bash
 git push -u origin <branch>
 ```
+
+If the first push targets `main`, `master`, or `dev` (for example a bootstrap default branch), never run it yourself — give the user the exact command to run.
 
 Do not force-push.
 

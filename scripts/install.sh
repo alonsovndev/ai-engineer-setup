@@ -3,34 +3,20 @@ set -euo pipefail
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 timestamp="$(date +%Y%m%d%H%M%S)"
-dry_run=0
 
 usage() {
   cat <<'USAGE'
-Usage: install.sh [--dry-run]
+Usage: install.sh [--harness claude|codex|opencode|copilot|antigravity]... [--all] [--dry-run]
 
 Installs or refreshes Code Agent Harness configuration symlinks for this clone.
 Existing managed targets are backed up before replacement.
+With no selection, a terminal menu is shown. Noninteractive runs require --harness or --all.
+Tool applications and plugins are installed separately.
 USAGE
 }
 
-while [ "$#" -gt 0 ]; do
-  case "$1" in
-    --dry-run)
-      dry_run=1
-      shift
-      ;;
-    --help|-h)
-      usage
-      exit 0
-      ;;
-    *)
-      printf 'Unknown option: %s\n' "$1" >&2
-      usage >&2
-      exit 2
-      ;;
-  esac
-done
+source "$repo_root/scripts/lib/harness-selection.sh"
+parse_harness_selection "$@"
 
 link_path() {
   local source_path="$1"
@@ -220,34 +206,56 @@ merge_skills_from_agents
 
 link_path "$repo_root/skills" "$HOME/.agents/skills"
 
-link_path "$repo_root/instructions/AGENTS.md" "$HOME/.claude/AGENTS.md"
-link_path "$repo_root/instructions/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
-link_path "$repo_root/skills" "$HOME/.claude/skills"
-link_path "$repo_root/agents/claude" "$HOME/.claude/agents"
-link_path "$repo_root/commands/claude" "$HOME/.claude/commands"
+if harness_selected claude; then
+  link_path "$repo_root/instructions/AGENTS.md" "$HOME/.claude/AGENTS.md"
+  link_path "$repo_root/instructions/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+  link_path "$repo_root/skills" "$HOME/.claude/skills"
+  link_path "$repo_root/agents/claude" "$HOME/.claude/agents"
+  link_path "$repo_root/commands/claude" "$HOME/.claude/commands"
+fi
 
-write_opencode_config
-link_path "$repo_root/instructions/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
-link_path "$repo_root/agents/opencode" "$HOME/.config/opencode/agent"
-link_path "$repo_root/commands/opencode" "$HOME/.config/opencode/command"
+if harness_selected opencode; then
+  write_opencode_config
+  link_path "$repo_root/instructions/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
+  link_path "$repo_root/agents/opencode" "$HOME/.config/opencode/agent"
+  link_path "$repo_root/commands/opencode" "$HOME/.config/opencode/command"
+fi
 
-link_path "$repo_root/skills" "$HOME/.copilot/skills"
-link_path "$repo_root/agents/copilot" "$HOME/.copilot/agents"
-link_path "$repo_root/adapters/copilot/instructions" "$HOME/.copilot/.github/instructions"
-link_path "$repo_root/commands/copilot-prompts" "$HOME/.copilot/.github/prompts"
+if harness_selected copilot; then
+  link_path "$repo_root/skills" "$HOME/.copilot/skills"
+  link_path "$repo_root/agents/copilot" "$HOME/.copilot/agents"
+  link_path "$repo_root/adapters/copilot/instructions" "$HOME/.copilot/.github/instructions"
+  link_path "$repo_root/commands/copilot-prompts" "$HOME/.copilot/.github/prompts"
+fi
 
-link_path "$repo_root/instructions/AGENTS.md" "$HOME/.gemini/config/AGENTS.md"
-link_path "$repo_root/skills" "$HOME/.gemini/config/skills"
-link_path "$repo_root/instructions/AGENTS.md" "$HOME/.codex/AGENTS.md"
-link_path "$repo_root/agents/codex" "$HOME/.codex/agents"
+if harness_selected antigravity; then
+  link_path "$repo_root/instructions/AGENTS.md" "$HOME/.gemini/config/AGENTS.md"
+  link_path "$repo_root/skills" "$HOME/.gemini/config/skills"
+  link_path "$repo_root/agents/antigravity" "$HOME/.gemini/config/agents"
+fi
 
-# Codex workflow skills are linked per skill so the Codex-managed .system
-# skills and curated installs already in ~/.codex/skills are left untouched.
-for codex_skill_path in "$repo_root"/adapters/codex/skills/*/; do
-  [ -d "$codex_skill_path" ] || continue
-  codex_skill_path="${codex_skill_path%/}"
-  link_path "$codex_skill_path" "$HOME/.codex/skills/$(basename "$codex_skill_path")"
-done
-link_path "$repo_root/agents/antigravity" "$HOME/.gemini/config/agents"
+if harness_selected codex; then
+  link_path "$repo_root/instructions/AGENTS.md" "$HOME/.codex/AGENTS.md"
+  link_path "$repo_root/agents/codex" "$HOME/.codex/agents"
 
-printf '\nRestart opencode after config changes; it does not hot-reload config.\n'
+  # Per-skill links leave Codex-managed and curated skills untouched.
+  for codex_skill_path in "$repo_root"/adapters/codex/skills/*/; do
+    [ -d "$codex_skill_path" ] || continue
+    codex_skill_path="${codex_skill_path%/}"
+    link_path "$codex_skill_path" "$HOME/.codex/skills/$(basename "$codex_skill_path")"
+  done
+fi
+
+printf '\nAfter installation, verify from this repository:\n  ./scripts/verify.sh'
+if [ "$all_harnesses" -eq 1 ]; then
+  printf ' --all'
+else
+  for harness_name in $selected_harnesses; do
+    printf ' --harness %s' "$harness_name"
+  done
+fi
+printf '\n'
+
+if harness_selected opencode; then
+  printf '\nRestart OpenCode after installation or config changes; it does not hot-reload config.\n'
+fi

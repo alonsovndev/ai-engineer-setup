@@ -28,7 +28,7 @@ Install only the harnesses you plan to use:
 | GitHub Copilot CLI | `copilot` |
 | Antigravity CLI | `agy` |
 
-Git is required for normal repository workflows.
+Install tool applications separately; the harness installer manages configuration only. Git is required for normal repository workflows.
 
 ## Clone on another machine
 
@@ -47,18 +47,31 @@ Run from the repository root:
 
 ```bash
 ./scripts/install.sh
-./scripts/verify.sh
 ```
+
+In a terminal, choose one or multiple whitespace-separated menu numbers, **All**, or **Cancel**. Invalid input prompts again; cancellation and closed input make no changes. Run the verification command printed for your selection after installation.
+
+Use explicit flags for a single tool, a subset, or all tools:
+
+```bash
+./scripts/install.sh --harness claude
+./scripts/install.sh --harness codex --harness opencode
+./scripts/install.sh --all
+```
+
+Supported identifiers are `claude`, `codex`, `opencode`, `copilot`, and `antigravity`. Repeated selections are deduplicated, and `--all` includes every tool even when combined with `--harness`.
+
+Noninteractive runs require `--harness` or `--all`, including dry runs. Calls without a selection exit with status `2` before making changes. Existing automation that previously used a bare `install.sh` or `uninstall.sh` must add a selection. Use `--help` for usage without opening the menu.
 
 `install.sh` backs up existing portable config paths before replacing them. Backups use the suffix `.backup-<timestamp>`.
 
 Preview changes before installing with:
 
 ```bash
-./scripts/install.sh --dry-run
+./scripts/install.sh --harness codex --dry-run
 ```
 
-Restart OpenCode after install or config changes because it loads config only at startup.
+When OpenCode is selected, restart it after install or config changes because it loads config only at startup.
 
 ## Install skills
 
@@ -76,10 +89,9 @@ Install community skills from [skills.sh](https://skills.sh/) from the repositor
 npx skills add <owner/repo@skill>
 git status
 ./scripts/install.sh
-./scripts/verify.sh
 ```
 
-A skill is portable when it appears as `skills/<skill-name>/SKILL.md`. After it is committed and pulled on another machine, run `./scripts/install.sh` and `./scripts/verify.sh` there to expose it through the managed harness paths.
+Select the tools to refresh and run the printed verification command. A skill is portable when it appears as `skills/<skill-name>/SKILL.md`. After it is committed and pulled on another machine, repeat installation and verification there to expose it through the selected tools' managed paths.
 
 Avoid relying on unversioned global installs for shared setup. If using `npx skills add ... -g`, still verify that the CLI wrote through one of the managed symlinks into this repository's `skills/` directory.
 
@@ -106,7 +118,7 @@ To add a plugin, append a line to the manifest and rerun the script. To remove o
 
 ## What install changes
 
-The installer creates symlinks for portable directories and writes one generated OpenCode config file. For Codex, it manages only `~/.codex/AGENTS.md`, `~/.codex/agents`, and its own per-skill links under `~/.codex/skills`; it leaves `config.toml`, auth, sessions, caches, the Codex-managed `.system` skills, and other Codex state untouched.
+The installer creates symlinks for selected tools and writes the generated OpenCode config only when OpenCode is selected. It also refreshes the shared `~/.agents/skills` link on every installation; other compatible tools may discover shared skills through it. Unselected tools' dedicated configuration is unchanged. For Codex, the installer manages only `~/.codex/AGENTS.md`, `~/.codex/agents`, and its own per-skill links under `~/.codex/skills`; it leaves `config.toml`, auth, sessions, caches, the Codex-managed `.system` skills, and other Codex state untouched.
 
 See [Symlink map](./symlink-map.md) for the full source-to-target mapping.
 
@@ -123,6 +135,8 @@ Run:
 ```bash
 ./scripts/verify.sh
 ```
+
+Without flags, verification checks all supported tools; this default is unchanged. For a partial install, use the matching `--harness` flags printed by the installer. Repeat `--harness` to validate multiple tools, or use `--all` explicitly for every tool.
 
 The verifier checks:
 
@@ -164,26 +178,27 @@ Pull the latest repository changes, then rerun install and validation:
 ```bash
 git pull --ff-only
 ./scripts/install.sh
-./scripts/verify.sh
 ```
 
-Rerunning `install.sh` is safe for paths already managed by this repository. Existing non-managed files are backed up before replacement.
+Reselect the tools to refresh and run the printed verification command. Selections are not stored. Installation is additive: selecting fewer tools does not remove previously installed configuration. Rerunning `install.sh` is safe for paths already managed by this repository. Existing non-managed files are backed up before replacement.
 
-Restart OpenCode after update so it reloads generated config, instructions, agents, commands, and skills.
+If OpenCode was selected, restart it after update so it reloads generated config, instructions, agents, commands, and skills.
 
 ## Rename and relocation
 
 Existing clones can keep their directory names. The installer resolves the repository root at runtime; command names, skill identifiers, configuration keys, and managed destination paths are unchanged by the rebrand.
 
-Existing OpenCode configs with the legacy installer marker remain valid when their paths point to the current clone. Rerunning `install.sh` backs up the old config and writes the new `code-agent-harness` marker. Uninstall continues to recognize both current and historical managed configs.
+Existing OpenCode configs with the legacy installer marker remain valid when their paths point to the current clone. Rerunning `install.sh --harness opencode` backs up the old config and writes the new `code-agent-harness` marker. Uninstall continues to recognize both current and historical managed configs.
 
-If you move or rename a clone, its absolute symlinks and generated configuration still point to the previous location. Run from the new repository root:
+If you move or rename a clone, its absolute symlinks and generated configuration still point to the previous location. From the new repository root, refresh every previously configured tool. For an all-tools installation:
 
 ```bash
-./scripts/install.sh --dry-run
-./scripts/install.sh
-./scripts/verify.sh
+./scripts/install.sh --all --dry-run
+./scripts/install.sh --all
+./scripts/verify.sh --all
 ```
+
+For a subset, replace `--all` with the matching `--harness` flags on all three commands.
 
 Restart your coding-agent tools afterward so they reload instructions, skills, and configuration. Moving the directory is optional.
 
@@ -210,7 +225,17 @@ Run:
 ./scripts/uninstall.sh
 ```
 
-`uninstall.sh` removes only symlinks that point into this repository and the generated OpenCode config created by `install.sh`, including the managed Codex instruction and agent links. It does not automatically restore backups.
+Choose tools from the terminal menu, or use the same explicit selection flags as installation:
+
+```bash
+./scripts/uninstall.sh --harness codex --dry-run
+./scripts/uninstall.sh --harness codex --harness opencode
+./scripts/uninstall.sh --all
+```
+
+`uninstall.sh` removes only selected symlinks that point into this repository and, when OpenCode is selected, its recognized generated config. It leaves unselected tools' configuration and non-managed files intact. Dry runs show planned removals without writing or deleting anything. Backups are not restored automatically.
+
+Selective uninstall retains `~/.agents/skills` so other tools can continue using shared skills. Only choosing **All** or passing `--all` removes that shared link; selecting every tool individually still retains it.
 
 ## Restore a backup
 

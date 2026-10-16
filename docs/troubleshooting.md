@@ -2,6 +2,17 @@
 
 Use this guide when harness validation fails or a harness does not load the expected agents, skills, or instructions.
 
+## Installer requires a tool selection
+
+Both install and uninstall show a selection menu only when standard input and output are terminals. For automation or redirected input/output, pass repeatable `--harness NAME` flags or `--all`:
+
+```bash
+./scripts/install.sh --harness codex
+./scripts/uninstall.sh --harness codex --dry-run
+```
+
+Missing selections in noninteractive runs exit with usage status `2` before changes, including with `--dry-run`. Existing scripts that relied on the previous all-tools default must add `--all`.
+
 ## Verify reports missing commands
 
 `scripts/verify.sh` checks selected harness commands on `PATH`. With no options, it checks `codex`, `claude`, `opencode`, `copilot`, and `agy`.
@@ -22,8 +33,9 @@ Run from the repository root:
 
 ```bash
 ./scripts/install.sh
-./scripts/verify.sh
 ```
+
+Select the affected tools, then run the verification command printed by the installer. Verification without flags still checks all tools.
 
 If the target path already existed, `install.sh` creates a `.backup-<timestamp>` copy before replacing it.
 
@@ -32,7 +44,7 @@ If the target path already existed, `install.sh` creates a `.backup-<timestamp>`
 Rerun setup so the generated config points to the current clone path:
 
 ```bash
-./scripts/install.sh
+./scripts/install.sh --harness opencode
 ```
 
 Then restart OpenCode. It loads config at startup and does not hot-reload config changes.
@@ -42,8 +54,8 @@ Then restart OpenCode. It loads config at startup and does not hot-reload config
 Rerun setup so the generated config points `skills.paths` to this clone's `skills/` directory:
 
 ```bash
-./scripts/install.sh
-./scripts/verify.sh
+./scripts/install.sh --harness opencode
+./scripts/verify.sh --harness opencode
 ```
 
 Then restart OpenCode. Running sessions keep using the already-loaded config.
@@ -55,8 +67,8 @@ The generated file is `~/.config/opencode/opencode.jsonc`.
 Run:
 
 ```bash
-./scripts/install.sh
-./scripts/verify.sh
+./scripts/install.sh --harness opencode
+./scripts/verify.sh --harness opencode
 ```
 
 The installer backs up the old generated file and writes a new one with the current repository path.
@@ -78,7 +90,7 @@ The Copilot global instructions may reference project-level knowledge documents.
 Antigravity chains global config from `~/.gemini/config/`. Confirm the symlinks are in place:
 
 ```bash
-./scripts/install.sh
+./scripts/install.sh --harness antigravity
 ./scripts/verify.sh --harness antigravity
 ```
 
@@ -101,7 +113,7 @@ Only restore files you recognize. Do not restore auth, session, cache, or teleme
 Confirm the managed global paths and Codex CLI version:
 
 ```bash
-./scripts/install.sh
+./scripts/install.sh --harness codex
 ./scripts/verify.sh --harness codex
 codex --version
 ```

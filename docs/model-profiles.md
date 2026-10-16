@@ -1,6 +1,6 @@
 # Model profiles
 
-This setup uses shared profile names so each harness can be started with the same intent.
+Code Agent Harness uses shared profile names so each harness can be started with the same intent.
 
 ## Profiles
 

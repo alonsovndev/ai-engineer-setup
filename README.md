@@ -1,14 +1,16 @@
-# AI Engineer Setup
+# Code Agent Harness
 
-> Portable instructions, skills, agents, and commands that give Claude Code, Codex, opencode, and Copilot CLI one consistent engineering workflow.
+> A portable development harness for AI coding agents, skills, commands, instructions, and workflows.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Part of [alonsovndev](https://github.com/alonsovndev), the open-source engineering lab by [Alonso Villanueva](https://alonsovndev.com).
 
-Portable AI coding-agent setup for Codex CLI, Claude Code, opencode, GitHub Copilot CLI, and Antigravity CLI.
+Code Agent Harness is an open-source AI coding agent harness for maintaining reusable development configuration across coding-agent platforms. It standardizes AI-assisted development workflows through shared agents, agent skills, commands, instructions, and model profiles, with adapters for Claude Code, Codex CLI, OpenCode, GitHub Copilot CLI, and Antigravity CLI.
 
-This repository tracks only reusable instructions, skills, agents, commands, model profiles, and harness adapters. It intentionally excludes auth, sessions, telemetry, logs, caches, and machine-specific state.
+Keep your AI developer tools and workflows consistent across machines and teams while adapting configuration to each platform. Shared content stays portable, and platform adapters provide a place to support future coding-agent tools.
+
+This repository tracks reusable instructions, skills, agents, commands, model profiles, scripts, workflows, and platform adapters. It intentionally excludes auth, sessions, telemetry, logs, caches, and machine-specific state.
 
 ## Layout
 
@@ -18,11 +20,11 @@ This repository tracks only reusable instructions, skills, agents, commands, mod
 | `skills/`                   | Shared `SKILL.md` packages loaded by supported harnesses.                                                                                                          |
 | `agents/claude/`            | Claude Code agent definitions.                                                                                                                                     |
 | `agents/copilot/`           | Copilot CLI agent definitions.                                                                                                                                     |
-| `agents/opencode/`          | opencode agent definitions.                                                                                                                                         |
+| `agents/opencode/`          | OpenCode agent definitions.                                                                                                                                         |
 | `agents/antigravity/`       | Antigravity CLI agent definitions.                                                                                                                                  |
 | `agents/codex/`             | Codex custom subagents in TOML format.                                                                                                                               |
 | `commands/claude/`          | Claude Code slash commands.                                                                                                                                        |
-| `commands/opencode/`        | opencode command wrappers.                                                                                                                                         |
+| `commands/opencode/`        | OpenCode command wrappers.                                                                                                                                         |
 | `commands/copilot-prompts/` | Copilot prompt files.                                                                                                                                              |
 | `adapters/codex/skills/`    | Codex skill equivalents for shared workflow commands (linked per skill into `~/.codex/skills`, not the shared skills tree).                                            |
 | `adapters/`                 | Harness-specific config files that are safe to version.                                                                                                            |
@@ -37,9 +39,11 @@ Stack-specific standards are not loaded as global defaults. Use `python-fastapi-
 
 ## New Machine Quickstart
 
-Run from this repository:
+Clone the repository and run:
 
 ```bash
+git clone https://github.com/alonsovndev/code-agent-harness.git
+cd code-agent-harness
 ./scripts/install.sh
 ./scripts/verify.sh
 ```
@@ -50,7 +54,7 @@ Claude Code plugins listed in `plugins/claude-plugins.txt` are installed separat
 
 `verify.sh` checks the managed symlinks and enforces parity against `agents/claude/` and `commands/claude/`. Codex custom agents live under `agents/codex/`; each canonical command has a Codex skill equivalent under `adapters/codex/skills/<command>/`, linked per skill into `~/.codex/skills` so it stays out of the shared skills tree the other harnesses load. Add new agents and commands to every supported harness in the same change.
 
-`./scripts/test-verify.sh` self-tests verifier parity, and `./scripts/test-run-agent.sh` checks launcher arguments through a stub Codex executable without model calls. Run the matching self-test after changing either script.
+`./scripts/test-install.sh` checks installation, generator-marker compatibility, and clone relocation in temporary directories. `./scripts/test-verify.sh` self-tests verifier parity, and `./scripts/test-run-agent.sh` checks launcher arguments through stub executables without model calls. Run the matching self-test after changing these scripts.
 
 Preview changes before installing with:
 
@@ -58,7 +62,7 @@ Preview changes before installing with:
 ./scripts/install.sh --dry-run
 ```
 
-Restart opencode after install or config changes because it loads config only at startup.
+Restart OpenCode after install or config changes because it loads config only at startup.
 
 ## Skills
 
@@ -73,7 +77,7 @@ git status
 ./scripts/verify.sh
 ```
 
-If the new skill appears as `skills/<skill-name>/SKILL.md`, it is portable and exposed through the managed paths for Codex, Claude Code, GitHub Copilot CLI, Antigravity CLI, shared agent paths, and opencode's generated `skills.paths` config. Review the diff before committing community skills or skill updates.
+If the new skill appears as `skills/<skill-name>/SKILL.md`, it is portable and exposed through the managed paths for Codex, Claude Code, GitHub Copilot CLI, Antigravity CLI, shared agent paths, and OpenCode's generated `skills.paths` config. Review the diff before committing community skills or skill updates.
 
 ## Update Existing Install
 
@@ -85,7 +89,9 @@ git pull --ff-only
 ./scripts/verify.sh
 ```
 
-Rerunning `install.sh` refreshes managed symlinks and regenerates opencode's machine-local config for this clone.
+Rerunning `install.sh` refreshes managed symlinks and regenerates OpenCode's machine-local config for this clone.
+
+Existing clone directories can keep their names. If you move or rename your clone, rerun installation and verification from its new location; see [Rename and relocation](docs/setup-and-replication.md#rename-and-relocation).
 
 Deep setup docs:
 
@@ -99,8 +105,12 @@ Deep setup docs:
 - Do not commit auth or local session state from `~/.codex`; the installer only manages `AGENTS.md`, `agents/`, and its own workflow skill links there.
 - Do not commit auth files from `~/.claude`, `~/.copilot`, `~/.config/github-copilot`, or provider credential stores.
 - Do not symlink whole config roots. Only symlink the portable paths handled by `scripts/install.sh`.
-- Restart opencode after config changes; it loads config once at startup.
+- Restart OpenCode after config changes; it loads config once at startup.
 
 ## Git Repo Flow
 
-This setup supports fork-mode and direct-mode workflows for GitHub repositories. See [Git repo flow](docs/git-repo-flow.md) for branch naming, aliases, PR targets, and safety gates.
+This harness supports fork-mode and direct-mode workflows for GitHub repositories. See [Git repo flow](docs/git-repo-flow.md) for branch naming, aliases, PR targets, and safety gates.
+
+## Contributing
+
+Contributions to shared configuration and platform adapters are welcome through [pull requests](https://github.com/alonsovndev/code-agent-harness/pulls). Keep changes focused, preserve command and agent parity across supported platforms, and run the relevant checks described above before submitting.

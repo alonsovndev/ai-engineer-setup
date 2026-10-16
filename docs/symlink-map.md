@@ -18,7 +18,7 @@ This document lists the local paths managed by `scripts/install.sh` and `scripts
 | `agents/claude/` | `~/.claude/agents` | Symlink |
 | `commands/claude/` | `~/.claude/commands` | Symlink |
 
-## opencode
+## OpenCode
 
 | Source | Target | Type |
 |---|---|---|
@@ -27,11 +27,11 @@ This document lists the local paths managed by `scripts/install.sh` and `scripts
 | `agents/opencode/` | `~/.config/opencode/agent` | Symlink |
 | `commands/opencode/` | `~/.config/opencode/command` | Symlink |
 
-The opencode config is generated instead of symlinked because it must point to the absolute `instructions/AGENTS.md` path for the current clone.
+The OpenCode config is generated instead of symlinked because it must point to the absolute `instructions/AGENTS.md` path for the current clone.
 
 The generated config also sets `skills.paths` to the current clone's absolute `skills/` path.
 
-`~/.config/opencode/AGENTS.md` is linked so opencode's auto-loaded global instructions stay identical to the canonical `instructions/AGENTS.md` instead of drifting as a standalone copy.
+`~/.config/opencode/AGENTS.md` is linked so OpenCode's auto-loaded global instructions stay identical to the canonical `instructions/AGENTS.md` instead of drifting as a standalone copy.
 
 ## GitHub Copilot CLI
 

@@ -106,7 +106,7 @@ Before committing, validate that the final subject starts with an allowed type a
 
 ```bash
 # Valid examples
-feat(setup): add portable AI agent setup
+feat(harness): add portable coding-agent configuration
 fix(api): handle missing user id
 docs: update README
 ```

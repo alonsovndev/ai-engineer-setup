@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Use this guide when setup validation fails or a harness does not load the expected agents, skills, or instructions.
+Use this guide when harness validation fails or a harness does not load the expected agents, skills, or instructions.
 
 ## Verify reports missing commands
 
@@ -27,7 +27,7 @@ Run from the repository root:
 
 If the target path already existed, `install.sh` creates a `.backup-<timestamp>` copy before replacing it.
 
-## opencode does not load the shared instructions
+## OpenCode does not load the shared instructions
 
 Rerun setup so the generated config points to the current clone path:
 
@@ -35,9 +35,9 @@ Rerun setup so the generated config points to the current clone path:
 ./scripts/install.sh
 ```
 
-Then restart opencode. It loads config at startup and does not hot-reload config changes.
+Then restart OpenCode. It loads config at startup and does not hot-reload config changes.
 
-## opencode does not load shared skills
+## OpenCode does not load shared skills
 
 Rerun setup so the generated config points `skills.paths` to this clone's `skills/` directory:
 
@@ -46,9 +46,9 @@ Rerun setup so the generated config points `skills.paths` to this clone's `skill
 ./scripts/verify.sh
 ```
 
-Then restart opencode. Running sessions keep using the already-loaded config.
+Then restart OpenCode. Running sessions keep using the already-loaded config.
 
-## opencode config points to an old clone
+## OpenCode config points to an old clone
 
 The generated file is `~/.config/opencode/opencode.jsonc`.
 

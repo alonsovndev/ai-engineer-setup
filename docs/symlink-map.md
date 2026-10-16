@@ -2,11 +2,15 @@
 
 This document lists the local paths managed by `scripts/install.sh` and `scripts/uninstall.sh`.
 
+Both scripts offer a terminal selection menu and repeatable `--harness NAME` flags or `--all`. Only selected tools' dedicated paths are changed. Both scripts support `--dry-run`.
+
 ## Shared paths
 
 | Source | Target | Type |
 |---|---|---|
 | `skills/` | `~/.agents/skills` | Symlink |
+
+Every installation refreshes this shared link, which other compatible tools may discover automatically. Selective uninstall retains it; only choosing **All** or passing `--all` removes it. Selecting all five tools individually still retains the shared link.
 
 ## Claude Code
 

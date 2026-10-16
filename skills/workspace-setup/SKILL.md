@@ -19,10 +19,10 @@ provisions BE/FE/docs repos themselves before running this command.
 
 ## Phase 0 — Preconditions
 
-- Refuse to run with `ai-engineer-setup` itself as the target. If the working
-  directory's root has `scripts/install.sh`, a `skills/` directory, and its own
-  `AGENTS.md` matching this repo's canonical content, stop and explain this command is
-  for *other* workspaces.
+- Refuse to run with Code Agent Harness itself as the target, regardless of its clone
+  directory name. If the working directory's root has `scripts/install.sh`, a `skills/`
+  directory, and its own `AGENTS.md` matching this repo's canonical content, stop and
+  explain this command is for *other* workspaces.
 - Confirm the target directory exists (default: current directory).
 
 ## Phase 1 — Discover Sibling Repos (read-only)
@@ -83,7 +83,7 @@ Write these at the workspace root:
   multiple sub-repos, written via `/spec-clarify` + `/spec-write` run from the
   workspace root.
 - A pointer that global baseline rules load automatically from the machine's
-  `ai-engineer-setup` install — this file adds only workspace-specific rules.
+  Code Agent Harness install — this file adds only workspace-specific rules.
 - The custom block, empty on first generation.
 
 ### b. `CLAUDE.md`

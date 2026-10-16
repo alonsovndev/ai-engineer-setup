@@ -1,8 +1,8 @@
 # Harness Matrix
 
-This setup keeps reusable content in this repository and exposes it through harness-specific symlinks.
+Code Agent Harness keeps reusable content in this repository and exposes it through harness-specific symlinks.
 
-| Capability | Codex CLI | Claude Code | opencode | Copilot CLI | Antigravity CLI |
+| Capability | Codex CLI | Claude Code | OpenCode | Copilot CLI | Antigravity CLI |
 |---|---|---|---|---|---|
 | Global instructions | `~/.codex/AGENTS.md` | `~/.claude/AGENTS.md`, `~/.claude/CLAUDE.md` | `instructions` in `opencode.jsonc` | `~/.copilot/.github/instructions` | `~/.gemini/config/AGENTS.md` |
 | Shared skills | `~/.agents/skills` | `~/.claude/skills` | Generated `skills.paths` to repo `skills/` and external skill scan | `~/.copilot/skills` and `~/.agents/skills` | `~/.gemini/config/skills` |
@@ -17,7 +17,7 @@ Do not symlink whole harness config roots because they contain local auth, sessi
 
 ## Standard Workflow Entry Points
 
-| Workflow | Skill | Codex skill | Claude command | opencode command | Copilot prompt | Antigravity skill `/`command |
+| Workflow | Skill | Codex skill | Claude command | OpenCode command | Copilot prompt | Antigravity skill `/`command |
 |---|---|---|---|---|---|---|
 | Start feature/hotfix | `git-repo-flow` | `$start-feature` | `/start-feature` | `/start-feature` | `Start Feature` | `git-repo-flow` |
 | Sync repo | `git-repo-flow` | `$sync-repo` | `/sync-repo` | `/sync-repo` | `Sync Repo` | `git-repo-flow` |
@@ -50,7 +50,7 @@ Commands and prompts are convenience entry points. Skills remain the source of t
 
 Accepted gaps, recorded so they are not rediscovered as bugs.
 
-- **No managed `~/.claude/settings.json`.** opencode gets a generated config that denies `git reset --hard` and `rm -rf` at the harness level; `git push` is not harness-denied so the pre-approved create-PR flow (commit → push working branch → create PR) works with full parity, and push safety (named working branches only, never protected branches) rests on the rules in `instructions/AGENTS.md` — the same prose-only protection Claude Code, Codex, Copilot, and Antigravity rely on. Claude Code has no equivalent managed denylist here, because its `settings.json` also holds personal state (model, theme, MCP permissions) that this repo deliberately does not own. Claude relies on its own permission prompts plus the rules in `instructions/CLAUDE.md`. Add the denies by hand if you want parity.
+- **No managed `~/.claude/settings.json`.** OpenCode gets a generated config that denies `git reset --hard` and `rm -rf` at the harness level; `git push` is not harness-denied so the pre-approved create-PR flow (commit → push working branch → create PR) works with full parity, and push safety (named working branches only, never protected branches) rests on the rules in `instructions/AGENTS.md` — the same prose-only protection Claude Code, Codex, Copilot, and Antigravity rely on. Claude Code has no equivalent managed denylist here, because its `settings.json` also holds personal state (model, theme, MCP permissions) that this repo deliberately does not own. Claude relies on its own permission prompts plus the rules in `instructions/CLAUDE.md`. Add the denies by hand if you want parity.
 - **Antigravity agents have no tool or permission scoping.** Its binary carries `name`, `description`, `subagent`, `model`, and `tools` as agent frontmatter keys, so `tools:` is very likely accepted — but it also carries two different tool-name vocabularies (`Read`/`Bash`/`Edit` and `view_file`/`run_command`/`grep_search`), and there is no command that prints the valid set. A wrong list would silently strip a review agent's file access rather than error, so nothing is declared. Its `code-review` and `bug-finder` agents are therefore not read-only, unlike the other four harnesses. Resolve by checking Antigravity's agent documentation for the tool vocabulary, then scoping both agents.
 - **Antigravity has no commands directory.** Workflow entry points reach it only through skill auto-conversion, so the extra approval gates written into the commands apply only via each skill's own text.
 

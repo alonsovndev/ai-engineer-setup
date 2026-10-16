@@ -1,4 +1,10 @@
-# ai-agent-setup
+# AI Engineer Setup
+
+> Portable instructions, skills, agents, and commands that give Claude Code, Codex, opencode, and Copilot CLI one consistent engineering workflow.
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+Part of [alonsovndev](https://github.com/alonsovndev), the open-source engineering lab by [Alonso Villanueva](https://alonsovndev.com).
 
 Portable AI coding-agent setup for Codex CLI, Claude Code, opencode, GitHub Copilot CLI, and Antigravity CLI.
 

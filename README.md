@@ -45,8 +45,19 @@ Clone the repository and run:
 git clone https://github.com/alonsovndev/code-agent-harness.git
 cd code-agent-harness
 ./scripts/install.sh
-./scripts/verify.sh
 ```
+
+Choose one or more tools from the terminal menu, or choose **All**. Then run the verification command printed by the installer. Supported selection names are `claude`, `codex`, `opencode`, `copilot`, and `antigravity`.
+
+For scripted installation, specify the selection explicitly:
+
+```bash
+./scripts/install.sh --harness claude
+./scripts/install.sh --harness codex --harness opencode
+./scripts/install.sh --all
+```
+
+Noninteractive calls without `--harness` or `--all` exit with usage status `2`; update existing automation that previously relied on installing all tools by default. The installer configures tools; install their CLI applications separately.
 
 `install.sh` backs up existing portable config paths before replacing them with symlinks. It does not touch auth, session, cache, or telemetry files.
 
@@ -54,15 +65,15 @@ Claude Code plugins listed in `plugins/claude-plugins.txt` are installed separat
 
 `verify.sh` checks the managed symlinks and enforces parity against `agents/claude/` and `commands/claude/`. Codex custom agents live under `agents/codex/`; each canonical command has a Codex skill equivalent under `adapters/codex/skills/<command>/`, linked per skill into `~/.codex/skills` so it stays out of the shared skills tree the other harnesses load. Add new agents and commands to every supported harness in the same change.
 
-`./scripts/test-install.sh` checks installation, generator-marker compatibility, and clone relocation in temporary directories. `./scripts/test-verify.sh` self-tests verifier parity, and `./scripts/test-run-agent.sh` checks launcher arguments through stub executables without model calls. Run the matching self-test after changing these scripts.
+`./scripts/test-install.sh` checks tool selection, terminal menus, dry runs, installation, uninstall, generator-marker compatibility, and clone relocation in temporary directories. Its terminal tests use Python's standard library. `./scripts/test-verify.sh` self-tests verifier parity, and `./scripts/test-run-agent.sh` checks launcher arguments through stub executables without model calls. Run the matching self-test after changing these scripts.
 
 Preview changes before installing with:
 
 ```bash
-./scripts/install.sh --dry-run
+./scripts/install.sh --harness codex --dry-run
 ```
 
-Restart OpenCode after install or config changes because it loads config only at startup.
+When OpenCode is selected, restart it after install or config changes because it loads config only at startup.
 
 ## Skills
 
@@ -74,10 +85,9 @@ Recommended community skill workflow:
 npx skills add <owner/repo@skill>
 git status
 ./scripts/install.sh
-./scripts/verify.sh
 ```
 
-If the new skill appears as `skills/<skill-name>/SKILL.md`, it is portable and exposed through the managed paths for Codex, Claude Code, GitHub Copilot CLI, Antigravity CLI, shared agent paths, and OpenCode's generated `skills.paths` config. Review the diff before committing community skills or skill updates.
+Select the tools to refresh and run the printed verification command. If the new skill appears as `skills/<skill-name>/SKILL.md`, it is portable and exposed through the selected tools' managed paths and the shared `~/.agents/skills` link. Review the diff before committing community skills or skill updates.
 
 ## Update Existing Install
 
@@ -86,10 +96,11 @@ Run from this repository:
 ```bash
 git pull --ff-only
 ./scripts/install.sh
-./scripts/verify.sh
 ```
 
-Rerunning `install.sh` refreshes managed symlinks and regenerates OpenCode's machine-local config for this clone.
+Select the tools to refresh, then run the printed verification command. Selections are not stored; choose them again on each run. Installation is additive: selecting fewer tools leaves previously configured tools in place. The installer refreshes selected symlinks and regenerates OpenCode's config only when OpenCode is selected.
+
+Use `./scripts/verify.sh --harness codex` to verify one tool, repeat `--harness` for a subset, or use `--all` for every supported tool. Verification without flags still checks all tools.
 
 Existing clone directories can keep their names. If you move or rename your clone, rerun installation and verification from its new location; see [Rename and relocation](docs/setup-and-replication.md#rename-and-relocation).
 
@@ -99,6 +110,18 @@ Deep setup docs:
 - [Harness matrix](docs/harness-matrix.md)
 - [Symlink map](docs/symlink-map.md)
 - [Troubleshooting](docs/troubleshooting.md)
+
+## Uninstall
+
+Run `./scripts/uninstall.sh` for the selection menu, or use explicit flags:
+
+```bash
+./scripts/uninstall.sh --harness codex --dry-run
+./scripts/uninstall.sh --harness codex
+./scripts/uninstall.sh --all
+```
+
+Selective uninstall keeps unselected configuration and shared `~/.agents/skills` intact. The shared link is removed only by choosing **All** or using `--all`, even if every tool is selected individually. Backups are not restored automatically.
 
 ## Safety
 

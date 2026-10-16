@@ -10,9 +10,9 @@ Code Agent Harness stores portable configuration for AI coding agents, not appli
 
 ## Install And Verify
 
-- Install or refresh symlinks with `./scripts/install.sh`, then validate with `./scripts/verify.sh`.
+- Install or refresh symlinks with `./scripts/install.sh` and select tools from its terminal menu. Automation must pass repeatable `--harness NAME` flags or `--all`; noninteractive runs without a selection fail before changes. Run the matching verification command printed by the installer. `verify.sh` without flags still checks all tools.
 - `scripts/install.sh` backs up existing managed targets as `<target>.backup-<timestamp>` and intentionally does not touch auth, session, cache, telemetry, or credential files.
-- `scripts/uninstall.sh` removes only symlinks pointing into this repo and the generated OpenCode config; it does not restore backups. Codex links are limited to `~/.codex/AGENTS.md`, `~/.codex/agents`, and repo-pointing workflow skill links under `~/.codex/skills`.
+- `scripts/uninstall.sh` uses the same selection flags/menu and supports `--dry-run`. It removes only selected symlinks pointing into this repo and the generated OpenCode config; it does not restore backups. Shared `~/.agents/skills` is retained unless all tools are explicitly selected through the menu or `--all`. Codex links are limited to `~/.codex/AGENTS.md`, `~/.codex/agents`, and repo-pointing workflow skill links under `~/.codex/skills`.
 - `scripts/verify.sh` checks local commands, required repo files, symlink targets, generated OpenCode config content, Codex agent/workflow parity, warns on missing Claude Code plugins listed in `plugins/claude-plugins.txt` (install them with `./scripts/install-plugins.sh`), and global git aliases `sync`, `resync`, and `feature`.
 
 ## Harness Layout

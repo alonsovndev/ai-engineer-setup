@@ -7,7 +7,7 @@ agent: "agent"
 Use the `ai-repo-setup` skill.
 
 Requirements:
-- Refuse to run with `ai-engineer-setup` itself as the target repo.
+- Refuse to run with Code Agent Harness itself as the target repo, regardless of its clone directory name.
 - Best-effort check that the global install is present (`~/.claude/AGENTS.md`,
   `~/.config/opencode/opencode.jsonc`, `~/.copilot/.github/instructions`); warn, don't
   block, if it's missing.
@@ -24,11 +24,11 @@ Requirements:
   `python-fastapi-ddd`, `technical-writer`/`markdown-author`) and its
   `instructions/stacks/*.md` file — do not attach a stack skill that doesn't fit.
 - Do not generate a project-level `opencode.jsonc` unless the user explicitly asks for
-  repo-scoped opencode permission overrides.
+  repo-scoped OpenCode permission overrides.
 - Do not scaffold application folders, CI workflows, or package manifests — this command
   only wires instruction files.
 - Report what was created, updated, or left untouched (custom blocks preserved), the
-  stack assigned per area, any `TBD` items, and remind the user opencode needs a restart
+  stack assigned per area, any `TBD` items, and remind the user OpenCode needs a restart
   after config/instruction changes.
 
 Arguments: $ARGUMENTS

@@ -1,6 +1,6 @@
 # Setup and replication
 
-Use this guide to install the portable agent setup on a new machine or share the same setup with a peer.
+Use this guide to install Code Agent Harness on a new machine or share its reusable AI coding-agent configuration with a peer.
 
 ## Scope
 
@@ -24,7 +24,7 @@ Install only the harnesses you plan to use:
 |---|---|
 | Codex CLI | `codex` |
 | Claude Code | `claude` |
-| opencode | `opencode` |
+| OpenCode | `opencode` |
 | GitHub Copilot CLI | `copilot` |
 | Antigravity CLI | `agy` |
 
@@ -35,8 +35,8 @@ Git is required for normal repository workflows.
 Clone the repository to any local path:
 
 ```bash
-git clone <repository-url> ai-agent-setup
-cd ai-agent-setup
+git clone https://github.com/alonsovndev/code-agent-harness.git
+cd code-agent-harness
 ```
 
 The clone path does not need to match the original machine. `scripts/install.sh` resolves the local repository root at runtime.
@@ -58,8 +58,7 @@ Preview changes before installing with:
 ./scripts/install.sh --dry-run
 ```
 
-
-Restart opencode after install or config changes because it loads config only at startup.
+Restart OpenCode after install or config changes because it loads config only at startup.
 
 ## Install skills
 
@@ -107,15 +106,15 @@ To add a plugin, append a line to the manifest and rerun the script. To remove o
 
 ## What install changes
 
-The installer creates symlinks for portable directories and writes one generated opencode config file. For Codex, it manages only `~/.codex/AGENTS.md`, `~/.codex/agents`, and its own per-skill links under `~/.codex/skills`; it leaves `config.toml`, auth, sessions, caches, the Codex-managed `.system` skills, and other Codex state untouched.
+The installer creates symlinks for portable directories and writes one generated OpenCode config file. For Codex, it manages only `~/.codex/AGENTS.md`, `~/.codex/agents`, and its own per-skill links under `~/.codex/skills`; it leaves `config.toml`, auth, sessions, caches, the Codex-managed `.system` skills, and other Codex state untouched.
 
 See [Symlink map](./symlink-map.md) for the full source-to-target mapping.
 
-The opencode config is generated at `~/.config/opencode/opencode.jsonc` because opencode needs an absolute instructions path for the local clone. The generated file includes a marker comment and should not be committed.
+The OpenCode config is generated at `~/.config/opencode/opencode.jsonc` because OpenCode needs an absolute instructions path for the local clone. The generated file includes a marker comment and should not be committed.
 
-The generated opencode config also sets `skills.paths` to this repository's absolute `skills/` path. Codex discovers the same portable skills through `~/.agents/skills`; its workflow command skills (named after the canonical commands) are linked per skill into `~/.codex/skills` so they do not appear in other harnesses.
+The generated OpenCode config also sets `skills.paths` to this repository's absolute `skills/` path. Codex discovers the same portable skills through `~/.agents/skills`; its workflow command skills (named after the canonical commands) are linked per skill into `~/.codex/skills` so they do not appear in other harnesses.
 
-The installer also links `instructions/AGENTS.md` to `~/.config/opencode/AGENTS.md` so opencode's auto-loaded global instructions cannot drift from the canonical file.
+The installer also links `instructions/AGENTS.md` to `~/.config/opencode/AGENTS.md` so OpenCode's auto-loaded global instructions cannot drift from the canonical file.
 
 ## Validate
 
@@ -130,7 +129,7 @@ The verifier checks:
 - Harness commands available on `PATH`.
 - Required repository files exist.
 - Symlinks point to this clone.
-- The generated opencode config points to this clone.
+- The generated OpenCode config points to this clone.
 - Git aliases `sync`, `resync`, and `feature` are available, reported as warnings if absent.
 
 Missing selected harness commands are reported as issues. Install only the tools you need, then rerun the verifier for those harnesses:
@@ -170,7 +169,38 @@ git pull --ff-only
 
 Rerunning `install.sh` is safe for paths already managed by this repository. Existing non-managed files are backed up before replacement.
 
-Restart opencode after update so it reloads generated config, instructions, agents, commands, and skills.
+Restart OpenCode after update so it reloads generated config, instructions, agents, commands, and skills.
+
+## Rename and relocation
+
+Existing clones can keep their directory names. The installer resolves the repository root at runtime; command names, skill identifiers, configuration keys, and managed destination paths are unchanged by the rebrand.
+
+Existing OpenCode configs with the legacy installer marker remain valid when their paths point to the current clone. Rerunning `install.sh` backs up the old config and writes the new `code-agent-harness` marker. Uninstall continues to recognize both current and historical managed configs.
+
+If you move or rename a clone, its absolute symlinks and generated configuration still point to the previous location. Run from the new repository root:
+
+```bash
+./scripts/install.sh --dry-run
+./scripts/install.sh
+./scripts/verify.sh
+```
+
+Restart your coding-agent tools afterward so they reload instructions, skills, and configuration. Moving the directory is optional.
+
+### Manual GitHub actions
+
+The repository contents prepare for the rename; installation does not change GitHub settings or git remotes.
+
+1. Rename the GitHub repository to `alonsovndev/code-agent-harness`.
+2. Set the About description to: "A portable development harness for AI coding agents, skills, commands, instructions, and workflows."
+3. Set the topics to `ai-agents`, `coding-agents`, `developer-tools`, `claude-code`, `codex`, `opencode`, `github-copilot`, `ai-development`, `agentic-workflows`, and `agent-harness`.
+4. After the GitHub rename, update each clone's remote:
+
+   ```bash
+   git remote set-url origin https://github.com/alonsovndev/code-agent-harness.git
+   ```
+
+5. Update external documentation or bookmarks and confirm repository and pull-request links resolve under the new name.
 
 ## Uninstall
 
@@ -180,7 +210,7 @@ Run:
 ./scripts/uninstall.sh
 ```
 
-`uninstall.sh` removes only symlinks that point into this repository and the generated opencode config created by `install.sh`, including the managed Codex instruction and agent links. It does not automatically restore backups.
+`uninstall.sh` removes only symlinks that point into this repository and the generated OpenCode config created by `install.sh`, including the managed Codex instruction and agent links. It does not automatically restore backups.
 
 ## Restore a backup
 

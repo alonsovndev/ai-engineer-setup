@@ -1,21 +1,21 @@
 ---
 name: git-repo-flow
-description: "Use when starting feature work, syncing repositories, creating feature or hotfix branches, preparing dev/main pull requests, or explaining fork/direct git flows. Keywords: git workflow, fork workflow, direct repo, git feature, git sync, git resync, origin upstream dev main, feature branch, hotfix branch, release tag, dev behind main, post-release back-sync, sync dev."
-argument-hint: "Provide repository path, desired branch name, target base branch, and whether sync/resync/push actions are approved."
+description: "Use when starting feature work, syncing repositories, creating feature, fix, chore, or hotfix branches, preparing pull requests into main, tagging releases, or explaining fork/direct git flows. Keywords: git workflow, trunk-based, fork workflow, direct repo, git feature, git sync, git resync, origin upstream main, feature branch, hotfix branch, squash merge, release tag."
+argument-hint: "Provide repository path, desired branch name, and whether sync/resync/push actions are approved."
 user-invocable: true
 allowed-tools: Bash
 ---
 
 # Git Repo Flow Skill
 
-Standardize development work for GitHub repositories that use either fork-based or direct-repository development.
+Standardize development work for GitHub repositories that use either fork-based or direct-repository development. The flow is trunk-based: every change reaches `main` through one squash-merged PR.
 
 ## Repository Topologies
 
-| Mode | Remote shape | Feature source | PR target |
+| Mode | Remote shape | Branch source | PR target |
 |---|---|---|---|
-| Fork mode | `origin` = engineer fork, `upstream` = organization repo | `origin:feature/*` | `upstream:dev` |
-| Direct mode | `origin` = organization repo, no `upstream` | `origin:feature/*` | `origin:dev` |
+| Fork mode | `origin` = engineer fork, `upstream` = organization repo | `origin:<type>/*` | `upstream:main` |
+| Direct mode | `origin` = organization repo, no `upstream` | `origin:<type>/*` | `origin:main` |
 
 Detection rules:
 
@@ -26,26 +26,24 @@ Detection rules:
 
 ## Branch Model
 
-- `dev` is the long-running development and integration branch.
-- `main` is the production-candidate branch.
-- `feature/<ticket>-<short-desc>` branches target `dev`.
-- `hotfix/<ticket>-<short-desc>` branches target `main`.
-- Other named working branches, such as `fix/*` and `chore/*`, may also hold commits.
-- Production deploys are promoted by release tags `vX.Y.Z` from `main`.
+- `main` is the only long-running branch. It is always releasable.
+- Working branches are `<type>/<short-desc>` with `<type>` one of `feature`, `fix`, `chore`, or `hotfix` (urgent production fix). `<short-desc>` is kebab-case; a ticket may prefix it: `<type>/<ticket>-<short-desc>`.
+- Every working branch branches from fresh `main` and targets `main`.
+- PRs are squash-merged and the head branch is deleted after merge.
+- Production releases are tags `vX.Y.Z` created on `main`.
 
 ## Safety Rules
 
-- Never stage or commit on `main`, `master`, `dev`, or a detached HEAD. Check the branch first, then create or switch to any named working branch before making a commit.
-- Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch), and only when the user explicitly asks or the create-PR flow has been invoked — that invocation pre-approves committing the current changes, pushing the working branch, and creating the PR. If a protected branch needs a push, do the local step and give the user the exact command to run.
+- Never stage or commit on `main`, `master`, or a detached HEAD. Check the branch first, then create or switch to any named working branch before making a commit.
+- Never push commits on `main`, `master`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch), and only when the user explicitly asks or the create-PR flow has been invoked — that invocation pre-approves committing the current changes, pushing the working branch, and creating the PR. If a protected branch needs a push, do the local step and give the user the exact command to run.
 - Never add AI or tool co-author trailers (e.g., `Co-authored-by: ...`) to commit messages.
 - Never run `git resync` yourself — it performs `reset --hard` and `push --force-with-lease`, so it is user-run only. Never run `git sync` while on a protected branch — it pushes the current branch; on a protected branch, the user runs these aliases themselves.
-- Never run `git feature` yourself — it runs `git resync` on `dev`. The user may run it when topology is fork mode, the worktree is clean, and the branch name is confirmed; otherwise use the non-pushing manual workflow below.
-- In direct mode, do not use `git feature`; use the manual direct-mode feature workflow unless a direct-mode alias exists.
-- Never push directly to `dev` or `main` — not even when the user explicitly confirms a release, sync, or hotfix operation. Do the local step (merge, fast-forward, tag) and give the user the exact push command to run.
-- Never force-push a feature branch unless the user explicitly approves and the target branch is not protected.
+- Never run `git feature` yourself — it runs `git resync` on `main`. The user may run it when topology is fork mode, the worktree is clean, and the branch name is confirmed; otherwise use the non-pushing manual workflow below.
+- In direct mode, do not use `git feature`; use the manual direct-mode workflow unless a direct-mode alias exists.
+- Never push directly to `main` — not even when the user explicitly confirms a release or hotfix. Do the local step (fast-forward, tag) and give the user the exact push command to run.
+- Never force-push a working branch unless the user explicitly approves and the target branch is not protected.
 - Never create release tags without explicit approval for the version and target commit.
 - Never bypass hooks, branch protections, PR reviews, or CI checks.
-- Never push a `dev` back-sync merge or fast-forward — hand the push command to the user — and never force-push or hard-reset `dev` while back-syncing it from `main`.
 
 ## Required Preflight
 
@@ -60,38 +58,38 @@ git log --oneline -10
 
 Classify the repository topology before recommending commands.
 
-## Start Feature Workflow
+## Start Work Workflow
 
 Fork mode alias:
 
 ```bash
-git feature feature/<ticket>-<short-desc>
+git feature <type>/<short-desc>
 ```
 
 This alias is expected to:
 
-1. Check out local `dev`.
-2. Run `git resync` to align local/fork `dev` with `upstream/dev`.
-3. Create the feature branch from refreshed `dev`.
+1. Check out local `main`.
+2. Run `git resync` to align local/fork `main` with `upstream/main`.
+3. Create the working branch from refreshed `main`.
 
-Because `git resync` hard-resets and force-pushes `dev`, never run `git feature` yourself — ask the user to run it. Use the non-pushing fork-mode manual workflow instead:
+Because `git resync` hard-resets and force-pushes `main`, never run `git feature` yourself — ask the user to run it. Use the non-pushing fork-mode manual workflow instead:
 
 ```bash
 git fetch upstream
-git checkout dev
-git merge --ff-only upstream/dev
-git checkout -b feature/<ticket>-<short-desc>
+git checkout main
+git merge --ff-only upstream/main
+git checkout -b <type>/<short-desc>
 ```
 
-If the `--ff-only` merge fails (local/fork `dev` diverged from `upstream/dev`), stop and ask the user to run `git feature` or `git resync` themselves.
+If the `--ff-only` merge fails (local/fork `main` diverged from `upstream/main`), stop and ask the user to run `git feature` or `git resync` themselves.
 
 Direct mode manual workflow:
 
 ```bash
 git fetch origin
-git checkout dev
-git pull --ff-only origin dev
-git checkout -b feature/<ticket>-<short-desc>
+git checkout main
+git pull --ff-only origin main
+git checkout -b <type>/<short-desc>
 ```
 
 If the working tree is dirty, stop before syncing or creating a branch.
@@ -110,7 +108,7 @@ Fork mode hard reset for disposable local copies of shared branches:
 git resync
 ```
 
-Never run `git sync` or `git resync` while on `main`, `master`, or `dev` — both aliases push the current branch. On a protected branch, use the local fast-forward sync below and let the user handle any push. `git resync` on a protected branch is user-run only, even for disposable local/fork copies of shared branches.
+Never run `git sync` or `git resync` while on `main` or `master` — both aliases push the current branch. On a protected branch, use the local fast-forward sync below and let the user handle any push. `git resync` on a protected branch is user-run only, even for disposable local/fork copies of shared branches.
 
 Direct mode preserving local commits on a working branch:
 
@@ -119,7 +117,16 @@ git fetch origin
 git merge origin/$(git branch --show-current)
 ```
 
-For normal sync of `main`, `master`, or `dev`, fetch the owning remote and use `git merge --ff-only <remote>/<branch>`; stop if it cannot fast-forward. Never run `git sync` or create a merge commit on these branches. `git resync` on these branches is user-run only — the agent never pushes them.
+For normal sync of `main` or `master`, fetch the owning remote and use `git merge --ff-only <remote>/<branch>`; stop if it cannot fast-forward. Never run `git sync` or create a merge commit on these branches. `git resync` on these branches is user-run only — the agent never pushes them.
+
+Bring a working branch up to date with `main` (the main case in trunk-based flow; `git sync` only fits branches that exist on `upstream`):
+
+```bash
+git fetch <upstream-or-origin>
+git merge <upstream-or-origin>/main
+```
+
+Rebase onto `<remote>/main` instead only when the branch has not been pushed or shared.
 
 Direct mode fast-forward only for shared branches:
 
@@ -128,89 +135,52 @@ git fetch origin
 git pull --ff-only origin $(git branch --show-current)
 ```
 
-Do not use hard reset or force-push on a feature branch that contains unmerged work.
+Do not use hard reset or force-push on a working branch that contains unmerged work.
 
-## PR Target Rules
+## PR Rules
 
-| Branch type | Fork mode target | Direct mode target |
-|---|---|---|
-| `feature/*` | `upstream:dev` | `origin:dev` |
-| `hotfix/*` | `upstream:main` | `origin:main` |
-| `dev` release candidate | `upstream:main` | `origin:main` |
+Every working branch targets `main`:
 
-PR title format for feature work:
+| Mode | Target |
+|---|---|
+| Fork mode | `upstream:main` |
+| Direct mode | `origin:main` |
+
+PR title is a Conventional Commit, because squash merge turns it into the commit on `main`:
 
 ```text
-[TICKET] imperative summary
+type(scope): imperative summary
 ```
 
 Example:
 
 ```text
-[PPWR-42] add publication-outcomes POST endpoint
+feat(api): add publication-outcomes POST endpoint
 ```
+
+Reference tickets or issues in the PR body (`Closes #42`), not the title.
 
 ## Release Flow
 
-Normal production release:
+1. Merge the PR into `main` with a squash merge. No promote PR and no back-sync are needed — there is no second branch to keep aligned.
+2. After sign-off, run the `tag-release` command to create `vX.Y.Z` on `main`. Give the user the exact `git push <remote> vX.Y.Z` command; never push the tag yourself.
 
-1. Merge feature PRs into `dev`.
-2. Open PR from `dev` to `main`.
-3. Merge to `main` after required approvals and checks, using a real merge commit rather than squash or rebase, so `dev`'s commits remain ancestors of `main` and `dev` can fast-forward during back-sync.
-4. Tag `main` with `vX.Y.Z` after final sign-off.
+Hotfixes follow the same path: a `hotfix/<short-desc>` branch from `main`, a PR into `main`, then a new tag.
 
-Do not tag an unreleased candidate unless the user confirms the candidate is safe.
+Do not tag an unreleased commit unless the user confirms it is safe.
 
-## Post-Release Back-Sync (dev ← main)
+## After a PR Merges
 
-Merging the `dev` → `main` PR only advances `main` on GitHub — it never advances `dev`. Immediately afterward, `dev` will show as behind `main`. This is expected Git behavior, not an error; use the `sync-dev` command to fix it.
-
-Detection:
+The head branch is deleted on GitHub. Locally, fast-forward `main` and delete the merged branch:
 
 ```bash
-git fetch upstream   # fork mode
-git fetch origin     # direct mode
-git merge-base --is-ancestor dev upstream/main   # fork mode
-git merge-base --is-ancestor dev origin/main     # direct mode
+git fetch <remote>
+git checkout main
+git merge --ff-only <remote>/main
+git branch -d <type>/<short-desc>
 ```
 
-If the command exits `0`, the `dev` → `main` PR was merged as a real merge commit and `dev`'s commits are already ancestors of `main` — fast-forward is safe.
-
-Fork mode, fast-forward case:
-
-```bash
-git checkout dev
-git merge --ff-only upstream/main
-```
-
-Then give the user the exact command to run: `git push origin dev`. Never push `dev` yourself.
-
-Fork mode, non-fast-forward case (the `dev` → `main` PR was squashed or rebased):
-
-```bash
-git checkout -b <working-branch> upstream/dev
-git merge --no-ff upstream/main -m "Merge main into dev after release"
-# Push the working branch only with approval, then open a PR into upstream/dev.
-```
-
-Direct mode, fast-forward case:
-
-```bash
-git checkout dev
-git merge --ff-only origin/main
-```
-
-Then give the user the exact command to run: `git push origin dev`. Never push `dev` yourself.
-
-Direct mode, non-fast-forward case:
-
-```bash
-git checkout -b <working-branch> origin/dev
-git merge --no-ff origin/main -m "Merge main into dev after release"
-# Push the working branch only with approval, then open a PR into origin/dev.
-```
-
-Never create a merge commit directly on `dev` or rebase it onto `main` — `dev` may already be pushed and shared. Never force-push or hard-reset `dev` during back-sync. Require explicit approval before pushing a back-sync working branch or creating a back-sync PR (outside the pre-approved create-PR flow); never push `dev` yourself — give the user the exact command.
+Squash merges rewrite history, so `git branch -d` may refuse a branch that is already merged; confirm the PR shows as merged, then use `git branch -D` only with the user's approval.
 
 ## Final Response
 

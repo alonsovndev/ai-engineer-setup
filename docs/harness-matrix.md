@@ -19,12 +19,10 @@ Do not symlink whole harness config roots because they contain local auth, sessi
 
 | Workflow | Skill | Codex skill | Claude command | OpenCode command | Copilot prompt | Antigravity skill `/`command |
 |---|---|---|---|---|---|---|
-| Start feature/hotfix | `git-repo-flow` | `$start-feature` | `/start-feature` | `/start-feature` | `Start Feature` | `git-repo-flow` |
+| Start working branch (feature/fix/chore/hotfix) | `git-repo-flow` | `$start-feature` | `/start-feature` | `/start-feature` | `Start Feature` | `git-repo-flow` |
 | Sync repo | `git-repo-flow` | `$sync-repo` | `/sync-repo` | `/sync-repo` | `Sync Repo` | `git-repo-flow` |
 | Commit changes | `git-commit` | `$commit` | `/commit` | `/commit` | `Commit` | `git-commit` |
-| Create PR (feature → dev) | `git-create-pr`, `gh-prs` | `$create-pr` | `/create-pr` | `/create-pr` | `Create PR` | `gh-prs` |
-| Promote release (dev → main) | `git-create-pr`, `gh-prs`, `git-repo-flow` | `$promote-release` | `/promote-release` | `/promote-release` | `Promote Release` | `gh-prs` |
-| Sync dev from main after a release merge | `git-repo-flow` | `$sync-dev` | `/sync-dev` | `/sync-dev` | `Sync Dev` | `git-repo-flow` |
+| Create PR (working branch → main) | `git-create-pr`, `gh-prs` | `$create-pr` | `/create-pr` | `/create-pr` | `Create PR` | `gh-prs` |
 | Tag release (create vX.Y.Z tag from main) | `git-repo-flow`, `pr-review` | `$tag-release` | `/tag-release` | `/tag-release` | `Tag Release` | `pr-review` |
 | Frontend design review | `frontend-design` | `$review-design` | `/review-design` | `/review-design` | `Review Design` | `frontend-design` |
 | Improve an existing UI end-to-end | `ui-refinement` | `$improve-ui` | `/improve-ui` | `/improve-ui` | `Improve UI` | `ui-refinement` |

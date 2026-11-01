@@ -164,12 +164,12 @@ The repository workflow expects these user-level aliases:
 [alias]
     sync = !git fetch upstream && git merge upstream/$(git branch --show-current) && git push origin HEAD
     resync = !git fetch upstream && git reset --hard upstream/$(git branch --show-current) && git push origin HEAD --force-with-lease
-    feature = "!f() { test -n \"$1\" || { echo \"usage: git feature <branch-name>\"; return 1; }; git checkout dev && git resync && git checkout -b \"$1\"; }; f"
+    feature = "!f() { test -n \"$1\" || { echo \"usage: git feature <branch-name>\"; return 1; }; git checkout main && git resync && git checkout -b \"$1\"; }; f"
 ```
 
 These aliases are for fork-mode repositories. In direct-mode repositories, use the manual workflow documented in [Git repo flow](./git-repo-flow.md).
 
-`git sync`, `git resync`, and `git feature` all push the current branch, so agents never run them on a protected branch (`main`, `master`, `dev`) — run them yourself when needed; see the [push policy](./git-repo-flow.md#push-policy).
+`git sync`, `git resync`, and `git feature` all push the current branch, so agents never run them on a protected branch (`main`, `master`) — run them yourself when needed; see the [push policy](./git-repo-flow.md#push-policy).
 
 ## Update an existing setup
 

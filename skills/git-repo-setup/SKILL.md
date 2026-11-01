@@ -1,15 +1,14 @@
 ---
 name: git-repo-setup
-description: "Use for post-clone repository bootstrap: creating a dev branch from main when it doesn't exist, and scaffolding baseline hygiene files (README, .gitignore, LICENSE, CONTRIBUTING) that don't exist yet. Branch protection/rulesets are out of scope for this skill — use the branch-protection skill directly if needed. Keywords: post-clone setup, dev branch, repo bootstrap, README, gitignore, license, contributing."
-argument-hint: "Repo path (default: current directory), license choice or skip, whether branch changes are approved"
+description: "Use for post-clone repository bootstrap: scaffolding baseline hygiene files (README, .gitignore, LICENSE, CONTRIBUTING) that don't exist yet. Branch protection/rulesets are out of scope for this skill — use the branch-protection skill directly if needed. Keywords: post-clone setup, repo bootstrap, README, gitignore, license, contributing."
+argument-hint: "Repo path (default: current directory), license choice or skip"
 user-invocable: true
 allowed-tools: Bash, Read, Write, Edit
 ---
 
 # Git Repo Setup Skill
 
-Bootstrap a freshly cloned repository: make sure `dev` exists, and scaffold any missing
-baseline hygiene files. This skill delegates branch/PR conventions to `git-repo-flow`
+Bootstrap a freshly cloned repository: scaffold any missing baseline hygiene files. This skill delegates branch/PR conventions to `git-repo-flow`
 rather than duplicating them. Branch protection/rulesets are intentionally out of scope —
 set those up manually, or use the `branch-protection` skill directly.
 
@@ -25,32 +24,17 @@ gh auth status
 ```
 
 Detect fork mode (`origin` + `upstream`) or direct mode (`origin` only) using the
-`git-repo-flow` skill's detection rules. Then check which permanent branches already
-exist on the relevant remote (`upstream` in fork mode, `origin` in direct mode):
+`git-repo-flow` skill's detection rules. Then confirm `main` exists on the relevant
+remote (`upstream` in fork mode, `origin` in direct mode):
 
 ```bash
 git fetch <remote>
-git ls-remote --heads <remote> dev main
+git ls-remote --heads <remote> main
 ```
 
-If `main` itself doesn't exist, stop and ask — this skill only creates `dev` from an
-existing `main`, it does not invent a `main` branch.
+If `main` doesn't exist, stop and ask — this skill does not invent a `main` branch.
 
-## Step 1 — Create `dev` from `main` if missing
-
-If `dev` is already present, skip this step and report it as already set up.
-
-If `dev` is missing, confirm with the user before writing anything, then:
-
-```bash
-git fetch <remote>
-git checkout -B dev <remote>/main
-```
-
-Then give the user the exact command to run themselves: `git push -u <remote> dev`.
-Never push `dev` yourself — not even with explicit approval.
-
-## Step 2 — Scaffold repo hygiene files
+## Scaffold repo hygiene files
 
 Create-only: check each file for existence first and only generate the ones missing.
 Never overwrite an existing file, even partially.
@@ -84,7 +68,6 @@ to overwrite it.
 
 Report:
 
-- Whether `dev` already existed or was created (and the push command handed to the user).
 - Which hygiene files were created vs. already existed.
 - Any `TBD` items (license choice deferred, undetected stack, etc.).
 - A reminder that branch protection/rulesets are not configured by this skill — set them
@@ -93,6 +76,6 @@ Report:
 ## Constraints
 
 - Never overwrite an existing README/.gitignore/LICENSE/CONTRIBUTING.
-- Never push branches yourself — a `dev` bootstrap push is always handed to the user as the exact command to run.
+- Never push protected branches yourself — hand any needed push to the user as the exact command to run.
 - Do not configure branch protection or rulesets — out of scope for this skill.
 - Mark unknowns `TBD`; do not invent license choice, org name, or project details.

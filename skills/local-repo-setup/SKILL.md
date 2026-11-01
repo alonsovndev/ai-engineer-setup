@@ -13,7 +13,7 @@ Set up a `github.com` repository from a semantic local path with safe defaults.
 ## Safety Rules
 
 - Never create a remote repository, push code, or change remotes without explicit approval.
-- Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch). If a protected branch or a bootstrap push is needed, give the user the exact command to run.
+- Never push commits on `main`, `master`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch). If a protected branch or a bootstrap push is needed, give the user the exact command to run.
 - Never commit or push secrets, `.env` files, credentials, private keys, local caches, session stores, or generated artifacts.
 - Never overwrite an existing remote without confirming owner, repository, host, and URL.
 - Prefer private repositories unless the user explicitly requests public visibility.
@@ -59,7 +59,7 @@ Confirm these fields before changing anything:
 - Owner or group.
 - Repository name.
 - Visibility.
-- Default branch, usually `main` or `dev` depending on team convention.
+- Default branch, normally `main`.
 - Remote name, usually `origin`.
 
 ## Repository Topology Setup
@@ -77,7 +77,7 @@ For fork-based development:
 
 - `origin` must point to the engineer fork.
 - `upstream` must point to the organization repository.
-- Engineers push feature and hotfix branches to `origin`.
+- Engineers push working branches (`feature/*`, `fix/*`, `chore/*`, `hotfix/*`) to `origin`.
 - PRs target `upstream`.
 
 Check current remotes:
@@ -92,28 +92,26 @@ Add upstream only after confirming the organization repository URL:
 git remote add upstream https://github.com/<org>/<repo>.git
 ```
 
-Verify both permanent branches exist upstream:
+Verify `main` exists upstream:
 
 ```bash
 git fetch upstream
-git ls-remote --heads upstream dev main
+git ls-remote --heads upstream main
 ```
 
-Create local tracking branches only after approval:
+Create the local tracking branch only after approval:
 
 ```bash
-git checkout -B dev upstream/dev
 git checkout -B main upstream/main
 ```
 
-Then give the user the exact commands to run themselves:
+Then give the user the exact command to run themselves:
 
 ```bash
-git push -u origin dev --force-with-lease
 git push -u origin main --force-with-lease
 ```
 
-Never push `dev` or `main` yourself — not even with explicit approval. The `--force-with-lease` operations are destructive for fork branches, which is why they stay user-run.
+Never push `main` yourself — not even with explicit approval. The `--force-with-lease` operation is destructive for fork branches, which is why it stays user-run.
 
 ## Direct Remote Setup
 
@@ -121,14 +119,14 @@ For direct repository development:
 
 - `origin` points to the organization repository.
 - No `upstream` is required.
-- Engineers push `feature/*` and `hotfix/*` branches to `origin`.
-- PRs target `origin:dev` or `origin:main`.
+- Engineers push working branches (`feature/*`, `fix/*`, `chore/*`, `hotfix/*`) to `origin`.
+- PRs target `origin:main`.
 
-Verify permanent branches:
+Verify `main` exists:
 
 ```bash
 git fetch origin
-git ls-remote --heads origin dev main
+git ls-remote --heads origin main
 ```
 
 If `gh` is available and remote creation is approved:
@@ -153,7 +151,7 @@ Only after explicit approval, and only from a named working branch (`feature/*`,
 git push -u origin <branch>
 ```
 
-If the first push targets `main`, `master`, or `dev` (for example a bootstrap default branch), never run it yourself — give the user the exact command to run.
+If the first push targets `main` or `master` (for example a bootstrap default branch), never run it yourself — give the user the exact command to run.
 
 Do not force-push.
 

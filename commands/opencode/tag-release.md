@@ -12,7 +12,7 @@ Arguments: $ARGUMENTS
 Required behavior:
 
 - Run read-only checks first.
-- Verify `dev` to `main` candidate flow and release tag assumptions.
+- Verify the release commit is merged on `main` and the release tag assumptions.
 - Confirm main HEAD versus latest release tag for hotfixes.
 - Check PR approvals, unresolved threads, CI status, and verification evidence when data is available.
 - Require explicit approval before creating the release tag, merging, or calling GitHub APIs.

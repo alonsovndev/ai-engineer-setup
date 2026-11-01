@@ -61,7 +61,7 @@ BREAKING CHANGE: `extends` key behavior changed
 git branch --show-current
 ```
 
-If the command fails or returns an empty branch name (detached HEAD), `main`, `master`, or `dev`, stop before staging. Do not change the index or working tree. Tell the user to create or switch to a named working branch (see the `git-repo-flow` skill or `/start-feature`). Any other named branch is allowed.
+If the command fails or returns an empty branch name (detached HEAD), `main`, or `master`, stop before staging. Do not change the index or working tree. Tell the user to create or switch to a named working branch (see the `git-repo-flow` skill or `/start-feature`). Any other named branch is allowed.
 
 ### 1. Analyze Diff
 
@@ -115,7 +115,7 @@ If the subject does not include a Conventional Commit type, stop and rewrite it 
 
 ### 4. Execute Commit
 
-Recheck the current branch immediately before `git commit`; stop if the check fails or the branch is empty, `main`, `master`, or `dev`.
+Recheck the current branch immediately before `git commit`; stop if the check fails or the branch is empty, `main`, or `master`.
 
 ```bash
 # Single line
@@ -154,8 +154,8 @@ docs: add fork setup steps
 
 ## Git Safety Protocol
 
-- NEVER stage or commit on `main`, `master`, `dev`, or a detached HEAD
-- NEVER push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch) when the user explicitly asks; if a protected branch needs a push, give the user the exact command to run
+- NEVER stage or commit on `main`, `master`, or a detached HEAD
+- NEVER push commits on `main`, `master`, or a detached HEAD — not even with explicit approval. Push only from a named working branch (`feature/*`, `fix/*`, `hotfix/*`, `chore/*`, or another named branch) when the user explicitly asks; if a protected branch needs a push, give the user the exact command to run
 - NEVER update git config
 - NEVER run destructive commands (--force, hard reset) without explicit request
 - NEVER skip hooks (--no-verify) unless user asks

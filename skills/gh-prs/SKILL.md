@@ -34,8 +34,7 @@ Detect repository topology:
 
 - Fork mode: `origin` is the engineer fork and `upstream` is the organization repository.
 - Direct mode: `origin` is the organization repository and there is no `upstream`.
-- Feature PRs target `dev`.
-- Hotfix and release PRs target `main`.
+- All PRs (`feature/*`, `fix/*`, `chore/*`, `hotfix/*`) target `main` and are squash-merged.
 
 For branch PR creation, inspect included changes:
 
@@ -75,38 +74,29 @@ git push -u origin <branch>
 gh pr create --repo <owner>/<repo> --base <base> --head <branch> --title "<title>" --body-file <body-file>
 ```
 
-If the current branch is `main`, `master`, `dev`, or detached, stop — never push a protected branch; give the user the exact push command to run instead.
+If the current branch is `main`, `master`, or detached, stop — never push a protected branch; give the user the exact push command to run instead.
 
-Fork feature PR example:
+The PR title is a Conventional Commit (`type(scope): summary`) because squash merge turns it into the commit on `main`.
 
-```bash
-gh pr create \
-  --repo <org>/<repo> \
-  --base dev \
-  --head <user>:feature/<ticket>-<short-desc> \
-  --title "[TICKET] imperative summary" \
-  --body-file <body-file>
-```
-
-Direct feature PR example:
-
-```bash
-gh pr create \
-  --repo <org>/<repo> \
-  --base dev \
-  --head feature/<ticket>-<short-desc> \
-  --title "[TICKET] imperative summary" \
-  --body-file <body-file>
-```
-
-Release PR example:
+Fork PR example:
 
 ```bash
 gh pr create \
   --repo <org>/<repo> \
   --base main \
-  --head dev \
-  --title "release: promote dev to main" \
+  --head <user>:<type>/<short-desc> \
+  --title "type(scope): imperative summary" \
+  --body-file <body-file>
+```
+
+Direct PR example:
+
+```bash
+gh pr create \
+  --repo <org>/<repo> \
+  --base main \
+  --head <type>/<short-desc> \
+  --title "type(scope): imperative summary" \
   --body-file <body-file>
 ```
 

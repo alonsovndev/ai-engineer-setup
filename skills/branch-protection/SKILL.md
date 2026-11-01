@@ -12,7 +12,7 @@ Configure GitHub branch protection safely for repositories on `github.com`.
 
 ## Default Policy
 
-When the user asks for the standard setup on a repository with no CI/reviewers configured yet, apply this light preset to both `dev` and `main` (protections live on the organization repository, so this applies in both fork-mode and direct-mode): require a pull request before merging, no mandatory approval count, block force pushes, block branch deletion. No required status checks by default.
+When the user asks for the standard setup on a repository with no CI/reviewers configured yet, apply this light preset to `main` (protections live on the organization repository, so this applies in both fork-mode and direct-mode): require a pull request before merging, allow squash merges only (applied by the ruleset payload below after approval, or by repository merge settings in the fallback paths), no mandatory approval count, block force pushes, block branch deletion. No required status checks by default. Also recommend enabling "Automatically delete head branches" (see the `auto-delete-branches` skill).
 
 Do not weaken existing stricter protections unless the user explicitly approves the exact relaxation.
 
@@ -22,10 +22,9 @@ Use only when the user explicitly asks for stricter protection, or the repositor
 
 | Branch | Required approvals | Required check | Notes |
 |---|---:|---|---|
-| `dev` | 1 | `continuous-integration/vela/push` | Development integration branch |
-| `main` | 2 | `continuous-integration/vela/push` | Production-candidate branch |
+| `main` | 2 | `continuous-integration/vela/push` | Trunk; every PR is squash-merged |
 
-The status check name above is specific to repositories already wired to that CI system — confirm the actual check name with the user rather than assuming it applies. Both branches should also require latest push approval, conversation resolution, and linear history in this preset.
+The status check name above is specific to repositories already wired to that CI system — confirm the actual check name with the user rather than assuming it applies. The branch should also require latest push approval, conversation resolution, and linear history in this preset.
 
 ## Safety Rules
 
@@ -55,7 +54,7 @@ Confirm:
 
 ## Ruleset Mode (recommended)
 
-GitHub Rulesets (`repos/{owner}/{repo}/rulesets`) are the modern replacement for classic per-branch protection. Prefer this mode: a single ruleset can target multiple branches by name (e.g. `refs/heads/main` and `refs/heads/dev`) instead of requiring one API call per branch, and a ruleset can be created even before a targeted branch exists yet.
+GitHub Rulesets (`repos/{owner}/{repo}/rulesets`) are the modern replacement for classic per-branch protection. Prefer this mode: a ruleset can be created even before the targeted branch exists, and one ruleset can target several branches by name if the repository ever needs more than `main`.
 
 **Read existing rulesets first** (avoid creating a duplicate):
 
@@ -70,12 +69,12 @@ If a ruleset already covers the target branches, report it and ask before adding
 ```bash
 gh api --method POST repos/<owner>/<repo>/rulesets --input - <<'JSON'
 {
-  "name": "protect-main-and-dev",
+  "name": "protect-main",
   "target": "branch",
   "enforcement": "active",
-  "conditions": { "ref_name": { "include": ["refs/heads/main", "refs/heads/dev"], "exclude": [] } },
+  "conditions": { "ref_name": { "include": ["refs/heads/main"], "exclude": [] } },
   "rules": [
-    { "type": "pull_request", "parameters": { "required_approving_review_count": 0, "dismiss_stale_reviews_on_push": false, "require_code_owner_review": false, "require_last_push_approval": false, "required_review_thread_resolution": false } },
+    { "type": "pull_request", "parameters": { "required_approving_review_count": 0, "dismiss_stale_reviews_on_push": false, "require_code_owner_review": false, "require_last_push_approval": false, "required_review_thread_resolution": false, "allowed_merge_methods": ["squash"] } },
     { "type": "non_fast_forward" },
     { "type": "deletion" }
   ],
@@ -84,7 +83,7 @@ gh api --method POST repos/<owner>/<repo>/rulesets --input - <<'JSON'
 JSON
 ```
 
-This payload matches the light **Default Policy** above. For the **Strict Preset**, `required_approving_review_count` cannot vary by branch within one ruleset — either create two rulesets (one scoped to `refs/heads/dev` with `required_approving_review_count: 1`, one scoped to `refs/heads/main` with `2`), or fall back to per-branch classic protection below. Add a `required_status_checks` rule object only when the user confirms an actual check name:
+This payload matches the light **Default Policy** above. For the **Strict Preset**, set `required_approving_review_count` to `2` (and `require_last_push_approval` and `required_review_thread_resolution` to `true`). Add a `required_status_checks` rule object only when the user confirms an actual check name:
 
 ```json
 { "type": "required_status_checks", "parameters": { "strict_required_status_checks_policy": true, "required_status_checks": [{ "context": "<check-name>" }] } }
@@ -113,6 +112,7 @@ If the endpoint returns not found, report that protection may not be enabled.
 Target behavior:
 
 - Pull request required before merge.
+- Squash-only merging is a repository setting, not branch protection: set `allow_squash_merge=true`, `allow_merge_commit=false`, `allow_rebase_merge=false` (Settings > General > Pull Requests), after approval.
 - Mandatory approvals not required unless explicitly requested (or per the Strict Preset above).
 - Existing required status checks preserved when present.
 - Existing admin enforcement preserved unless explicitly changed.
@@ -130,6 +130,7 @@ If CLI access is unavailable, provide steps:
 2. Add or edit the rule/protection for the target branch(es).
 3. Enable requiring pull requests before merging.
 4. Leave required approvals disabled unless requested.
+   Allow squash merging only under Settings > General > Pull Requests.
 5. Preserve any existing required checks or restrictions.
 
 ## Final Response

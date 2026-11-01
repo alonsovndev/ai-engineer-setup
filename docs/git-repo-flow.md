@@ -1,6 +1,6 @@
 # Git repo flow
 
-This setup supports the standard GitHub development flows used by the repository skills and commands.
+Code Agent Harness supports the standard GitHub development flows used by the repository skills and commands.
 
 ## Repository topologies
 

@@ -26,7 +26,7 @@ Examples:
 
 | Local path | Suggested repo |
 |---|---|
-| `/Users/name/CodeRepository/local/ai-agent-setup` | `ai-agent-setup` |
+| `/Users/name/CodeRepository/local/code-agent-harness` | `code-agent-harness` |
 | `/Users/name/CodeRepository/team/service-api` | `service-api` |
 
 Use lowercase kebab-case for repository names unless the organization has a different convention.

@@ -11,7 +11,7 @@ Use the `workspace-setup` skill.
 
 Required behavior:
 
-- Refuse to run with `ai-engineer-setup` itself as the target workspace.
+- Refuse to run with Code Agent Harness itself as the target workspace, regardless of its clone directory name.
 - Discover the workspace's immediate subdirectories read-only first. A subdirectory with
   `.git` is a sub-repo; classify it FE/BE/Docs using the same heuristics as
   `ai-repo-setup` (package.json+react/vite, pyproject.toml/requirements.txt+fastapi,

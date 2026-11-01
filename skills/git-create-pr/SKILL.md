@@ -22,8 +22,8 @@ Create safe, review-ready GitHub pull requests from the current repository state
 
 - The create-pr invocation itself pre-approves: committing the current changes (with logical splits), pushing the working branch, and creating the PR. Do not ask for approval again inside this flow.
 - Outside this flow, never create a PR from `main` or `master` unless the user explicitly confirms this is intentional.
-- Refuse to start the flow on `main`, `master`, `dev`, or a detached HEAD — tell the user to run the start-feature command first. Any other named working branch is allowed.
-- Never push commits on `main`, `master`, `dev`, or a detached HEAD — not even with explicit approval or inside this flow.
+- Refuse to start the flow on `main`, `master`, or a detached HEAD — tell the user to run the start-feature command first. Any other named working branch is allowed.
+- Never push commits on `main`, `master`, or a detached HEAD — not even with explicit approval or inside this flow.
 - Stop and ask before committing only when changes cannot be grouped confidently, or secrets are detected — then never stage secrets.
 - Still gated inside the flow: force-push (explicit approval), PR edits, comments, and merges (explicit approval).
 - Never bypass hooks, CI, branch protections, or review rules.
@@ -33,7 +33,7 @@ Create safe, review-ready GitHub pull requests from the current repository state
 
 ## Preflight Checks
 
-Run read-only checks first:
+Run read-only checks first. The commands are independent, so run them (including the `gh` checks below and the existing-PR check) as one parallel batch:
 
 ```bash
 git status --short
@@ -66,7 +66,7 @@ gh auth status
 
 The create-pr invocation counts as an explicit request to commit the current changes. Commit them before opening the PR:
 
-- Refuse to start on `main`, `master`, `dev`, or a detached HEAD; tell the user to run the start-feature command first.
+- Refuse to start on `main`, `master`, or a detached HEAD; tell the user to run the start-feature command first.
 - Split many or mixed changes into logical commits following the `git-commit` skill (Conventional Commits, one logical change per commit). Split silently — do not ask for approval per split.
 - Stop and ask only when changes cannot be grouped confidently or secrets are detected; never stage secrets, credentials, `.env` files, or sensitive configuration.
 - Do not amend, skip hooks, or push protected branches; pushing the working branch is pre-approved and happens in the PR step below.
@@ -93,9 +93,9 @@ Defaults:
 
 | Branch type | Fork mode | Direct mode |
 |---|---|---|
-| `feature/*` | target upstream `dev` | target origin `dev` |
-| `hotfix/*` | target upstream `main` | target origin `main` |
-| release PR | upstream `dev` to upstream `main` | origin `dev` to origin `main` |
+| `feature/*`, `fix/*`, `chore/*`, `hotfix/*` | target upstream `main` | target origin `main` |
+
+PRs are squash-merged, so the PR title must be a Conventional Commit (`type(scope): summary`). When the branch has a single commit, reuse its subject; otherwise use the dominant type and scope. Put ticket or issue references in the body (`Closes #42`).
 
 In fork mode, the PR head should be the fork branch (`<user>:<branch>`), not a direct upstream branch, unless the user explicitly says otherwise.
 
@@ -107,8 +107,6 @@ git branch --show-current
 git log --oneline <base>..HEAD
 git diff --stat <base>...HEAD
 ```
-
-If branch type and base branch conflict, stop and ask for confirmation.
 
 ## PR Content
 
@@ -139,9 +137,9 @@ For fork-mode PRs, target the upstream repository explicitly:
 ```bash
 gh pr create \
   --repo <org>/<repo> \
-  --base dev \
-  --head <user>:feature/<ticket>-<short-desc> \
-  --title "[TICKET] imperative summary" \
+  --base main \
+  --head <user>:<type>/<short-desc> \
+  --title "type(scope): imperative summary" \
   --body-file <body-file>
 ```
 
@@ -150,9 +148,9 @@ For direct repository PRs:
 ```bash
 gh pr create \
   --repo <org>/<repo> \
-  --base dev \
-  --head feature/<ticket>-<short-desc> \
-  --title "[TICKET] imperative summary" \
+  --base main \
+  --head <type>/<short-desc> \
+  --title "type(scope): imperative summary" \
   --body-file <body-file>
 ```
 
@@ -194,9 +192,9 @@ If a PR exists, ask whether to update the existing PR body or leave it unchanged
 
 When complete, report:
 
-- Whether the PR was created — PR URL, number, and title. Never claim a PR exists unless the command succeeded.
+- Whether the PR was created — PR URL and title. Never claim a PR exists unless the command succeeded.
 - Base ← head branches, and topology (fork or direct mode).
-- Commits included: list each commit subject created or already on the branch.
+- Commits included: list commit subjects only when there is more than one commit.
 - A short summary of what the PR changes and why.
 - Verification status (tests, lint, checks run or explicitly not run).
 - Any skipped safety step and reason.

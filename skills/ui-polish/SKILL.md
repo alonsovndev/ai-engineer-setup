@@ -1,5 +1,5 @@
 ---
-name: frontend-design
+name: ui-polish
 description: "Use when evaluating or improving visual design polish, animation/motion, or responsive layout in frontend UI work. Covers visual hierarchy, typography, restraint, motion timing and easing, breakpoints, fluid sizing, and touch/pointer adaptation. Keywords: frontend design, ui polish, impeccable, visual hierarchy, animation, motion, transitions, responsive, breakpoints, mobile-first, accessibility."
 argument-hint: "Describe the UI, component, or page under design, and whether the concern is visual polish, animation, or responsive behavior."
 user-invocable: true

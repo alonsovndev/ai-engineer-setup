@@ -25,7 +25,7 @@ Use these budgets to control token usage and response depth across orchestration
 | `postgresql` | `standard` | 1800 | 1000 |
 | `terraform` | `standard` | 1800 | 1000 |
 | `clean-architecture` | `standard` | 1900 | 1100 |
-| `frontend-design` | `standard` | 1600 | 900 |
+| `ui-polish` | `standard` | 1600 | 900 |
 | `product-ba` | `standard` | 1500 | 900 |
 | `tech-lead` | `standard` | 1900 | 1100 |
 | `code-review` | `standard` | 2000 | 1200 |

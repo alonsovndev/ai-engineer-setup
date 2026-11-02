@@ -8,13 +8,13 @@ user-invocable: true
 
 Use this skill to review **and improve** an existing UI while preserving the product's identity, information architecture, functionality, and technical architecture. The objective is to make the interface feel intentionally designed by a strong product team — not like a generic AI-generated SaaS application.
 
-This skill is the implementing counterpart to `review-design`/`frontend-design`, which only report findings without editing. It is React/Vite/Ant Design focused; on other stacks apply only the stack-agnostic phases and defer detail to the `frontend-design` skill.
+This skill is the implementing counterpart to `review-design`/`ui-polish`, which only report findings without editing. It is React/Vite/Ant Design focused; on other stacks apply only the stack-agnostic phases and defer detail to the `ui-polish` skill.
 
 **Approval gate:** after the implementation plan (Phase 5), stop and present the design direction and prioritized plan. Do not edit files until the user approves.
 
 ## Related Skills
 
-- `frontend-design` — source of truth for visual polish, animation timing/easing and `prefers-reduced-motion`, and responsive breakpoint/touch-target rules (Phases 7–9).
+- `ui-polish` — source of truth for visual polish, animation timing/easing and `prefers-reduced-motion`, and responsive breakpoint/touch-target rules (Phases 7–9).
 - `react-vite-antd` and `antd-v6-patterns` — component structure, AntD theming/tokens, and v6 API conventions (Phase 6).
 - `component-design` — component composition and accessibility behavior.
 
@@ -84,7 +84,7 @@ Present the design direction and the P0/P1/P2 plan to the user, then stop. Only 
 
 ## Phase 7 — Responsive Review
 
-Review at ~375px, ~430px, ~768px, ~1280px, and ~1440px+: navigation, typography, tables, forms, cards, buttons, spacing, overflow, horizontal scrolling, content width, and touch targets. Do not simply stack everything vertically on mobile — preserve hierarchy and usability. Apply the `frontend-design` responsive rules (content-driven breakpoints, input-method detection).
+Review at ~375px, ~430px, ~768px, ~1280px, and ~1440px+: navigation, typography, tables, forms, cards, buttons, spacing, overflow, horizontal scrolling, content width, and touch targets. Do not simply stack everything vertically on mobile — preserve hierarchy and usability. Apply the `ui-polish` responsive rules (content-driven breakpoints, input-method detection).
 
 ## Phase 8 — Accessibility
 
@@ -92,7 +92,7 @@ Check semantic HTML, keyboard navigation, focus states, color contrast, button/f
 
 ## Phase 9 — Interaction Design
 
-Review hover, focus, active, loading, disabled, error, empty, and success states. Interactions should communicate state, not decorate. Use animation sparingly and prefer subtle transitions, per the `frontend-design` animation rules (including `prefers-reduced-motion`).
+Review hover, focus, active, loading, disabled, error, empty, and success states. Interactions should communicate state, not decorate. Use animation sparingly and prefer subtle transitions, per the `ui-polish` animation rules (including `prefers-reduced-motion`).
 
 ## Phase 10 — Final Genericity Review
 

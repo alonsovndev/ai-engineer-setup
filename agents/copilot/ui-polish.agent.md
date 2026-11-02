@@ -1,5 +1,5 @@
 ---
-name: frontend-design
+name: ui-polish
 description: Frontend visual design, animation, and responsive-layout review agent for visual hierarchy/polish, motion timing and prefers-reduced-motion handling, and responsive/touch behavior across breakpoints.
 argument-hint: Provide target files, whether the concern is visual polish/animation/responsive, and any project-specific constraints.
 tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'web', 'todo']

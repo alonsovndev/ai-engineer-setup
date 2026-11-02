@@ -8,7 +8,7 @@ user-invocable: true
 
 Use this skill only when the repository actually uses React with TypeScript, Vite, and Ant Design (`antd`).
 
-For general SOLID/KISS/DRY/YAGNI tradeoffs, also apply the shared `programming-principles` skill. For test placement and coverage strategy, also apply `test-strategy`; use `tdd` when the user explicitly wants test-first development. For XSS, injection, and other client-side security concerns, also apply `secure-code-generation`. For animation, motion, and responsive-layout guidance, also apply the `frontend-design` skill.
+For general SOLID/KISS/DRY/YAGNI tradeoffs, also apply the shared `programming-principles` skill. For test placement and coverage strategy, also apply `test-strategy`; use `tdd` when the user explicitly wants test-first development. For XSS, injection, and other client-side security concerns, also apply `secure-code-generation`. For animation, motion, and responsive-layout guidance, also apply the `ui-polish` skill.
 
 Before editing, read the project files first and then apply the stack guide at `../../instructions/stacks/react-vite-antd.md` when it matches the repository. Do not impose that guide on Next.js, Vue, Svelte, plain JavaScript, other component libraries (MUI, Chakra), or legacy projects with established local conventions.
 
@@ -43,7 +43,7 @@ When the task scope goes beyond stack integration, pull in the specialized skill
 | Deep AntD component API, tokens, Pro/X, SSR, a11y, `@ant-design/cli` lookup | `ant-design` |
 | Vite config, plugins, build/SSR, environment API, Rolldown migration | `vite` |
 | React/Next.js performance: rendering, re-renders, async, bundle, server rules | `vercel-react-best-practices` |
-| Animation, motion, responsive layout, visual hierarchy | `frontend-design` |
+| Animation, motion, responsive layout, visual hierarchy | `ui-polish` |
 | State management selection, local vs server data patterns | `state-management` |
 | Redux Toolkit reducers, selectors, RTK Query | `redux-logic` |
 | Client-side security (XSS, injection, CSP) | `secure-code-generation` |

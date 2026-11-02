@@ -130,8 +130,6 @@ printf 'Checking local commands only. No model/provider calls are made.\n\n'
 printf '\nChecking required repository paths.\n'
 check_required_path "$repo_root/instructions/AGENTS.md"
 check_required_path "$repo_root/instructions/stacks/python-fastapi-ddd.md"
-check_required_path "$repo_root/skills/tdd/SKILL.md"
-check_required_path "$repo_root/skills/find-skills/SKILL.md"
 check_required_path "$repo_root/skills/python-fastapi-ddd/SKILL.md"
 check_required_path "$repo_root/skills/git-repo-flow/SKILL.md"
 check_required_path "$repo_root/profiles/model-profiles.jsonc"
@@ -685,6 +683,19 @@ if [ "$check_claude" -eq 1 ] && [ -f "$repo_root/plugins/claude-plugins.txt" ] &
       warnings=1
     fi
   done < "$repo_root/plugins/claude-plugins.txt"
+fi
+
+if [ -f "$repo_root/third-party/skills.txt" ]; then
+  printf '\nChecking third-party skills.\n'
+  while read -r skill_dir skill_source || [ -n "$skill_dir" ]; do
+    case "$skill_dir" in ''|'#'*) continue ;; esac
+    if [ -f "$repo_root/skills/$skill_dir/SKILL.md" ]; then
+      printf 'ok: third-party skill installed: %s\n' "$skill_dir"
+    else
+      printf 'warn: third-party skill not installed: %s (run ./scripts/install-skills.sh)\n' "$skill_dir"
+      warnings=1
+    fi
+  done < "$repo_root/third-party/skills.txt"
 fi
 
 printf '\nChecking git aliases.\n'

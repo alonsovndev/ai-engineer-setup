@@ -27,3 +27,10 @@ skills/synced/
 
 # Installer backups (scripts/install.sh)
 *.backup-*
+
+# Third-party skills installed from skills.sh (see third-party/skills.txt)
+skills/vercel-react-best-practices/
+skills/vite/
+skills/find-skills/
+skills/ant-design/
+skills/tdd/

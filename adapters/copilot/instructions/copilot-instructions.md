@@ -22,7 +22,7 @@ Active agents in this workspace. Every file in `agents/` is listed here; keep th
    - Purpose: Terraform/OpenTofu module, plan, state, provider/backend, import, IAM/security, and CI/CD workflow work.
 5. `clean-architecture` (`agents/clean-architecture.agent.md`)
    - Purpose: cross-stack layer boundaries, dependency direction, ports and adapters, and DDD aggregate design.
-6. `frontend-design` (`agents/frontend-design.agent.md`)
+6. `ui-polish` (`agents/ui-polish.agent.md`)
    - Purpose: visual hierarchy, animation, responsive behavior, and UI polish. Not component architecture — use `react-ui` for that.
 7. `product-ba` (`agents/product-ba.agent.md`)
    - Purpose: product ownership, business analysis, requirements discovery, backlog definition, and delivery-ready planning artifacts.
@@ -38,7 +38,7 @@ Active agents in this workspace. Every file in `agents/` is listed here; keep th
 Routing notes:
 - Route discovery and requirement clarification to `product-ba`; route architecture and execution planning to `tech-lead`.
 - Route stack work to the matching domain agent: `react-ui` (frontend), `python-api` (backend), `postgresql` (database), `terraform` (infrastructure).
-- Route review work by intent: `code-review` for a just-made change, `bug-finder` for an untargeted sweep, `clean-architecture` for boundary and dependency-direction questions, `frontend-design` for visual and motion quality, `doc-tracker` for stale documentation.
+- Route review work by intent: `code-review` for a just-made change, `bug-finder` for an untargeted sweep, `clean-architecture` for boundary and dependency-direction questions, `ui-polish` for visual and motion quality, `doc-tracker` for stale documentation.
 - Prefer one primary agent at a time; add a second only when findings reveal a cross-domain concern.
 
 ## Documentation

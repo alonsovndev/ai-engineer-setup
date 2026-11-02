@@ -11,7 +11,7 @@ Routes work to the appropriate domain subagent. Prefer one primary subagent at a
 | **Database** | Schema design, SQL, migrations, indexing, ORM models, repository persistence | `postgresql` | `relational-db-orm`, `database-design` |
 | **Infrastructure** | Terraform/OpenTofu modules, providers, state, IAM, CI/CD workflow | `terraform` | `terraform` |
 | **Cross-stack Architecture** | Layer boundaries, dependency direction, ports & adapters, DDD aggregates | `clean-architecture` | `clean-architecture-ddd`, `design-patterns` |
-| **Visual/UX Review** | Visual hierarchy, animation, responsive behavior, polish | `frontend-design` | `frontend-design`, `component-design` |
+| **Visual/UX Review** | Visual hierarchy, animation, responsive behavior, polish | `ui-polish` | `ui-polish`, `component-design` |
 | **Requirements** | Backlog, acceptance criteria, user stories, prioritization | `product-ba` | `agile-planning`, `technical-writer` |
 | **Architecture Planning** | C4 diagrams, ADRs, technical planning, sequencing, risk analysis | `tech-lead` | `diagram-author`, `technical-writer` |
 | **Post-change Review** | Correctness, security, tests, verification before completion | `code-review` | `quality-gates`, `secure-code-generation` |

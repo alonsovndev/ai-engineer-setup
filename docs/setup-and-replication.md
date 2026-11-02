@@ -75,31 +75,27 @@ When OpenCode is selected, restart it after install or config changes because it
 
 ## Install skills
 
-`skills/` is the portable source of truth for both custom skills and community skills.
-
-Create custom skills directly in this repository:
+`skills/` holds the project's own skills. Create custom skills directly in this repository:
 
 ```text
 skills/<skill-name>/SKILL.md
 ```
 
-Install community skills from [skills.sh](https://skills.sh/) from the repository root, then confirm the new files landed under `skills/`:
+Third-party skills from [skills.sh](https://skills.sh/) are not committed. The ones the harness relies on are listed in `third-party/skills.txt` (one `<skill-dir> <owner/repo@skill>` per line; `TBD` sources are skipped) and git-ignored. After `./scripts/install.sh` has linked `~/.agents/skills` into this repository, install them with:
 
 ```bash
-npx skills add <owner/repo@skill>
-git status
-./scripts/install.sh
+./scripts/install-skills.sh --dry-run
+./scripts/install-skills.sh
 ```
 
-Select the tools to refresh and run the printed verification command. A skill is portable when it appears as `skills/<skill-name>/SKILL.md`. After it is committed and pulled on another machine, repeat installation and verification there to expose it through the selected tools' managed paths.
+It runs `npx skills add -g -y` for each missing entry and reaches the network, so `install.sh` does not call it. `./scripts/verify.sh` only warns when a listed skill is missing. Confirm the skill landed as `skills/<skill-name>/SKILL.md` through the managed symlink; if the CLI wrote elsewhere, move it there.
 
-Avoid relying on unversioned global installs for shared setup. If using `npx skills add ... -g`, still verify that the CLI wrote through one of the managed symlinks into this repository's `skills/` directory.
+To add another community skill as a dependency, add a line to `third-party/skills.txt` and an ignore entry for `skills/<skill-dir>/` in `.gitignore`. Do not reinstall `git-commit` from upstream: the copy in `skills/` is adapted and credited in `THIRD_PARTY_NOTICES.md`.
 
-For updates, run the skills update command only when you intend to review and version the resulting changes:
+For updates, run the skills update command only when you intend to review the result:
 
 ```bash
 npx skills update
-git diff
 ./scripts/verify.sh
 ```
 

@@ -69,7 +69,7 @@ Implement one complete vertical slice at a time. Each slice includes:
 | React components, hooks, state | `react-ui` | `react-vite-antd`, `component-design` |
 | FastAPI routes, use cases, DI | `python-api` | `python-fastapi-ddd`, `clean-architecture-ddd` |
 | Schema, queries, migrations | `postgresql` | `relational-db-orm` |
-| Visual polish, animation, responsive | `frontend-design` | `frontend-design` |
+| Visual polish, animation, responsive | `ui-polish` | `ui-polish` |
 
 ## Phase 5: Cross-Cutting Review
 

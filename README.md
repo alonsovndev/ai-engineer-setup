@@ -12,6 +12,10 @@ Keep your AI developer tools and workflows consistent across machines and teams 
 
 This repository tracks reusable instructions, skills, agents, commands, model profiles, scripts, workflows, and platform adapters. It intentionally excludes auth, sessions, telemetry, logs, caches, and machine-specific state.
 
+## Relationship to skills.sh
+
+This project complements the [skills.sh](https://skills.sh/) ecosystem; it does not replace it. It contributes what skills.sh does not: cross-harness installation and verification, shared instructions, agents, slash commands, model profiles, and workflow skills that tie them together. Popular third-party skills are referenced and installed from their upstream instead of being copied here. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for credits and licenses.
+
 ## Layout
 
 | Path                        | Purpose                                                                                                                                                            |
@@ -61,6 +65,8 @@ Noninteractive calls without `--harness` or `--all` exit with usage status `2`; 
 
 `install.sh` backs up existing portable config paths before replacing them with symlinks. It does not touch auth, session, cache, or telemetry files.
 
+Third-party skills listed in `third-party/skills.txt` are installed separately with `./scripts/install-skills.sh` (see [Skills](#skills)).
+
 Claude Code plugins listed in `plugins/claude-plugins.txt` are installed separately with `./scripts/install-plugins.sh` (it clones marketplaces from GitHub, so `install.sh` does not run it); `verify.sh` only warns when one is missing.
 
 `verify.sh` checks the managed symlinks and enforces parity against `agents/claude/` and `commands/claude/`. Codex custom agents live under `agents/codex/`; each canonical command has a Codex skill equivalent under `adapters/codex/skills/<command>/`, linked per skill into `~/.codex/skills` so it stays out of the shared skills tree the other harnesses load. Add new agents and commands to every supported harness in the same change.
@@ -77,17 +83,19 @@ When OpenCode is selected, restart it after install or config changes because it
 
 ## Skills
 
-`skills/` is the source of truth for portable skills. Custom skills should be created directly under this directory, and community skills from [skills.sh](https://skills.sh/) should be installed so they land here.
+`skills/` holds the skills that are original to this project. Create custom skills directly under it.
 
-Recommended community skill workflow:
+Third-party skills from [skills.sh](https://skills.sh/) are not redistributed here. The ones this harness relies on are listed in [`third-party/skills.txt`](third-party/skills.txt), ignored by Git, and installed from their upstream:
 
 ```bash
-npx skills add <owner/repo@skill>
-git status
 ./scripts/install.sh
+./scripts/install-skills.sh --dry-run
+./scripts/install-skills.sh
 ```
 
-Select the tools to refresh and run the printed verification command. If the new skill appears as `skills/<skill-name>/SKILL.md`, it is portable and exposed through the selected tools' managed paths and the shared `~/.agents/skills` link. Review the diff before committing community skills or skill updates.
+`install-skills.sh` runs `npx skills add -g -y` for each missing entry, so it reaches the network and is kept separate from `install.sh`. `verify.sh` only warns when a listed skill is missing. To add another community skill, install it with `npx skills add <owner/repo@skill>`; if you want it to be a harness dependency, add a line to `third-party/skills.txt` and an ignore entry to `.gitignore` instead of committing it.
+
+The skill adapted from upstream (`git-commit`) is kept in `skills/` with credit in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Do not reinstall it with `npx skills add`, because upstream would overwrite the adapted version.
 
 ## Update Existing Install
 
@@ -137,3 +145,7 @@ This harness supports fork-mode and direct-mode workflows for GitHub repositorie
 ## Contributing
 
 Contributions to shared configuration and platform adapters are welcome through [pull requests](https://github.com/alonsovndev/code-agent-harness/pulls). Keep changes focused, preserve command and agent parity across supported platforms, and run the relevant checks described above before submitting.
+
+## License
+
+MIT, see [LICENSE](LICENSE). It covers the original work of this project only; third-party skills keep their own licenses, listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

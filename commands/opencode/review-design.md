@@ -1,11 +1,11 @@
 ---
-description: Review UI code for visual polish, animation quality, and responsive behavior using the frontend-design skill and agent.
-agent: frontend-design
+description: Review UI code for visual polish, animation quality, and responsive behavior using the ui-polish skill and agent.
+agent: ui-polish
 ---
 
 Usage: Target files/component and whether to focus on visual polish, animation, or responsive behavior.
 
-Review UI code for visual polish, animation quality, and responsive behavior using the `frontend-design` skill and agent.
+Review UI code for visual polish, animation quality, and responsive behavior using the `ui-polish` skill and agent.
 
 ## How To Use This Command
 
@@ -16,7 +16,7 @@ Review UI code for visual polish, animation quality, and responsive behavior usi
 
 ## Required Skill
 
-Use the `frontend-design` skill before reviewing. Treat it as the source of truth for:
+Use the `ui-polish` skill before reviewing. Treat it as the source of truth for:
 
 - Visual hierarchy and polish heuristics.
 - Animation property choice, timing/easing table, and `prefers-reduced-motion` handling.

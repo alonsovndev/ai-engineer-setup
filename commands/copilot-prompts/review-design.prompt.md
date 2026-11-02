@@ -2,9 +2,9 @@
 description: "Review UI code for visual polish, animation quality, and responsive behavior"
 name: "Review Design"
 argument-hint: "Target files/component and whether to focus on visual polish, animation, or responsive behavior"
-agent: "frontend-design"
+agent: "ui-polish"
 ---
-Use the `frontend-design` skill to review UI code for visual polish, animation quality, and responsive behavior.
+Use the `ui-polish` skill to review UI code for visual polish, animation quality, and responsive behavior.
 
 Requirements:
 - Treat the skill as the source of truth for visual hierarchy heuristics, animation timing/easing/`prefers-reduced-motion` handling, and responsive breakpoint/touch-target/layout-adaptation rules.

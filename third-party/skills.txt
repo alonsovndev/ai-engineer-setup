@@ -1,0 +1,8 @@
+# Third-party skills this harness expects but does not redistribute.
+# Format: <skill-dir-under-skills/> <owner/repo@skill for `npx skills add`>
+# Install with ./scripts/install-skills.sh. Sources marked TBD are skipped.
+vercel-react-best-practices vercel-labs/agent-skills@react-best-practices
+vite antfu/skills@vite
+find-skills vercel-labs/skills@find-skills
+tdd mattpocock/skills@tdd
+ant-design TBD

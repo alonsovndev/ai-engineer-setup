@@ -2,7 +2,7 @@
 description: "Audit and refine an existing React/Vite/AntD UI so it feels intentionally designed, not like a generic AI-generated SaaS app"
 name: "Improve UI"
 argument-hint: "Target page, feature, or component area to refine, plus any focus areas such as typography, color, or layout"
-agent: "frontend-design"
+agent: "ui-polish"
 ---
 Use the `ui-refinement` skill to audit and refine an existing React/Vite/Ant Design UI so it feels intentionally designed. The core objective is avoiding generic AI-generated UI patterns.
 

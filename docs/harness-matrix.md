@@ -24,7 +24,7 @@ Do not symlink whole harness config roots because they contain local auth, sessi
 | Commit changes | `git-commit` | `$commit` | `/commit` | `/commit` | `Commit` | `git-commit` |
 | Create PR (working branch → main) | `git-create-pr`, `gh-prs` | `$create-pr` | `/create-pr` | `/create-pr` | `Create PR` | `gh-prs` |
 | Tag release (create vX.Y.Z tag from main) | `git-repo-flow`, `pr-review` | `$tag-release` | `/tag-release` | `/tag-release` | `Tag Release` | `pr-review` |
-| Frontend design review | `frontend-design` | `$review-design` | `/review-design` | `/review-design` | `Review Design` | `frontend-design` |
+| Frontend design review | `ui-polish` | `$review-design` | `/review-design` | `/review-design` | `Review Design` | `ui-polish` |
 | Improve an existing UI end-to-end | `ui-refinement` | `$improve-ui` | `/improve-ui` | `/improve-ui` | `Improve UI` | `ui-refinement` |
 | Refine a raw idea into a requirement | `spec-planning` | `$spec-clarify` | `/spec-clarify` | `/spec-clarify` | `Spec Clarify` | `spec-planning` |
 | Write a phased spec to `specs/` | `spec-planning` | `$spec-write` | `/spec-write` | `/spec-write` | `Spec Write` | `spec-planning` |
